@@ -19,7 +19,7 @@ caret4 = "↓"
 # settings keywords
 settingsKeywords = ["text", "text speed", "speed", "caret", "save", "save message", "load", "load message",
                     "new day message", "day message", "end message", "end", "action message", "action", "act",
-                    "up", "left", "down", "right", "select", "cancel", "misc"]
+                    "up", "left", "down", "right", "select", "cancel", "misc", w, a, s, d, z, x, c]
 numbersList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 exitBind = ""
 
@@ -349,13 +349,16 @@ def settingsFunc():
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
-    elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
+    elif choice in ["next", ">", d] and not nextP and page != 3 or choice in ["prev", "previous", "<", a] and not prevP and page != 3:
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return settingsFunc()
-    elif choice in ["quit", "x"] or choice == ":" and exitBind:
-        h.clearAll() # exits
+    elif choice in ["x"] and page != 3:
+        h.clearAll() # no return function means exit
         # collapsable
+    elif choice == ":" and page == 3:
+        page = 1
+        return settingsFunc()
     else:
         print("did not understand.")
         h.sleepadv(1)
