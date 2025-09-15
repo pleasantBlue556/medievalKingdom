@@ -1,6 +1,11 @@
-# import keyboard as k
 from utils import helpers as h
 # from utils import save as s
+import platform
+
+userSys = platform.system()
+userVer = platform.release()
+print(userSys, userVer)
+
 currentSave = 0
 
 # ↑↓←→
@@ -397,8 +402,8 @@ def creditsFunc():
         h.sleepadv(1)
         return creditsFunc()
 def quitFunc():
-    print("// [quit]")
     h.clearAll()
+    print("// [quit]")
     # s.save()
     print("thanks for playing!")
     h.sleepadv(1)
@@ -412,6 +417,7 @@ while True:
           f"{caret2} [settings]\n"
           f"{caret3} [credits]\n"
           f"{caret4} [quit]")
+    print(userSys, userVer)
     choice = h.inputadv("")
     # up
     if choice == w:
