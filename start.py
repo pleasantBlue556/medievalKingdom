@@ -217,7 +217,10 @@ def settingsFunc():
                 settingsChoice = h.inputadv("edit keybind 'up' - default: w\n"
                                             f"can't use: {keybindList}\n"
                                             "[:]")
-                if settingsChoice not in keybindList:
+                if settingsChoice == ":":
+                    return settingsFunc()
+                    # collapsable
+                elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
                     h.settings["up"] = settingsChoice
                     h.sleepadv(1)
@@ -226,16 +229,17 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
-                elif settingsChoice == ":":
-                    return settingsFunc()
                 else:
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
             elif choice in ["2", "left"]:
                 settingsChoice = h.inputadv("edit keybind 'left' - default: a\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
                     h.settings["left"] = settingsChoice
                     h.sleepadv(1)
@@ -244,16 +248,17 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
-                elif settingsChoice == ":":
-                    return settingsFunc()
                 else:
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
             elif choice in ["3", "down"]:
                 settingsChoice = h.inputadv("edit keybind 'down' - default: s\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
                     h.settings["down"] = settingsChoice
                     h.sleepadv(1)
@@ -262,16 +267,17 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
-                elif settingsChoice == ":":
-                    return settingsFunc()
                 else:
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
             elif choice in ["4", "right"]:
                 settingsChoice = h.inputadv("edit keybind 'right' - default: d\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
                     h.settings["right"] = settingsChoice
                     h.sleepadv(1)
@@ -280,16 +286,17 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
-                elif settingsChoice == ":":
-                    return settingsFunc()
                 else:
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
             elif choice in ["5", "select"]:
                 settingsChoice = h.inputadv("edit keybind 'select' - default: z\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
                     h.settings["select"] = settingsChoice
                     h.sleepadv(1)
@@ -306,8 +313,11 @@ def settingsFunc():
                     return settingsFunc()
             elif choice in ["6", "cancel"]:
                 settingsChoice = h.inputadv("edit keybind 'cancel' - default: x\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
                     h.settings["cancel"] = settingsChoice
                     h.sleepadv(1)
@@ -316,16 +326,17 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
-                elif settingsChoice == ":":
-                    return settingsFunc()
                 else:
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
             elif choice in ["7", "misc"]:
                 settingsChoice = h.inputadv("edit keybind 'misc' - default: c\n"
-                                            f"can't use: {keybindList}")
-                if settingsChoice not in keybindList:
+                                            f"can't use: {keybindList}\n"
+                                            f"[:]")
+                if settingsChoice == ":":
+                    return settingsFunc()
+                elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
                     h.settings["misc"] = settingsChoice
                     h.sleepadv(1)
@@ -333,8 +344,6 @@ def settingsFunc():
                 elif settingsChoice in keybindList:
                     print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
-                    return settingsFunc()
-                elif settingsChoice == ":":
                     return settingsFunc()
                 else:
                     print("did not understand.")
