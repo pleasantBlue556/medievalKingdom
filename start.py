@@ -1,10 +1,11 @@
 from utils import helpers as h
 # from utils import save as s
-import platform
+import platform, distro
 
 userSys = platform.system()
 userVer = platform.release()
-print(userSys, userVer)
+if distro.name():
+    userVer = distro.name()
 
 currentSave = 0
 

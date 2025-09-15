@@ -1,4 +1,4 @@
-import time, os
+import time, os, platform
 
 settings = {
     # page 1
@@ -28,7 +28,10 @@ def inputadv(msg="", caret=settings["caret"]):
 def sleepadv(length=1, speed=settings["textSpeed"]):
     time.sleep(length*speed)
 def clearAll():
-    os.system("cls") # prints a box with an x in terminal but works in cmd
+    if platform.system() == "Windows":
+        os.system("cls") # prints a box with an x in terminal but works in cmd
+    elif platform.system() == "Linux":
+        os.system("clear")
 def huh(msg, sleepTime, returnArea):
     if msg == "min":
         print("please enter a higher number.")
