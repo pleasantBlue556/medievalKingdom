@@ -82,6 +82,7 @@ def settingsFunc():
               f"6. cancel: [{x}]\n"
               f"7. misc: [{c}]\n"
               f"[: exit] [< prev] [> next]\n")
+        print(keybindList)
     choice = h.inputadv("[<] [>] [#] [help]")
     if choice == "help":
         h.clearAll()
@@ -96,7 +97,7 @@ def settingsFunc():
     elif choice in ["prev", "previous", "<", a] and prevP is not False:
         page -= 1
         return settingsFunc()
-    elif choice in numbersList  or choice in settingsKeywords:
+    elif choice in numbersList or choice in settingsKeywords:
         # pg 1. customization
         if page == 1:
             # text spd
@@ -202,58 +203,86 @@ def settingsFunc():
         elif page == 3:
             if choice in ["1", "up"]:
                 settingsChoice = h.inputadv("edit keybind 'up' - default: w\n"
-                                            f"can't use: [{keybindList.remove(w)}]")
-                if settingsChoice != keybindList.remove(w):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
                     h.settings[w] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["2", "left"]:
                 settingsChoice = h.inputadv("edit keybind 'left' - default: a\n"
-                                            f"can't use: [{keybindList.remove(a)}]")
-                if settingsChoice != keybindList.remove(a):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
                     h.settings[a] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["3", "down"]:
                 settingsChoice = h.inputadv("edit keybind 'down' - default: s\n"
-                                            f"can't use: [{keybindList.remove(s)}]")
-                if settingsChoice != keybindList.remove(a):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
                     h.settings[s] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["4", "right"]:
                 settingsChoice = h.inputadv("edit keybind 'right' - default: d\n"
-                                            f"can't use: [{keybindList.remove(d)}]")
-                if settingsChoice != keybindList.remove(d):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
                     h.settings[d] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["5", "select"]:
                 settingsChoice = h.inputadv("edit keybind 'select' - default: z\n"
-                                            f"can't use: [{keybindList.remove(a)}]")
-                if settingsChoice != keybindList.remove(z):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
                     h.settings[z] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["6", "cancel"]:
                 settingsChoice = h.inputadv("edit keybind 'cancel' - default: x\n"
-                                            f"can't use: [{keybindList.remove(x)}]")
-                if settingsChoice != keybindList.remove(x):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
                     h.settings[x] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
+                    h.sleepadv(1)
+                    return settingsFunc()
             elif choice in ["7", "misc"]:
                 settingsChoice = h.inputadv("edit keybind 'misc' - default: c\n"
-                                            f"can't use: [{keybindList.remove(c)}]")
-                if settingsChoice != keybindList.remove(c):
+                                            f"can't use: [{keybindList}]")
+                if settingsChoice != keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
                     h.settings[c] = settingsChoice
+                    h.sleepadv(1)
+                    return settingsFunc()
+                else:
+                    print(f"keybind {settingsChoice} already used.")
                     h.sleepadv(1)
                     return settingsFunc()
     elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
@@ -310,7 +339,7 @@ def creditsFunc():
     elif choice in ["1"]:
         # pg 1. dev
         if page == 1:
-            pass
+            print("hi! im the main dev of this game, but i dont like talking about myself very much...\n")
 
     else:
         print("did not understand.")
