@@ -338,7 +338,7 @@ def settingsFunc():
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return settingsFunc()
-    elif choice in ["quit", "x", ":"]:
+    elif choice in ["quit", "x"] or choice == ":" and exitBind:
         h.clearAll() # exits
         # collapsable
     else:
