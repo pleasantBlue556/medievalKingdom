@@ -1,29 +1,29 @@
-from utils import helpers as h
-# from utils import save as s
-import platform, distro, colorama
+import utils.helpers as h
+import utils.save as s
+from utils import config as conf
+import platform, os, distro
 
 userSys = platform.system()
 userVer = platform.release()
 if distro.name():
     userVer = distro.name()
-
 currentSave = 0
 
 # ↑↓←→
 currentCaret = 1
-caret1 = h.settings["caret"]
+caret1 = conf.settings["caret"]
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
 
 # shorter keybind var
-w = h.settings["up"]
-a = h.settings["left"]
-s = h.settings["down"]
-d = h.settings["right"]
-z = h.settings["select"]
-x = h.settings["cancel"]
-c = h.settings["misc"]
+w = conf.settings["up"]
+a = conf.settings["left"]
+s = conf.settings["down"]
+d = conf.settings["right"]
+z = conf.settings["select"]
+x = conf.settings["cancel"]
+c = conf.settings["misc"]
 keybindList = [w, a, s, d, z, x, c]
 
 # settings keywords
@@ -48,13 +48,18 @@ def fileFunc():
     choice = h.inputadv("[save] [load] [help]")
     if choice == "help":
         h.clearAll()
-        print(f"use [help], [save], [load], [#], and [{x}/quit]...\n"
+        print(f"use [help], [save], [load], [#], and [{x}]...\n"
               "to navigate and configure the save file menu.\n")
         choice = h.inputadv("[enter] to leave")
         if choice:
             return fileFunc()
-    elif choice in [x, "quit"]:
+    elif choice in [x]:
         h.clearAll()
+        # collapsable
+    elif choice in ["save", "s", "1"]:
+        print("// [saves]\n")
+        for i in range(len(os.listdir(s.saveDir))):
+            print(f"{i}: savefile0")
     else:
         print("did not understand.\n")
         h.sleepadv(1)
@@ -68,29 +73,29 @@ def settingsFunc():
         prevP = False
         page3Extra = ""
         print("## page 1 - customization >>\n"
-              f"1. text speed: {h.settings['textSpeed']}\n"
-              f"2. caret: '{h.settings['caret']}'\n")
+              f"1. text speed: {conf.settings['textSpeed']}\n"
+              f"2. caret: '{conf.settings['caret']}'\n")
     elif page == 2:
         nextP = True
         prevP = True
         page3Extra = ""
         print("<< page 2 - messages >>\n"
-              f"1. save message: {h.settings['saveMsg']}\n"
-              f"2. load message: {h.settings['loadMsg']}\n"
-              f"3. new day message: {h.settings['newDayMsg']}\n"
-              f"4. action message: {h.settings['actionMsg']}\n")
+              f"1. save message: {conf.settings['saveMsg']}\n"
+              f"2. load message: {conf.settings['loadMsg']}\n"
+              f"3. new day message: {conf.settings['newDayMsg']}\n"
+              f"4. action message: {conf.settings['actionMsg']}\n")
     elif page == 3:
         nextP = False
         prevP = True
         page3Extra = " only"
         print("<< page 3 - keybinds ##\n"
-              f"1. up: [{h.settings['up']}]\n"
-              f"2. left: [{h.settings['left']}]\n"
-              f"3. down: [{h.settings['down']}]\n"
-              f"4. right: [{h.settings['right']}]\n"
-              f"5. select: [{h.settings['select']}]\n"
-              f"6. cancel: [{h.settings['cancel']}]\n"
-              f"7. misc: [{h.settings['misc']}]\n")
+              f"1. up: [{conf.settings['up']}]\n"
+              f"2. left: [{conf.settings['left']}]\n"
+              f"3. down: [{conf.settings['down']}]\n"
+              f"4. right: [{conf.settings['right']}]\n"
+              f"5. select: [{conf.settings['select']}]\n"
+              f"6. cancel: [{conf.settings['cancel']}]\n"
+              f"7. misc: [{conf.settings['misc']}]\n")
     choice = h.inputadv(f"[<] [>] [#{page3Extra}] [help]")
     if choice == "help":
         h.clearAll()
@@ -117,8 +122,8 @@ def settingsFunc():
                         settingsChoice = '0.25'
                     elif settingsChoice == '1/2':
                         settingsChoice = '0.5'
-                    h.settings["textSpeed"] = float(settingsChoice)
-                    print(f"speed set to {h.settings["textSpeed"]}.\n")
+                    conf.settings["textSpeed"] = float(settingsChoice)
+                    print(f"speed set to {conf.settings["textSpeed"]}.\n")
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -130,8 +135,8 @@ def settingsFunc():
                 settingsChoice = h.inputadv("change the caret of every input statement - default: >\n"
                                             "examples: ->, -, o\n"
                                             "note: the newline and extra space after the caret are given automatically.\n")
-                h.settings["caret"] = settingsChoice
-                print(f"caret set to {h.settings["caret"]}.\n")
+                conf.settings["caret"] = settingsChoice
+                print(f"caret set to {conf.settings["caret"]}.\n")
                 h.sleepadv(1)
                 return settingsFunc()
         # pg 2. messages
@@ -143,12 +148,12 @@ def settingsFunc():
                     "[{saveNum}: save number] [blank: remove message]\n")
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    h.settings["saveMsg"] = settingsChoice
+                    conf.settings["saveMsg"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    h.settings["saveMsg"] = ""
+                    conf.settings["saveMsg"] = ""
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -162,12 +167,12 @@ def settingsFunc():
                     "[{saveNum}: save number] [blank: remove message]\n")
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    h.settings["loadMsg"] = settingsChoice
+                    conf.settings["loadMsg"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    h.settings["loadMsg"] = ""
+                    conf.settings["loadMsg"] = ""
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -180,12 +185,12 @@ def settingsFunc():
                                                   "[{day}: day number] [blank: remove messages]\n")
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    h.settings["newDayMsg"] = settingsChoice
+                    conf.settings["newDayMsg"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    h.settings["newDayMsg"] = ""
+                    conf.settings["newDayMsg"] = ""
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -198,13 +203,13 @@ def settingsFunc():
                                             "[blank: remove messages]\n")
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    h.settings["actionMsg"] = settingsChoice
+                    conf.settings["actionMsg"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
 
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    h.settings["newDayMsg"] = ""
+                    conf.settings["newDayMsg"] = ""
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -222,7 +227,7 @@ def settingsFunc():
                     # collapsable
                 elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
-                    h.settings["up"] = settingsChoice
+                    conf.settings["up"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -241,7 +246,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
-                    h.settings["left"] = settingsChoice
+                    conf.settings["left"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -260,7 +265,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
-                    h.settings["down"] = settingsChoice
+                    conf.settings["down"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -279,7 +284,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
-                    h.settings["right"] = settingsChoice
+                    conf.settings["right"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -298,7 +303,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
-                    h.settings["select"] = settingsChoice
+                    conf.settings["select"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -319,7 +324,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
-                    h.settings["cancel"] = settingsChoice
+                    conf.settings["cancel"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -338,7 +343,7 @@ def settingsFunc():
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
-                    h.settings["misc"] = settingsChoice
+                    conf.settings["misc"] = settingsChoice
                     h.sleepadv(1)
                     return settingsFunc()
                 elif settingsChoice in keybindList:
@@ -435,29 +440,29 @@ while True:
         elif currentCaret == 2:
             currentCaret -= 1
             caret2 = "↓"
-            caret1 = h.settings["caret"]
+            caret1 = conf.settings["caret"]
         elif currentCaret == 3:
             currentCaret -= 1
             caret3 = "↓"
-            caret2 = h.settings["caret"]
+            caret2 = conf.settings["caret"]
         elif currentCaret == 4:
             currentCaret -= 1
             caret4 = "↓"
-            caret3 = h.settings["caret"]
+            caret3 = conf.settings["caret"]
     # down
     elif choice == s:
         if currentCaret == 1:
             currentCaret += 1
             caret1 = "↑"
-            caret2 = h.settings["caret"]
+            caret2 = conf.settings["caret"]
         elif currentCaret == 2:
             currentCaret += 1
             caret2 = "↑"
-            caret3 = h.settings["caret"]
+            caret3 = conf.settings["caret"]
         elif currentCaret == 3:
             currentCaret += 1
             caret3 = "↑"
-            caret4 = h.settings["caret"]
+            caret4 = conf.settings["caret"]
         elif currentCaret == 4:
             pass
     # select

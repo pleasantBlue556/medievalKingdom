@@ -1,31 +1,11 @@
 import time, os, platform
-
-settings = {
-    # page 1
-    "textSpeed": 1,
-    "caret": ">",
-
-    # page 2
-    "actionMsg": "what is your action? ",
-    "saveMsg": "file {saveNum} saved.",
-    "loadMsg": "file {saveNum} loaded.",
-    "newDayMsg": "the day is ending...",
-
-    # page 3
-    "up": "w",
-    "left": "a",
-    "down": "s",
-    "right": "d",
-    "select": "z",
-    "cancel": "x",
-    "misc": "c"
-}
+from utils import config as c
 
 # adv = advanced
-def inputadv(msg="", caret=settings["caret"]):
+def inputadv(msg="", caret=c.settings["caret"]):
     inp = input(f"{msg}\n{caret} ").lower()
     return inp
-def sleepadv(length=1, speed=settings["textSpeed"]):
+def sleepadv(length=1, speed=c.settings["textSpeed"]):
     time.sleep(length*speed)
 def clearAll():
     if platform.system() == "Windows":
