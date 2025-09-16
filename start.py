@@ -1,6 +1,6 @@
 from utils import helpers as h
 # from utils import save as s
-import platform, distro
+import platform, distro, colorama
 
 userSys = platform.system()
 userVer = platform.release()
@@ -16,13 +16,6 @@ caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
 
-# settings keywords
-settingsKeywords = ["text", "text speed", "speed", "caret", "save", "save message", "load", "load message",
-                    "new day message", "day message", "end message", "end", "action message", "action", "act",
-                    "up", "left", "down", "right", "select", "cancel", "misc", w, a, s, d, z, x, c]
-numbersList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-exitBind = ""
-
 # shorter keybind var
 w = h.settings["up"]
 a = h.settings["left"]
@@ -33,10 +26,17 @@ x = h.settings["cancel"]
 c = h.settings["misc"]
 keybindList = [w, a, s, d, z, x, c]
 
+# settings keywords
+settingsKeywords = ["text", "text speed", "speed", "caret", "save", "save message", "load", "load message",
+                    "new day message", "day message", "end message", "end", "action message", "action", "act",
+                    "up", "left", "down", "right", "select", "cancel", "misc"]
+numbersList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+
 # settings var
 nextP = False
 prevP = False
 page = 1
+page3Extra = ""
 
 # credits var
 credPage = 1
@@ -60,38 +60,38 @@ def fileFunc():
         h.sleepadv(1)
         return fileFunc()
 def settingsFunc():
-    global nextP, prevP, page, exitBind
+    global nextP, prevP, page, page3Extra
     h.clearAll()
     print("// [settings]")
     if page == 1:
         nextP = True
         prevP = False
-        exitBind = ""
+        page3Extra = ""
         print("## page 1 - customization >>\n"
-              f"1. text speed: {h.settings["textSpeed"]}\n"
-              f"2. caret: '{h.settings["caret"]}'\n")
+              f"1. text speed: {h.settings['textSpeed']}\n"
+              f"2. caret: '{h.settings['caret']}'\n")
     elif page == 2:
         nextP = True
         prevP = True
-        exitBind = ""
+        page3Extra = ""
         print("<< page 2 - messages >>\n"
-              f"1. save message: {h.settings["saveMsg"]}\n"
-              f"2. load message: {h.settings["loadMsg"]}\n"
-              f"3. new day message: {h.settings["newDayMsg"]}\n"
-              f"4. action message: {h.settings["actionMsg"]}\n")
+              f"1. save message: {h.settings['saveMsg']}\n"
+              f"2. load message: {h.settings['loadMsg']}\n"
+              f"3. new day message: {h.settings['newDayMsg']}\n"
+              f"4. action message: {h.settings['actionMsg']}\n")
     elif page == 3:
         nextP = False
         prevP = True
-        exitBind = " [:]"
+        page3Extra = " only"
         print("<< page 3 - keybinds ##\n"
-              f"1. up: [{h.settings["up"]}]\n"
-              f"2. left: [{h.settings["left"]}]\n"
-              f"3. down: [{h.settings["down"]}]\n"
-              f"4. right: [{h.settings["right"]}]\n"
-              f"5. select: [{h.settings["select"]}]\n"
-              f"6. cancel: [{h.settings["cancel"]}]\n"
-              f"7. misc: [{h.settings["misc"]}]\n")
-    choice = h.inputadv(f"[<] [>] [#]{exitBind} [help]")
+              f"1. up: [{h.settings['up']}]\n"
+              f"2. left: [{h.settings['left']}]\n"
+              f"3. down: [{h.settings['down']}]\n"
+              f"4. right: [{h.settings['right']}]\n"
+              f"5. select: [{h.settings['select']}]\n"
+              f"6. cancel: [{h.settings['cancel']}]\n"
+              f"7. misc: [{h.settings['misc']}]\n")
+    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [help]")
     if choice == "help":
         h.clearAll()
         print("use [help], [next/>], [prev/<], [#], and [x/quit]...\n"
@@ -99,10 +99,10 @@ def settingsFunc():
         choice = h.inputadv("[enter] to leave")
         if choice:
             return settingsFunc()
-    elif choice in ["next", ">", d] and nextP is not False:
+    elif choice in ["next", ">", d] and nextP:
         page += 1
         return settingsFunc()
-    elif choice in ["prev", "previous", "<", a] and prevP is not False:
+    elif choice in ["prev", "previous", "<", a] and prevP:
         page -= 1
         return settingsFunc()
     elif choice in numbersList or choice in settingsKeywords:
@@ -349,16 +349,13 @@ def settingsFunc():
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
-    elif choice in ["next", ">", d] and not nextP and page != 3 or choice in ["prev", "previous", "<", a] and not prevP and page != 3:
+    elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return settingsFunc()
-    elif choice in ["x"] and page != 3:
+    elif choice in ["x"]:
         h.clearAll() # no return function means exit
         # collapsable
-    elif choice == ":" and page == 3:
-        page = 1
-        return settingsFunc()
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -430,7 +427,6 @@ while True:
           f"{caret2} [settings]\n"
           f"{caret3} [credits]\n"
           f"{caret4} [quit]")
-    print(userSys, userVer)
     choice = h.inputadv("")
     # up
     if choice == w:
