@@ -1,7 +1,7 @@
 import utils.helpers as h
 import utils.save as sv
 import utils.config as conf
-import platform, os, distro
+import platform, os, distro, json
 
 userSys = platform.system()
 userVer = platform.release()
@@ -54,16 +54,26 @@ def fileFunc():
     saveFileListAlt = os.listdir(sv.saveDirAlt)
     saveFileList = []
     for i in range(len(os.listdir(sv.saveDirAlt))):
-        # REALLY weird looking but just cuts the .json
+        # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
     # list prints
-    for file in range(len(os.listdir(sv.saveDirAlt))):
-        if file == currentSave:
-            currentSaveAlt = "*"
-        else:
-            currentSaveAlt = ""
-        print(f"{file}{currentSaveAlt}: {saveFileList[file]}")
+    print("looking in:", sv.saveDirAlt)
+    print("files found:", os.listdir(sv.saveDirAlt))
+    for file in enumerate(sorted(os.listdir(sv.saveDirAlt))):
+        filepath = os.path.join(sv.saveDirAlt, 'savefile' + str(file) + '.json')
+        if os.path.exists(filepath):
+            # grab data from each save
+            with open(filepath, "r") as f:
+                data = json.load(f)
+            name = data.get("name", "?")
+            gold = data.get("gold", 0)
+
+            # add mark
+            currentSaveAlt = "*" if file == currentSave else ""
+            print(f"{file}{currentSaveAlt}: {saveFileList[file]} // "
+                  f"'{name}', '{gold}'")
+    print("")
     choice = h.inputadv(f"[#] [{x}] [help]")
 
     if choice == "help":
