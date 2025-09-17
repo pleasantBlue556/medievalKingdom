@@ -500,5 +500,3 @@ while True:
     elif choice == x:
         quitFunc()
         #collapsable
-
-# todo: add saving to settings
