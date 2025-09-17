@@ -58,11 +58,9 @@ def fileFunc():
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
     # list prints
-    print("looking in:", sv.saveDirAlt)
-    print("files found:", os.listdir(sv.saveDirAlt))
-    for file in enumerate(sorted(os.listdir(sv.saveDirAlt))):
-        filepath = os.path.join(sv.saveDirAlt, 'savefile' + str(file) + '.json')
-        if os.path.exists(filepath):
+    for displayIndex, fileName in enumerate(sorted(os.listdir(sv.saveDirAlt))):
+        filepath = os.path.join(sv.saveDirAlt, fileName)
+        if fileName.endswith('.json'):
             # grab data from each save
             with open(filepath, "r") as f:
                 data = json.load(f)
@@ -70,9 +68,9 @@ def fileFunc():
             gold = data.get("gold", 0)
 
             # add mark
-            currentSaveAlt = "*" if file == currentSave else ""
-            print(f"{file}{currentSaveAlt}: {saveFileList[file]} // "
-                  f"'{name}', '{gold}'")
+            currentSaveAlt = "*" if displayIndex == currentSave else ""
+            print(f"{displayIndex}{currentSaveAlt}: {fileName} // "
+                  f"'{name}', {gold} gold")
     print("")
     choice = h.inputadv(f"[#] [{x}] [help]")
 
