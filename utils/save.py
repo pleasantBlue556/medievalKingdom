@@ -2,14 +2,34 @@ import json, os
 from utils import config as c
 
 saveDir = os.path.join("..", "savefiles")
+saveDirAlt = "savefiles"
 os.makedirs(saveDir, exist_ok=True)
 saveNum = len(os.listdir(saveDir))
 
 # default save
 defaultData = {
+    # KINGDOM
     "name": "",
-    "gold": 100,
-    "value": 5,
+    "gold": 0,
+
+
+    # CONFIG
+    # page 1
+    "textSpeed": 1,
+    "caret": ">",
+    # page 2
+    "actionMsg": "what is your action? ",
+    "saveMsg": f"file {saveNum} saved.",
+    "loadMsg": f"file {saveNum} loaded.",
+    "newDayMsg": "the day is ending...",
+    # page 3
+    "up": "w",
+    "left": "a",
+    "down": "s",
+    "right": "d",
+    "select": "z",
+    "cancel": "x",
+    "misc": "c"
 }
 
 def save(data, saveSlot=saveNum):
@@ -27,8 +47,6 @@ def load(saveSlot):
         data = json.load(f)
         print(f"{c.settings[f"loadMsg"]}")
         return data
-
-# DEBUG
 # choice = input("save/load")
 # if choice == "save":
 #     slot = int(input("slot num?"))

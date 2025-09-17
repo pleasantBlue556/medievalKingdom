@@ -1,6 +1,6 @@
 import utils.helpers as h
-import utils.save as s
-from utils import config as conf
+import utils.save as sv
+import utils.config as conf
 import platform, os, distro
 
 userSys = platform.system()
@@ -32,6 +32,9 @@ settingsKeywords = ["text", "text speed", "speed", "caret", "save", "save messag
                     "up", "left", "down", "right", "select", "cancel", "misc"]
 numbersList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
+# file var
+currentSaveAlt = ""
+
 # settings var
 nextP = False
 prevP = False
@@ -43,23 +46,39 @@ credPage = 1
 # nextP and prevP carry on with credits page
 
 def fileFunc():
+    global currentSaveAlt
     h.clearAll()
     print("// [files]")
-    choice = h.inputadv("[save] [load] [help]")
+
+    # split .json off
+    saveFileListAlt = os.listdir(sv.saveDirAlt)
+    saveFileList = []
+    for i in range(len(os.listdir(sv.saveDirAlt))):
+        # REALLY weird looking but just cuts the .json
+        saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
+
+    # list prints
+    for file in range(len(os.listdir(sv.saveDirAlt))):
+        if file == currentSave:
+            currentSaveAlt = "*"
+        else:
+            currentSaveAlt = ""
+        print(f"{file}{currentSaveAlt}: {saveFileList[file]}")
+    choice = h.inputadv(f"[#] [{x}] [help]")
+
     if choice == "help":
         h.clearAll()
-        print(f"use [help], [save], [load], [#], and [{x}]...\n"
+        print(f"use [help], [#], and [{x}]...\n"
               "to navigate and configure the save file menu.\n")
         choice = h.inputadv("[enter] to leave")
         if choice:
             return fileFunc()
-    elif choice in [x]:
+    elif choice == x:
         h.clearAll()
         # collapsable
-    elif choice in ["save", "s", "1"]:
-        print("// [saves]\n")
-        for i in range(len(os.listdir(s.saveDir))):
-            print(f"{i}: savefile0")
+    elif choice in numbersList:
+        # to work on
+        pass
     else:
         print("did not understand.\n")
         h.sleepadv(1)
@@ -96,7 +115,7 @@ def settingsFunc():
               f"5. select: [{conf.settings['select']}]\n"
               f"6. cancel: [{conf.settings['cancel']}]\n"
               f"7. misc: [{conf.settings['misc']}]\n")
-    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [help]")
+    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [help]")
     if choice == "help":
         h.clearAll()
         print("use [help], [next/>], [prev/<], [#], and [x/quit]...\n"
@@ -373,21 +392,21 @@ def creditsFunc():
         nextP = True
         prevP = False
         print("## page 1 - dev >>\n"
-              "1: pleasantBlue")
+              "1: pleasantBlue\n")
     elif credPage == 2:
         nextP = True
         prevP = True
         print("<< page 2 - contributors >>\n"
-              "...wip")
+              "...wip\n")
     elif credPage == 3:
         nextP = False
         prevP = True
         print("<< page 3 - special thanks ##\n"
-              "...wip")
-    choice = h.inputadv("[<] [>] [help]")
+              "...wip\n")
+    choice = h.inputadv(f"[<] [>] [#] [{x}] [help]")
     if choice == "help":
         h.clearAll()
-        print("use [help], [next/>], [prev/<], and [x/quit]...\n"
+        print(f"use [help], [<], [>], [#], and [x]...\n"
               "to navigate the credits menu. thanks to everyone on here!\n")
         choice = h.inputadv("[enter] to leave")
         if choice:
@@ -398,7 +417,7 @@ def creditsFunc():
     elif choice in ["prev", "previous", "<", a] and prevP is not False:
         credPage -= 1
         return creditsFunc()
-    elif choice in ["x", "quit"]:
+    elif choice in [x]:
         h.clearAll()
         # collapsable
     elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
@@ -419,13 +438,13 @@ def creditsFunc():
 def quitFunc():
     h.clearAll()
     print("// [quit]")
-    # s.save()
+    # sv.save()
     print("thanks for playing!")
     h.sleepadv(1)
     h.clearAll()
     quit()
 
-# start func
+# start!
 while True:
     h.clearAll()
     print(f"{caret1} [files]\n"
@@ -482,5 +501,4 @@ while True:
         quitFunc()
         #collapsable
 
-
-
+# todo: add saving to settings
