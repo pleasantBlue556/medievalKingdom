@@ -64,8 +64,8 @@ def fileFunc():
             # grab data from each save
             with open(filepath, "r") as f:
                 data = json.load(f)
-            name = data.get("name", "?")
-            gold = data.get("gold", 0)
+            name = data.get("kingdom", None).get("name", "")
+            gold = data.get("kingdom", None).get("gold", 0)
 
             # add mark
             currentSaveAlt = "*" if displayIndex == currentSave else ""
@@ -79,8 +79,7 @@ def fileFunc():
         print(f"use [help], [#], and [{x}]...\n"
               "to navigate and configure the save file menu.\n")
         choice = h.inputadv("[enter] to leave")
-        if choice:
-            return fileFunc()
+        if choice: fileFunc()
     elif choice == x:
         h.clearAll()
         # collapsable
@@ -123,14 +122,13 @@ def settingsFunc():
               f"5. select: [{conf.settings['select']}]\n"
               f"6. cancel: [{conf.settings['cancel']}]\n"
               f"7. misc: [{conf.settings['misc']}]\n")
-    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [help]")
+    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [help]").strip()
     if choice == "help":
         h.clearAll()
         print("use [help], [next/>], [prev/<], [#], and [x/quit]...\n"
               "to navigate and configure the settings menu.\n")
         choice = h.inputadv("[enter] to leave")
-        if choice:
-            return settingsFunc()
+        if choice: settingsFunc()
     elif choice in ["next", ">", d] and nextP:
         page += 1
         return settingsFunc()
@@ -385,7 +383,7 @@ def settingsFunc():
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return settingsFunc()
-    elif choice in ["x"]:
+    elif choice == x:
         h.clearAll() # no return function means exit
         # collapsable
     else:
@@ -417,8 +415,7 @@ def creditsFunc():
         print(f"use [help], [<], [>], [#], and [x]...\n"
               "to navigate the credits menu. thanks to everyone on here!\n")
         choice = h.inputadv("[enter] to leave")
-        if choice:
-            return creditsFunc()
+        if choice: creditsFunc()
     elif choice in ["next", ">", d] and nextP is not False:
         credPage += 1
         return creditsFunc()
@@ -437,8 +434,7 @@ def creditsFunc():
         if page == 1:
             print("hi! im the main dev of this game, but i dont like talking about myself very much...\n")
             choice = h.inputadv("[enter] to leave")
-            if choice:
-                return creditsFunc()
+            if choice: return creditsFunc()
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -462,9 +458,7 @@ while True:
     choice = h.inputadv("")
     # up
     if choice == w:
-        if currentCaret == 1:
-            pass
-        elif currentCaret == 2:
+        if currentCaret == 2:
             currentCaret -= 1
             caret2 = "↓"
             caret1 = conf.settings["caret"]
@@ -490,8 +484,6 @@ while True:
             currentCaret += 1
             caret3 = "↑"
             caret4 = conf.settings["caret"]
-        elif currentCaret == 4:
-            pass
     # select
     elif choice == z:
         if currentCaret == 1:
