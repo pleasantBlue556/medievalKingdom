@@ -45,6 +45,56 @@ page3Extra = ""
 credPage = 1
 # nextP and prevP carry on with credits page
 
+def menuFunc():
+    global caret1, caret2, caret3, caret4, currentCaret
+    h.clearAll()
+    print(f"{caret1} [files]\n"
+          f"{caret2} [settings]\n"
+          f"{caret3} [credits]\n"
+          f"{caret4} [quit]")
+    choice = h.inputadv("")
+    # up
+    if choice == w:
+        if currentCaret == 2:
+            currentCaret -= 1
+            caret2 = "↓"
+            caret1 = conf.settings["caret"]
+        elif currentCaret == 3:
+            currentCaret -= 1
+            caret3 = "↓"
+            caret2 = conf.settings["caret"]
+        elif currentCaret == 4:
+            currentCaret -= 1
+            caret4 = "↓"
+            caret3 = conf.settings["caret"]
+    # down
+    elif choice == s:
+        if currentCaret == 1:
+            currentCaret += 1
+            caret1 = "↑"
+            caret2 = conf.settings["caret"]
+        elif currentCaret == 2:
+            currentCaret += 1
+            caret2 = "↑"
+            caret3 = conf.settings["caret"]
+        elif currentCaret == 3:
+            currentCaret += 1
+            caret3 = "↑"
+            caret4 = conf.settings["caret"]
+    # select
+    elif choice == z:
+        if currentCaret == 1:
+            return 'fileFunc'
+        elif currentCaret == 2:
+            return 'settingsFunc'
+        elif currentCaret == 3:
+            return 'creditsFunc'
+        elif currentCaret == 4:
+            return 'quitFunc'
+    # quit
+    elif choice == x:
+        quitFunc()
+        # collapsable
 def fileFunc():
     global currentSaveAlt
     h.clearAll()
@@ -75,14 +125,12 @@ def fileFunc():
     choice = h.inputadv(f"[#] [{x}] [help]")
 
     if choice == "help":
-        h.clearAll()
         print(f"use [help], [#], and [{x}]...\n"
               "to navigate and configure the save file menu.\n")
-        choice = h.inputadv("[enter] to leave")
-        if choice: fileFunc()
+        h.inputadv("[enter] to leave")
     elif choice == x:
         h.clearAll()
-        # collapsable
+        return
     elif choice in numbersList:
         # to work on
         pass
@@ -90,6 +138,7 @@ def fileFunc():
         print("did not understand.\n")
         h.sleepadv(1)
         return fileFunc()
+    return fileFunc()
 def settingsFunc():
     global nextP, prevP, page, page3Extra
     h.clearAll()
@@ -124,11 +173,9 @@ def settingsFunc():
               f"7. misc: [{conf.settings['misc']}]\n")
     choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [help]").strip()
     if choice == "help":
-        h.clearAll()
-        print("use [help], [next/>], [prev/<], [#], and [x/quit]...\n"
+        print(f"use [help], [<], [>], [#], and [{x}]...\n"
               "to navigate and configure the settings menu.\n")
-        choice = h.inputadv("[enter] to leave")
-        if choice: settingsFunc()
+        h.inputadv("[enter] to leave")
     elif choice in ["next", ">", d] and nextP:
         page += 1
         return settingsFunc()
@@ -379,17 +426,19 @@ def settingsFunc():
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
+
     elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return settingsFunc()
     elif choice == x:
-        h.clearAll() # no return function means exit
-        # collapsable
+        h.clearAll()
+        return
     else:
         print("did not understand.")
         h.sleepadv(1)
         return settingsFunc()
+    return settingsFunc()
 def creditsFunc():
     global credPage, nextP, prevP
     h.clearAll()
@@ -411,11 +460,9 @@ def creditsFunc():
               "...wip\n")
     choice = h.inputadv(f"[<] [>] [#] [{x}] [help]")
     if choice == "help":
-        h.clearAll()
         print(f"use [help], [<], [>], [#], and [x]...\n"
               "to navigate the credits menu. thanks to everyone on here!\n")
-        choice = h.inputadv("[enter] to leave")
-        if choice: creditsFunc()
+        h.inputadv("[enter] to leave")
     elif choice in ["next", ">", d] and nextP is not False:
         credPage += 1
         return creditsFunc()
@@ -424,7 +471,7 @@ def creditsFunc():
         return creditsFunc()
     elif choice in [x]:
         h.clearAll()
-        # collapsable
+        return
     elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
@@ -439,6 +486,7 @@ def creditsFunc():
         print("did not understand.")
         h.sleepadv(1)
         return creditsFunc()
+    return creditsFunc()
 def quitFunc():
     h.clearAll()
     print("// [quit]")
@@ -450,53 +498,14 @@ def quitFunc():
 
 # start!
 while True:
-    h.clearAll()
-    print(f"{caret1} [files]\n"
-          f"{caret2} [settings]\n"
-          f"{caret3} [credits]\n"
-          f"{caret4} [quit]")
-    choice = h.inputadv("")
-    # up
-    if choice == w:
-        if currentCaret == 2:
-            currentCaret -= 1
-            caret2 = "↓"
-            caret1 = conf.settings["caret"]
-        elif currentCaret == 3:
-            currentCaret -= 1
-            caret3 = "↓"
-            caret2 = conf.settings["caret"]
-        elif currentCaret == 4:
-            currentCaret -= 1
-            caret4 = "↓"
-            caret3 = conf.settings["caret"]
-    # down
-    elif choice == s:
-        if currentCaret == 1:
-            currentCaret += 1
-            caret1 = "↑"
-            caret2 = conf.settings["caret"]
-        elif currentCaret == 2:
-            currentCaret += 1
-            caret2 = "↑"
-            caret3 = conf.settings["caret"]
-        elif currentCaret == 3:
-            currentCaret += 1
-            caret3 = "↑"
-            caret4 = conf.settings["caret"]
-    # select
-    elif choice == z:
-        if currentCaret == 1:
-            fileFunc()
-        elif currentCaret == 2:
-            page = 1
-            settingsFunc()
-        elif currentCaret == 3:
-            credPage = 1
-            creditsFunc()
-        elif currentCaret == 4:
-            quitFunc()
-    # quit
-    elif choice == x:
+    decision = menuFunc()
+    if decision == 'fileFunc':
+        fileFunc()
+    elif decision == 'settingsFunc':
+        page = 1
+        settingsFunc()
+    elif decision == 'creditsFunc':
+        credPage = 1
+        creditsFunc()
+    elif decision == 'quitFunc':
         quitFunc()
-        #collapsable
