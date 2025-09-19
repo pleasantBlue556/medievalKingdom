@@ -1,12 +1,16 @@
 from utils import config as conf
 from utils import save as sv
 from utils import helpers as h
-import platform, os, distro, json, colorama
+import platform, os, json
+from colorama import init as coloramaInit, Fore as cf, Style as cs
 
 userSys = platform.system()
 userVer = platform.release()
-if distro.name():
-    userVer = distro.name()
+# if distro.name():
+#     userVer = distro.name()
+
+if userSys == "Windows":
+    coloramaInit(autoreset=True)
 
 # ↑↓←→
 currentCaret = 1
@@ -87,7 +91,9 @@ def fileFunc():
     except ValueError:
         choiceInt = False
     if choice == "help":
-        print(f"\n")
+        print(f"[{z}]: continue (*)\n"
+              f"[{x}]: exit\n"
+              f"[{c}]: new file\n")
         h.inputadv("[enter] to leave")
     elif choice == x:
         h.clearAll()
@@ -103,8 +109,11 @@ def fileFunc():
         loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
         breakOut = True
         h.sleepadv(1)
+        h.clearAll()
+        return
     elif choice == c:
         sv.save(sv.defaultData, sv.saveNum+1)
+        return
     else:
         print("did not understand.\n")
         h.sleepadv(1)
@@ -149,8 +158,8 @@ def settingsFunc():
     except ValueError:
         choiceInt = False
     if choice == "help":
-        print(f"[<]: previous page (also use {a}\n"
-              f"[>]: next page (also use {d}\n"
+        print(f"[<]: previous page (also use {a})\n"
+              f"[>]: next page (also use {d})\n"
               f"[{x}]: exit\n"
               f"[{c}]: save changes\n")
         h.inputadv("[enter] to leave")
@@ -445,8 +454,10 @@ def creditsFunc():
     except ValueError:
         choiceInt = False
     if choice == "help":
-        print(f"use [help], [<], [>], [#], and [x]...\n"
-              "to navigate the credits menu. thanks to everyone on here!\n")
+        print(f"[<]: previous page (also use {a})\n"
+              f"[>]: next page (also use {d})\n"
+              f"[{x}]: exit\n"
+              f"thanks to everyone on here! :)\n")
         h.inputadv("[enter] to leave")
     elif choice in ["next", ">", d] and nextP is not False:
         credPage += 1
@@ -494,6 +505,7 @@ def gameLoop(actions=actionCount):
 # start!
 while True:
     h.clearAll()
+    print(cf.YELLOW + cs.BRIGHT + "// [medievalKingdom]")
     print(f"{caret1} [files]\n"
           f"{caret2} [settings]\n"
           f"{caret3} [credits]\n"
@@ -544,4 +556,3 @@ while True:
     if breakOut:
         gameLoop()
         break
-

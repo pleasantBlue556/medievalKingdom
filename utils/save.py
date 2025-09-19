@@ -31,7 +31,8 @@ defaultData = {
         "misc": "c"
     },
     "data": {
-        "version": 1.0
+        "version": 1.0,
+        "timesPlayed": 0,
     },
 
     "i see you smuggling in here...": True,
