@@ -1,13 +1,12 @@
-import utils.helpers as h
-import utils.save as sv
-import utils.config as conf
+from utils import config as conf
+from utils import save as sv
+from utils import helpers as h
 import platform, os, distro, json
 
 userSys = platform.system()
 userVer = platform.release()
 if distro.name():
     userVer = distro.name()
-currentSave = 0
 
 # ↑↓←→
 currentCaret = 1
@@ -15,6 +14,11 @@ caret1 = conf.settings["caret"]
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
+
+# file
+loadDataAlt = ""
+currentSave = 0
+breakOut = False
 
 # shorter keybind var
 w = conf.settings["up"]
@@ -30,7 +34,6 @@ keybindList = [w, a, s, d, z, x, c]
 settingsKeywords = ["text", "text speed", "speed", "caret", "save", "save message", "load", "load message",
                     "new day message", "day message", "end message", "end", "action message", "action", "act",
                     "up", "left", "down", "right", "select", "cancel", "misc"]
-numbersList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
 # file var
 currentSaveAlt = ""
@@ -45,58 +48,8 @@ page3Extra = ""
 credPage = 1
 # nextP and prevP carry on with credits page
 
-def menuFunc():
-    global caret1, caret2, caret3, caret4, currentCaret
-    h.clearAll()
-    print(f"{caret1} [files]\n"
-          f"{caret2} [settings]\n"
-          f"{caret3} [credits]\n"
-          f"{caret4} [quit]")
-    choice = h.inputadv("")
-    # up
-    if choice == w:
-        if currentCaret == 2:
-            currentCaret -= 1
-            caret2 = "↓"
-            caret1 = conf.settings["caret"]
-        elif currentCaret == 3:
-            currentCaret -= 1
-            caret3 = "↓"
-            caret2 = conf.settings["caret"]
-        elif currentCaret == 4:
-            currentCaret -= 1
-            caret4 = "↓"
-            caret3 = conf.settings["caret"]
-    # down
-    elif choice == s:
-        if currentCaret == 1:
-            currentCaret += 1
-            caret1 = "↑"
-            caret2 = conf.settings["caret"]
-        elif currentCaret == 2:
-            currentCaret += 1
-            caret2 = "↑"
-            caret3 = conf.settings["caret"]
-        elif currentCaret == 3:
-            currentCaret += 1
-            caret3 = "↑"
-            caret4 = conf.settings["caret"]
-    # select
-    elif choice == z:
-        if currentCaret == 1:
-            return 'fileFunc'
-        elif currentCaret == 2:
-            return 'settingsFunc'
-        elif currentCaret == 3:
-            return 'creditsFunc'
-        elif currentCaret == 4:
-            return 'quitFunc'
-    # quit
-    elif choice == x:
-        quitFunc()
-        # collapsable
 def fileFunc():
-    global currentSaveAlt
+    global currentSaveAlt, currentSave, loadDataAlt, breakOut
     h.clearAll()
     print("// [files]")
 
@@ -109,31 +62,45 @@ def fileFunc():
 
     # list prints
     for displayIndex, fileName in enumerate(sorted(os.listdir(sv.saveDirAlt))):
-        filepath = os.path.join(sv.saveDirAlt, fileName)
+        filePath = os.path.join(sv.saveDirAlt, fileName)
         if fileName.endswith('.json'):
             # grab data from each save
-            with open(filepath, "r") as f:
+            with open(filePath, "r") as f:
                 data = json.load(f)
             name = data.get("kingdom", None).get("name", "")
             gold = data.get("kingdom", None).get("gold", 0)
 
             # add mark
-            currentSaveAlt = "*" if displayIndex == currentSave else ""
+            if displayIndex == currentSave: currentSaveAlt = "*"
+            else: currentSaveAlt = ""
             print(f"{displayIndex}{currentSaveAlt}: {fileName} // "
                   f"'{name}', {gold} gold")
-    print("")
-    choice = h.inputadv(f"[#] [{x}] [help]")
+        elif len(os.listdir(sv.saveDirAlt)) == 0:
+            print("use 'c' to start a new file.")
 
+    print("")
+    choice = h.inputadv(f"[#] [{z}] [{x}] [{c}] [help]")
+    try:
+        int(choice)
+        choiceInt = True
+    except ValueError:
+        choiceInt = False
     if choice == "help":
-        print(f"use [help], [#], and [{x}]...\n"
+        print(f"use [help], [#], [{z}], [{x}], and [{c}]...\n"
               "to navigate and configure the save file menu.\n")
         h.inputadv("[enter] to leave")
     elif choice == x:
         h.clearAll()
         return
-    elif choice in numbersList:
-        # to work on
-        pass
+    elif choiceInt:
+        currentSave = choice
+        loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
+        breakOut = True
+        h.sleepadv(1)
+    elif choice == z:
+        loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
+        breakOut = True
+        h.sleepadv(1)
     else:
         print("did not understand.\n")
         h.sleepadv(1)
@@ -171,10 +138,17 @@ def settingsFunc():
               f"5. select: [{conf.settings['select']}]\n"
               f"6. cancel: [{conf.settings['cancel']}]\n"
               f"7. misc: [{conf.settings['misc']}]\n")
-    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [help]").strip()
+    choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{c}] [help]").strip()
+    try:
+        int(choice)
+        choiceInt = True
+    except ValueError:
+        choiceInt = False
     if choice == "help":
-        print(f"use [help], [<], [>], [#], and [{x}]...\n"
-              "to navigate and configure the settings menu.\n")
+        print(f"[<]: previous page (also use {a}\n"
+              f"[>]: next page (also use {d}\n"
+              f"[{x}]: exit\n"
+              f"[{c}]: save changes\n")
         h.inputadv("[enter] to leave")
     elif choice in ["next", ">", d] and nextP:
         page += 1
@@ -182,7 +156,7 @@ def settingsFunc():
     elif choice in ["prev", "previous", "<", a] and prevP:
         page -= 1
         return settingsFunc()
-    elif choice in numbersList or choice in settingsKeywords:
+    elif choiceInt or choice in settingsKeywords:
         # pg 1. customization
         if page == 1:
             # text spd
@@ -426,7 +400,6 @@ def settingsFunc():
                     print("did not understand.")
                     h.sleepadv(1)
                     return settingsFunc()
-
     elif choice in ["next", ">", d] and not nextP or choice in ["prev", "previous", "<", a] and not prevP:
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
@@ -434,6 +407,9 @@ def settingsFunc():
     elif choice == x:
         h.clearAll()
         return
+    elif choice == c:
+        sv.save(conf.settings, currentSave)
+        h.sleepadv(1)
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -459,6 +435,11 @@ def creditsFunc():
         print("<< page 3 - special thanks ##\n"
               "...wip\n")
     choice = h.inputadv(f"[<] [>] [#] [{x}] [help]")
+    try:
+        int(choice)
+        choiceInt = True
+    except ValueError:
+        choiceInt = False
     if choice == "help":
         print(f"use [help], [<], [>], [#], and [x]...\n"
               "to navigate the credits menu. thanks to everyone on here!\n")
@@ -476,12 +457,11 @@ def creditsFunc():
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
         return creditsFunc()
-    elif choice in numbersList:
+    elif choiceInt:
         # pg 1. dev
         if page == 1:
             print("hi! im the main dev of this game, but i dont like talking about myself very much...\n")
-            choice = h.inputadv("[enter] to leave")
-            if choice: return creditsFunc()
+            h.inputadv("[enter] to leave")
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -496,16 +476,68 @@ def quitFunc():
     h.clearAll()
     quit()
 
+loadData = loadDataAlt
+actionCount = 3
+def gameLoop(actions=actionCount):
+    for i in range(actions):
+        print(f"you have {actions} actions.")
+        command = h.inputadv(f"{conf.settings['actionMsg']}")
+        if command == "help":
+            pass
+        h.clearAll()
+        actions -= 1
+
 # start!
 while True:
-    decision = menuFunc()
-    if decision == 'fileFunc':
-        fileFunc()
-    elif decision == 'settingsFunc':
-        page = 1
-        settingsFunc()
-    elif decision == 'creditsFunc':
-        credPage = 1
-        creditsFunc()
-    elif decision == 'quitFunc':
+    h.clearAll()
+    print(f"{caret1} [files]\n"
+          f"{caret2} [settings]\n"
+          f"{caret3} [credits]\n"
+          f"{caret4} [quit]")
+    choice = h.inputadv("")
+    # up
+    if choice == w:
+        if currentCaret == 2:
+            currentCaret -= 1
+            caret2 = "↓"
+            caret1 = conf.settings["caret"]
+        elif currentCaret == 3:
+            currentCaret -= 1
+            caret3 = "↓"
+            caret2 = conf.settings["caret"]
+        elif currentCaret == 4:
+            currentCaret -= 1
+            caret4 = "↓"
+            caret3 = conf.settings["caret"]
+    # down
+    elif choice == s:
+        if currentCaret == 1:
+            currentCaret += 1
+            caret1 = "↑"
+            caret2 = conf.settings["caret"]
+        elif currentCaret == 2:
+            currentCaret += 1
+            caret2 = "↑"
+            caret3 = conf.settings["caret"]
+        elif currentCaret == 3:
+            currentCaret += 1
+            caret3 = "↑"
+            caret4 = conf.settings["caret"]
+    # select
+    elif choice == z:
+        if currentCaret == 1:
+            fileFunc()
+        elif currentCaret == 2:
+            settingsFunc()
+        elif currentCaret == 3:
+            creditsFunc()
+        elif currentCaret == 4:
+            quitFunc()
+    # quit
+    elif choice == x:
         quitFunc()
+        # collapsable
+    if breakOut:
+        gameLoop()
+        break
+

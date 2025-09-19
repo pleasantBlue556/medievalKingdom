@@ -5,16 +5,15 @@ saveDir = os.path.join("..", "savefiles")
 saveDirAlt = "savefiles"
 os.makedirs(saveDir, exist_ok=True)
 saveNum = len(os.listdir(saveDir))
+currentSave: 0
 
 # default save
 defaultData = {
-    "i see you smuggling in here...": True,
-    
+
     "kingdom": {
         "name": "",
         "gold": 0,
     },
-
     "config": {
         "textSpeed": 1,
         "caret": ">",
@@ -31,8 +30,12 @@ defaultData = {
         "select": "z",
         "cancel": "x",
         "misc": "c"
-    }
+    },
+    "data": {
+        "version": 1.0
+    },
 
+    "i see you smuggling in here...": True,
 }
 
 def save(data, saveSlot=saveNum):
@@ -41,16 +44,16 @@ def save(data, saveSlot=saveNum):
         json.dump(data, f, indent=4)
     print(f"{c.settings[f"saveMsg"]}")
 
-def load(saveSlot):
-    filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
+def load(saveDirectory, saveSlot):
+    filePath = os.path.join(saveDirectory, f"savefile{saveSlot}.json")
     if not os.path.exists(filePath):
-        print(f"save not found, check {filePath}")
+        print(f"save not found, check {filePath}.")
         return None
     with open(filePath, "r") as f:
         data = json.load(f)
         print(f"{c.settings[f"loadMsg"]}")
         return data
-#
+
 # choice = input("save/load")
 # if choice == "save":
 #     slot = int(input("slot num?"))
@@ -58,7 +61,7 @@ def load(saveSlot):
 #
 # elif choice == "load":
 #     choice = int(input("slot num?"))
-#     saveData = load(choice)
+#     saveData = load(saveDir, choice)
 #     print(saveData)
 
-# im so snart guys
+# im so snart
