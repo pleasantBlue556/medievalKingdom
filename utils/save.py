@@ -9,7 +9,6 @@ currentSave: 0
 
 # default save
 defaultData = {
-
     "kingdom": {
         "name": "",
         "gold": 0,
