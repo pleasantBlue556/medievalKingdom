@@ -28,21 +28,22 @@ defaultData = {
         "right": "d",
         "select": "z",
         "cancel": "x",
-        "misc": "c"
+        "misc": "c",
     },
     "data": {
         "version": 1.0,
         "timesPlayed": 0,
     },
-
     "i see you smuggling in here...": True,
 }
+
 
 def save(data, saveSlot=saveNum):
     filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
     with open(filePath, "w") as f:
         json.dump(data, f, indent=4)
     print(f"{c.settings[f"saveMsg"]}")
+
 
 def load(saveDirectory, saveSlot):
     filePath = os.path.join(saveDirectory, f"savefile{saveSlot}.json")
@@ -53,6 +54,7 @@ def load(saveDirectory, saveSlot):
         data = json.load(f)
         print(f"{c.settings[f"loadMsg"]}")
         return data
+
 
 # choice = input("save/load")
 # if choice == "save":
