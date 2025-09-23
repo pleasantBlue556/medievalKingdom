@@ -1,6 +1,10 @@
 import time, os, platform
 from utils import config as c
+from colorama import init as coloramaInit, Fore as cf, Style as cs
 
+userSys = platform.system()
+if userSys == "Windows":
+    coloramaInit(autoreset=True)
 
 # adv = advanced
 def inputadv(msg="", caret=c.settings["caret"]):
@@ -19,7 +23,7 @@ def clearAll():
         os.system("clear")
 
 
-def huh(msg, sleepTime, returnArea):
+def huh(msg="dnu", sleepTime=1, returnArea=False):
     if msg == "min":
         print("please enter a higher number.")
     elif msg == "max":
@@ -29,4 +33,16 @@ def huh(msg, sleepTime, returnArea):
     else:
         print(msg)
     sleepadv(sleepTime)
-    return returnArea
+    if returnArea:
+        return returnArea
+    elif not returnArea:
+        return
+
+def highlight(rule, text='', color=cf.BLUE) -> str:
+    endResult = ""
+    for letter in text:
+        if rule(letter):
+            endResult += color + letter + cs.RESET_ALL
+        else:
+            endResult += letter
+    return endResult

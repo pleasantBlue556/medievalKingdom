@@ -1,8 +1,10 @@
 from utils import config as conf
 from utils import save as sv
 from utils import helpers as h
-import platform, os, json, curses as cr, pylint
-from colorama import init as coloramaInit, Fore as cf, Style as cs
+import platform, os, json
+from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
+
+# import pylint, curses as cr
 
 userSys = platform.system()
 userVer = platform.release()
@@ -21,9 +23,13 @@ caret3 = "↓"
 caret4 = "↓"
 
 # file
+saveFileList = []
+saveFileListAlt = []
+currentSaveAlt = ""
 loadDataAlt = ""
 currentSave = 0
 breakOut = False
+saveDirList = os.listdir(sv.saveDirAlt)
 
 # shorter keybind var
 w = conf.settings["up"]
@@ -61,9 +67,6 @@ settingsKeywords = [
     "misc",
 ]
 
-# file var
-currentSaveAlt = ""
-
 # settings var
 nextP = False
 prevP = False
@@ -79,7 +82,7 @@ def fileFunc():
     """runs whenever file is picked"""
     global currentSaveAlt, currentSave, loadDataAlt, breakOut
     h.clearAll()
-    print("// [files]")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cf.RESET}{cb.RESET}")
 
     # split .json off
     saveFileListAlt = os.listdir(sv.saveDirAlt)
@@ -126,6 +129,7 @@ def fileFunc():
         return
     elif choiceInt:
         currentSave = choice
+        print(currentSave)
         loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
         breakOut = True
         h.sleepadv(1)
@@ -138,7 +142,10 @@ def fileFunc():
         h.clearAll()
         return
     elif choice == c:
-        sv.save(sv.defaultData, sv.saveNum + 1)
+        if sv.saveNum == 0:
+            sv.save(sv.defaultData, sv.saveNum)
+        else:
+            sv.save(sv.defaultData, sv.saveNum + 1)
         return
     else:
         print("did not understand.\n")
@@ -149,9 +156,9 @@ def fileFunc():
 
 def settingsFunc():
     """recursive settings function, calls data from config and saves(?)"""
-    global nextP, prevP, page, page3Extra
+    global nextP, prevP, page, page3Extra, saveFileList, saveFileListAlt
     h.clearAll()
-    print("// [settings]")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cf.RESET}{cb.RESET}")
     if page == 1:
         nextP = True
         prevP = False
@@ -196,6 +203,8 @@ def settingsFunc():
         print(
             f"[<]: previous page (also use {a})\n"
             f"[>]: next page (also use {d})\n"
+            f"[<<]: first page\n"
+            f"[>>]: last page\n"
             f"[{x}]: exit\n"
             f"[{c}]: save changes\n"
         )
@@ -205,6 +214,12 @@ def settingsFunc():
         return settingsFunc()
     elif choice in ["prev", "previous", "<", a] and prevP:
         page -= 1
+        return settingsFunc()
+    elif choice == "<<":
+        page = 1
+        return settingsFunc()
+    elif choice == ">>":
+        page = 3
         return settingsFunc()
     elif choiceInt or choice in settingsKeywords:
         # pg 1. customization
@@ -487,8 +502,33 @@ def settingsFunc():
         h.clearAll()
         return
     elif choice == c:
-        sv.save(conf.settings, currentSave)
-        h.sleepadv(1)
+        saveFileListAlt = os.listdir(sv.saveDirAlt)
+        saveFileList = []
+        for i in range(len(os.listdir(sv.saveDirAlt))):
+            # REALLY weird looking but just cuts the .json off
+            saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
+        # list prints
+        for displayIndex, fileName in enumerate(sorted(os.listdir(sv.saveDirAlt))):
+            filePath = os.path.join(sv.saveDirAlt, fileName)
+            if fileName.endswith(".json"):
+                # grab data from each save
+                with open(filePath, "r") as f:
+                    data = json.load(f)
+                name = data.get("kingdom", None).get("name", "")
+                gold = data.get("kingdom", None).get("gold", 0)
+
+                # add mark
+                if displayIndex == currentSave:
+                    currentSaveAlt = "*"
+                else:
+                    currentSaveAlt = ""
+
+                fileNameAlt = h.highlight('digit', fileName, cf.BLUE)
+                print(
+                    f"{fileNameAlt}{currentSaveAlt} // "
+                    f"'{name}', {gold} gold"
+                )
+        choice = h.inputadv("which would you like to save?")
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -499,7 +539,7 @@ def settingsFunc():
 def creditsFunc():
     global credPage, nextP, prevP
     h.clearAll()
-    print("// [credits]")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [credits]{cf.RESET}{cb.RESET}")
     if credPage == 1:
         nextP = True
         prevP = False
@@ -522,10 +562,18 @@ def creditsFunc():
         print(
             f"[<]: previous page (also use {a})\n"
             f"[>]: next page (also use {d})\n"
+            f"[<<] first page\n"
+            f"[>>] last page\n"
             f"[{x}]: exit\n"
             f"thanks to everyone on here! :)\n"
         )
         h.inputadv("[enter] to leave")
+    elif choice == "<<":
+        credPage = 1
+        return creditsFunc()
+    elif choice == ">>":
+        credPage = 3
+        return creditsFunc()
     elif choice in ["next", ">", d] and nextP is not False:
         credPage += 1
         return creditsFunc()
@@ -560,7 +608,7 @@ def creditsFunc():
 
 def quitFunc():
     h.clearAll()
-    print("// [quit]")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [quit]{cf.RESET}{cb.RESET}")
     # sv.save()
     print("thanks for playing!")
     h.sleepadv(1)
@@ -585,9 +633,9 @@ def gameLoop(actions=actionCount):
 # start!
 while True:
     h.clearAll()
-    print(f"{cs.BRIGHT}{cf.WHITE}// [medievalKingdom]")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [medievalKingdom]{cf.RESET}{cb.RESET}")
     print(
-        f"{cs.DIM}{caret1} [files]\n"
+        f"{caret1} [files]\n"
         f"{caret2} [settings]\n"
         f"{caret3} [credits]\n"
         f"{caret4} [quit]"

@@ -33,27 +33,44 @@ defaultData = {
     "data": {
         "version": 1.0,
         "timesPlayed": 0,
+        "stop smuggling!!!": True,
     },
-    "i see you smuggling in here...": True,
 }
 
 
-def save(data, saveSlot=saveNum):
+def save(saveData, saveSlot=saveNum, msg=c.settings["saveMsg"]):
     filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
     with open(filePath, "w") as f:
-        json.dump(data, f, indent=4)
-    print(f"{c.settings[f"saveMsg"]}")
+        json.dump(saveData, f, indent=4)
+    if msg:
+        print(msg)
 
 
-def load(saveDirectory, saveSlot):
+def saveDict(newDict, newData, saveData):
+    saveData[newDict].update(newData)
+    save(saveData)
+
+
+def load(saveDirectory, saveSlot, msg=c.settings["loadMsg"]):
     filePath = os.path.join(saveDirectory, f"savefile{saveSlot}.json")
-    if not os.path.exists(filePath):
+    if os.path.exists(filePath):
+        with open(filePath, "r") as f:
+            loadData = json.load(f)
+            if msg:
+                print(msg)
+    else:
         print(f"save not found, check {filePath}.")
-        return None
-    with open(filePath, "r") as f:
-        data = json.load(f)
-        print(f"{c.settings[f"loadMsg"]}")
-        return data
+        loadData = defaultData.copy()
+
+    merge(loadData, defaultData)
+    return loadData
+
+def merge(target, data):
+    for key, value in data.items():
+        if key not in target:
+            target[key] = value
+        elif isinstance(value, dict):
+            merge(target[key], value)
 
 
 # choice = input("save/load")
