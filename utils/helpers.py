@@ -6,6 +6,7 @@ userSys = platform.system()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
 
+
 # adv = advanced
 def inputadv(msg="", caret=c.settings["caret"]):
     inp = input(f"{msg}\n{caret} ").lower()
@@ -38,11 +39,29 @@ def huh(msg="dnu", sleepTime=1, returnArea=False):
     elif not returnArea:
         return
 
-def highlight(rule, text='', color=cf.BLUE) -> str:
+
+# looks chaotic
+# def printadv(text):
+#     textAlt = ''
+#     for letter in text:
+#         textAlt += letter
+#         print(textAlt)
+#         sleepadv(0.02)
+#         clearAll()
+
+
+def highlight(mode="digit", text="", color=cf.BLUE) -> str:
     endResult = ""
-    for letter in text:
-        if rule(letter):
-            endResult += color + letter + cs.RESET_ALL
-        else:
-            endResult += letter
-    return endResult
+    if mode == "digit":
+        for letter in text:
+            if letter.isdigit():
+                endResult += color + letter + cs.RESET_ALL
+            else:
+                endResult += letter
+        return endResult
+
+
+# debug
+# for i in range(10):
+#     print(highlight('digit', f'savefile{i}'))
+# sleepadv(2)

@@ -43,12 +43,13 @@ def save(saveData, saveSlot=saveNum, msg=c.settings["saveMsg"]):
     with open(filePath, "w") as f:
         json.dump(saveData, f, indent=4)
     if msg:
-        print(msg)
+        print(f"{msg}")
 
 
-def saveDict(newDict, newData, saveData):
+def saveDict(newDict, newData, saveData, msg=c.settings["loadMsg"]):
     saveData[newDict].update(newData)
-    save(saveData)
+    save(saveData, msg=False)
+    print(f"saved {newDict}.")
 
 
 def load(saveDirectory, saveSlot, msg=c.settings["loadMsg"]):
@@ -64,6 +65,7 @@ def load(saveDirectory, saveSlot, msg=c.settings["loadMsg"]):
 
     merge(loadData, defaultData)
     return loadData
+
 
 def merge(target, data):
     for key, value in data.items():

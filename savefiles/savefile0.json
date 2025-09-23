@@ -1,8 +1,8 @@
 {
     "i see you smuggling in here...": true,
     "kingdom": {
-        "name": "",
-        "gold": 0
+        "name": "guy",
+        "gold": 12
     },
     "config": {
         "textSpeed": 1,

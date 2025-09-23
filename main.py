@@ -1,10 +1,10 @@
+import json, os, platform, sys
+from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 from utils import config as conf
 from utils import save as sv
 from utils import helpers as h
-import platform, os, json
-from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 
-# import pylint, curses as cr
+# import curses as cr
 
 userSys = platform.system()
 userVer = platform.release()
@@ -82,7 +82,7 @@ def fileFunc():
     """runs whenever file is picked"""
     global currentSaveAlt, currentSave, loadDataAlt, breakOut
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cf.RESET}{cb.RESET}")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
     # split .json off
     saveFileListAlt = os.listdir(sv.saveDirAlt)
@@ -158,7 +158,7 @@ def settingsFunc():
     """recursive settings function, calls data from config and saves(?)"""
     global nextP, prevP, page, page3Extra, saveFileList, saveFileListAlt
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cf.RESET}{cb.RESET}")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
         nextP = True
         prevP = False
@@ -236,7 +236,7 @@ def settingsFunc():
                     elif settingsChoice == "1/2":
                         settingsChoice = "0.5"
                     conf.settings["textSpeed"] = float(settingsChoice)
-                    print(f"speed set to {conf.settings["textSpeed"]}.\n")
+                    print(f"speed set to {conf.settings['textSpeed']}.\n")
                     h.sleepadv(1)
                     return settingsFunc()
                 else:
@@ -523,12 +523,21 @@ def settingsFunc():
                 else:
                     currentSaveAlt = ""
 
-                fileNameAlt = h.highlight('digit', fileName, cf.BLUE)
-                print(
-                    f"{fileNameAlt}{currentSaveAlt} // "
-                    f"'{name}', {gold} gold"
-                )
-        choice = h.inputadv("which would you like to save?")
+                fileNameAlt = h.highlight("digit", fileName, cf.LIGHTBLUE_EX)
+                print(f"{fileNameAlt}{currentSaveAlt} // " f"'{name}', {gold} gold")
+        choice = h.inputadv("which would you like to save to?")
+        try:
+            int(choice)
+            choiceInt = True
+        except ValueError:
+            choiceInt = False
+        if choice == x:
+            return settingsFunc()
+        elif choiceInt:
+            sv.saveDict(
+                "config", conf.settings, sv.load(sv.saveDirAlt, choice, msg=False)
+            )
+            h.sleepadv(1)
     else:
         print("did not understand.")
         h.sleepadv(1)
@@ -539,7 +548,7 @@ def settingsFunc():
 def creditsFunc():
     global credPage, nextP, prevP
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [credits]{cf.RESET}{cb.RESET}")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [credits]{cs.RESET_ALL}")
     if credPage == 1:
         nextP = True
         prevP = False
@@ -608,12 +617,12 @@ def creditsFunc():
 
 def quitFunc():
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [quit]{cf.RESET}{cb.RESET}")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [quit]{cs.RESET_ALL}")
     # sv.save()
     print("thanks for playing!")
     h.sleepadv(1)
     h.clearAll()
-    quit()
+    sys.exit()
 
 
 loadData = loadDataAlt
@@ -621,7 +630,7 @@ actionCount = 3
 
 
 def gameLoop(actions=actionCount):
-    for i in range(actions):
+    for _ in range(actions):
         print(f"you have {actions} actions.")
         command = h.inputadv(f"{conf.settings['actionMsg']}")
         if command == "help":
@@ -633,7 +642,7 @@ def gameLoop(actions=actionCount):
 # start!
 while True:
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [medievalKingdom]{cf.RESET}{cb.RESET}")
+    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [medievalKingdom]{cs.RESET_ALL}")
     print(
         f"{caret1} [files]\n"
         f"{caret2} [settings]\n"

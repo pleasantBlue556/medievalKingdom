@@ -1,7 +1,7 @@
 {
     "kingdom": {
-        "name": "",
-        "gold": 0
+        "name": "another one",
+        "gold": -0
     },
     "config": {
         "textSpeed": 1,
