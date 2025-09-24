@@ -13,40 +13,43 @@ defaultData = {
         "name": "",
         "gold": 0,
     },
-    "config": {
-        "textSpeed": 1,
-        "caret": ">",
-        # page 2
-        "actionMsg": "what is your action? ",
-        "saveMsg": f"file {saveNum} saved.",
-        "loadMsg": f"file {saveNum} loaded.",
-        "newDayMsg": "the day is ending...",
-        # page 3
-        "up": "w",
-        "left": "a",
-        "down": "s",
-        "right": "d",
-        "select": "z",
-        "cancel": "x",
-        "misc": "c",
-    },
     "data": {
         "version": 1.0,
         "timesPlayed": 0,
         "stop smuggling!!!": True,
     },
 }
+defaultConfig = {
+    "textSpeed": 1,
+    "caret": ">",
+    # page 2
+    "actionMsg": "what is your action? ",
+    "saveMsg": f"file {saveNum} saved.",
+    "loadMsg": f"file {saveNum} loaded.",
+    "newDayMsg": "the day is ending...",
+    # page 3
+    "up": "w",
+    "left": "a",
+    "down": "s",
+    "right": "d",
+    "select": "z",
+    "cancel": "x",
+    "misc": "c",
+}
 
 
 def save(saveData, saveSlot=saveNum, msg=c.settings["saveMsg"]):
-    filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
+    if saveSlot == "config":
+        filePath = os.path.join(saveDir, f"conf.json")
+    else:
+        filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
     with open(filePath, "w") as f:
         json.dump(saveData, f, indent=4)
     if msg:
         print(f"{msg}")
 
 
-def saveDict(newDict, newData, saveData, msg=c.settings["loadMsg"]):
+def saveDict(newDict, newData, saveData):
     saveData[newDict].update(newData)
     save(saveData, msg=False)
     print(f"saved {newDict}.")
@@ -86,4 +89,3 @@ def merge(target, data):
 #     print(saveData)
 
 # im so snart
-
