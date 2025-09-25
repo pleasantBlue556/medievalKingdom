@@ -65,7 +65,6 @@ def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
         print(c.settings["saveMsg"].format(saveNum=slot))
     elif msg and slot == 'config':
         # saveNum = 'conf'
-
         print(c.settings['saveMsg'].format(saveNum=slotAlt))
 
 def saveDict(newDict, newData, saveData):
