@@ -80,6 +80,7 @@ credPage = 1
 def fileFunc():
     """runs whenever file is picked"""
     global currentSaveAlt, currentSave, loadDataAlt, breakOut
+    files = []
     h.clearAll()
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
@@ -90,7 +91,7 @@ def fileFunc():
         # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
-    if len(os.listdir(sv.saveDirAlt)) == 0:
+    if len(files) == 0:
         print("use 'c' to start a new file.")
     else:
         # list prints
@@ -98,13 +99,11 @@ def fileFunc():
             f for f in sorted(os.listdir(sv.saveDirAlt))
             if f.endswith(".json") and f != 'conf.json'
         ]
-        for displayIndex, fileName in enumerate(sorted(os.listdir(sv.saveDirAlt))):
+        for displayIndex, fileName in enumerate(files):
             filePath = os.path.join(sv.saveDirAlt, fileName)
 
             with open(filePath, "r") as f:
                 data = json.load(f)
-
-            kingdom = data.get
             name = data.get("kingdom", None).get("name", "")
             gold = data.get("kingdom", None).get("gold", 0)
 
@@ -146,10 +145,10 @@ def fileFunc():
         return
     elif choice == c:
         print(os.listdir(sv.saveDirAlt))
-        if not os.listdir(sv.saveDirAlt)[0]:
-            sv.save(sv.defaultData, sv.saveNum)
+        if not files:
+            sv.save(sv.defaultData, 0)
         else:
-            sv.save(sv.defaultData, sv.saveNum + 1)
+            sv.save(sv.defaultData, sv.saveNum)
         if not os.path.exists(os.path.join(sv.saveDirAlt, "conf.json")):
             sv.save(sv.defaultConfig, "config")
         h.sleepadv(1)
