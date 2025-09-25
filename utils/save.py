@@ -4,7 +4,7 @@ from utils import config as c
 saveDir = os.path.join("..", "savefiles")
 saveDirAlt = "savefiles"
 os.makedirs(saveDir, exist_ok=True)
-saveNum = len(os.listdir(saveDir))
+saveNum = str(len(os.listdir(saveDir)))
 currentSave: 0
 
 # default save
@@ -38,15 +38,19 @@ defaultConfig = {
 }
 
 
-def save(saveData, saveSlot=saveNum, msg=c.settings["saveMsg"]):
-    if saveSlot == "config":
+def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
+    if slot == "config":
         filePath = os.path.join(saveDir, f"conf.json")
+        slotAlt = 'conf'
     else:
-        filePath = os.path.join(saveDir, f"savefile{saveSlot}.json")
+        filePath = os.path.join(saveDir, f"savefile{slot}.json")
+        slotAlt = 'saveFile' + str(slot) + '.json'
+    if os.path.exists(filePath):
+        os.makedirs(os.path.join(saveDir, slotAlt), exist_ok=True)
     with open(filePath, "w") as f:
         json.dump(saveData, f, indent=4)
     if msg:
-        print(f"{msg}")
+        print(c.settings['saveMsg'].format(saveNum=saveNum))
 
 
 def saveDict(newDict, newData, saveData):
@@ -55,13 +59,13 @@ def saveDict(newDict, newData, saveData):
     print(f"saved {newDict}.")
 
 
-def load(saveDirectory, saveSlot, msg=c.settings["loadMsg"]):
-    filePath = os.path.join(saveDirectory, f"savefile{saveSlot}.json")
+def load(saveDirectory, saveNum, msg=c.settings["loadMsg"]):
+    filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
             loadData = json.load(f)
             if msg:
-                print(msg)
+                print(c.settings['loadMsg'].format(saveNum=saveNum))
     else:
         print(f"save not found, check {filePath}.")
         loadData = defaultData.copy()
@@ -77,7 +81,7 @@ def merge(target, data):
         elif isinstance(value, dict):
             merge(target[key], value)
 
-
+#
 # choice = input("save/load")
 # if choice == "save":
 #     slot = int(input("slot num?"))

@@ -1,10 +1,8 @@
-import json, os, platform, sys
+import json, os, platform, sys, curses as cr
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 from utils import config as conf
 from utils import save as sv
 from utils import helpers as h
-
-# import curses as cr
 
 userSys = platform.system()
 userVer = platform.release()
@@ -17,7 +15,7 @@ if userSys == "Windows":
 
 # ↑↓←→
 currentCaret = 1
-caret1 = conf.settings["caret"]
+caret1 = cf.LIGHTBLUE_EX + conf.settings["caret"] + cs.RESET_ALL
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
@@ -72,7 +70,6 @@ nextP = False
 prevP = False
 page = 1
 page3Extra = ""
-
 # credits var
 credPage = 1
 # nextP and prevP carry on with credits page
@@ -167,7 +164,9 @@ def settingsFunc():
         print(
             "## page 1 - customization >>\n"
             f"1. text speed: {conf.settings['textSpeed']}\n"
-            f"2. caret: '{conf.settings['caret']}'\n"
+            f"2. caret: '{conf.settings['caretColorless']}'\n"
+            f"3. caret color: {h.getColor(conf.settings['caretFore'])}, "
+            f"{h.getColor(conf.settings['caretBack'])}"
         )
     elif page == 2:
         nextP = True
@@ -492,10 +491,9 @@ def settingsFunc():
         h.clearAll()
         return
     elif choice == c:
-        saveFileListAlt = os.listdir(sv.saveDirAlt)
-        saveFileList = []
         # universal settings config
-        sv.save(c.settings, "config")
+        saveData = sv.save(conf.settings, "config")
+        print(saveData)
         h.sleepadv(1)
     else:
         print("did not understand.")
@@ -589,6 +587,8 @@ actionCount = 3
 
 
 def gameLoop(actions=actionCount):
+    cr.curs_set(2) # block cursor
+
     for _ in range(actions):
         print(f"you have {actions} actions.")
         if loadDataAlt == sv.defaultData:
@@ -650,6 +650,7 @@ while True:
             creditsFunc()
         elif currentCaret == 4:
             quitFunc()
+
     # quit
     elif choice == x:
         quitFunc()
@@ -657,3 +658,12 @@ while True:
     if breakOut:
         gameLoop()
         break
+    if currentCaret == 1:
+        caret1 = cf.LIGHTBLUE_EX + caret1 + cs.RESET_ALL
+    elif currentCaret == 2:
+        caret2 = cf.LIGHTBLUE_EX + caret2 + cs.RESET_ALL
+    elif currentCaret == 3:
+        caret3 = cf.LIGHTBLUE_EX + caret3 + cs.RESET_ALL
+    elif currentCaret == 4:
+        caret4 = cf.LIGHTBLUE_EX + caret4 + cs.RESET_ALL
+
