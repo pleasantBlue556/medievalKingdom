@@ -1,9 +1,10 @@
 from colorama import init as coloramaInit, Fore as cf, Back as cb, Style as cs
+
 coloramaInit(autoreset=True)
 settings = {
     # page 1
     "textSpeed": 1,
-    "caretColorless": '>',
+    "caretColorless": ">",
     "caret": ">",
     "caretFore": cf.WHITE,
     "caretBack": cb.BLACK,
@@ -21,5 +22,6 @@ settings = {
     "cancel": "x",
     "misc": "c",
 }
-settings['caret'] = (settings['caretFore'] + settings['caretBack']
-                     + settings['caret'] + cs.RESET_ALL)
+settings["caret"] = (
+    settings["caretFore"] + settings["caretBack"] + settings["caret"] + cs.RESET_ALL
+)

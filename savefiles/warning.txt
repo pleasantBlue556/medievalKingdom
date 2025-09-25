@@ -1,0 +1,5 @@
+please be very careful not to edit the names of the savefiles!
+the save and load functions are hard-coded to only recognize save files named 'savefile(number).json'
+if you get errors trying to load the files menu, this is likely why.
+
+also...the save files are encoded...so...you can't really edit them (unless you're a genius)

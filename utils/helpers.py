@@ -49,39 +49,81 @@ def huh(msg="dnu", sleepTime=1, returnArea=False):
 #         sleepadv(0.02)
 #         clearAll()
 
-def getColor(colorType) -> str:
-    if colorType == 'cf.BLUE':
-        return 'blue'
-    elif colorType == 'cf.LIGHTBLUE_EX':
-        return 'light blue'
-    elif colorType == 'cf.BLACK':
-        return 'black'
-    elif colorType == 'cf.LIGHTWHITE_EX':
-        return 'light gray'
-    elif colorType == 'cf.LIGHTBLACK_EX':
-        return 'gray'
-    elif colorType == 'cf.CYAN':
-        return 'cyan'
-    elif colorType == 'cf.GREEN':
-        return 'green'
-    elif colorType == 'cf.LIGHTCYAN_EX':
-        return 'light cyan'
-    elif colorType == 'cf.LIGHTGREEN_EX':
-        return 'light green'
-    elif colorType == 'cf.LIGHTMAGENTA_EX':
-        return 'light magenta'
-    elif colorType == 'cf.LIGHTRED_EX':
-        return 'pink'
-    elif colorType == 'cf.LIGHTYELLOW_EX':
-        return 'light yellow'
-    elif colorType == 'cf.MAGENTA':
-        return 'magenta'
-    elif colorType == 'cf.RED':
-        return 'red'
-    elif colorType == 'cf.WHITE':
-        return 'white'
-    elif colorType == 'cf.YELLOW':
-        return 'yellow'
+
+def getColor(colorType, mode='cf.') -> str:
+    colorType.lower()
+    if colorType == mode + "BLUE":
+        print(colorType, mode + "BLUE")
+        return "blue"
+    elif colorType == mode + "LIGHTBLUE_EX":
+        return "light blue"
+    elif colorType == mode + "BLACK":
+        return "black"
+    elif colorType == mode + "LIGHTWHITE_EX":
+        return "white"
+    elif colorType == mode + "LIGHTBLACK_EX":
+        return "gray"
+    elif colorType == mode + "CYAN":
+        return "cyan"
+    elif colorType == mode + "GREEN":
+        return "green"
+    elif colorType == mode + "LIGHTCYAN_EX":
+        return "light cyan"
+    elif colorType == mode + "LIGHTGREEN_EX":
+        return "light green"
+    elif colorType == mode + "LIGHTMAGENTA_EX":
+        return "light magenta"
+    elif colorType == mode + "LIGHTRED_EX":
+        return "pink"
+    elif colorType == mode + "LIGHTYELLOW_EX":
+        return "light yellow"
+    elif colorType == mode + "MAGENTA":
+        return "magenta"
+    elif colorType == mode + "RED":
+        return "red"
+    elif colorType == mode + "WHITE":
+        return "light gray"
+    elif colorType == mode + "YELLOW":
+        return "yellow"
+    else:
+        return None
+
+def getColorAlt(colorType, mode='cf.') -> str:
+    colorType.lower()
+    if colorType == "blue":
+        return mode + "BLUE"
+    elif colorType == "light blue":
+        return mode + "LIGHTBLUE_EX"
+    elif colorType == "black":
+        return mode + "BLACK"
+    elif colorType == "white":
+        return mode + "LIGHTWHITE_EX"
+    elif colorType == "gray":
+        return mode + "LIGHTBLACK_EX"
+    elif colorType == "cyan":
+        return mode + "CYAN"
+    elif colorType == "green":
+        return mode + "GREEN"
+    elif colorType == "light cyan":
+        return mode + "LIGHTCYAN_EX"
+    elif colorType == "light green":
+        return mode + "LIGHTGREEN_EX"
+    elif colorType == "light magenta":
+        return mode + "LIGHTMAGENTA_EX"
+    elif colorType == "pink":
+        return mode + "LIGHTRED_EX"
+    elif colorType == "light yellow":
+        return mode + "LIGHTYELLOW_EX"
+    elif colorType == "magenta":
+        return mode + "MAGENTA"
+    elif colorType == "red":
+        return mode + "RED"
+    elif colorType == "light gray":
+        return mode + "WHITE"
+    elif colorType == "yellow":
+        return mode + "YELLOW"
+    else:
+        return None
 
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:
     endResult = ""

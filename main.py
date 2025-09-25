@@ -1,8 +1,6 @@
 import json, os, platform, sys, curses as cr
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
-from utils import config as conf
-from utils import save as sv
-from utils import helpers as h
+from utils import config as conf, save as sv, helpers as h
 
 userSys = platform.system()
 userVer = platform.release()
@@ -13,9 +11,11 @@ userVer = platform.release()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
 
+
 # ↑↓←→
 currentCaret = 1
-caret1 = cf.LIGHTBLUE_EX + conf.settings["caret"] + cs.RESET_ALL
+conf.settings['caret'] = conf.settings['caretFore'] + conf.settings['caretBack'] + conf.settings["caret"] + cs.RESET_ALL
+caret1 = conf.settings['caret']
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
@@ -45,6 +45,8 @@ settingsKeywords = [
     "text speed",
     "speed",
     "caret",
+    'caret color',
+    'color',
     "save",
     "save message",
     "load",
@@ -92,24 +94,29 @@ def fileFunc():
         print("use 'c' to start a new file.")
     else:
         # list prints
+        files = [
+            f for f in sorted(os.listdir(sv.saveDirAlt))
+            if f.endswith(".json") and f != 'conf.json'
+        ]
         for displayIndex, fileName in enumerate(sorted(os.listdir(sv.saveDirAlt))):
             filePath = os.path.join(sv.saveDirAlt, fileName)
-            if fileName.endswith(".json"):
-                # grab data from each save
-                with open(filePath, "r") as f:
-                    data = json.load(f)
-                name = data.get("kingdom", None).get("name", "")
-                gold = data.get("kingdom", None).get("gold", 0)
 
-                # add mark
-                if displayIndex == currentSave:
-                    currentSaveAlt = "*"
-                else:
-                    currentSaveAlt = ""
-                print(
-                    f"{displayIndex}{currentSaveAlt}: {fileName} // "
-                    f"'{name}', {gold} gold"
-                )
+            with open(filePath, "r") as f:
+                data = json.load(f)
+
+            kingdom = data.get
+            name = data.get("kingdom", None).get("name", "")
+            gold = data.get("kingdom", None).get("gold", 0)
+
+            # add mark
+            if displayIndex == currentSave:
+                currentSaveAlt = "*"
+            else:
+                currentSaveAlt = ""
+            print(
+                f"{displayIndex}{currentSaveAlt}: {fileName} // "
+                f"'{name}', {gold} gold"
+            )
 
     print("")
     choice = h.inputadv(f"[#] [{z}] [{x}] [{c}] [help]")
@@ -182,7 +189,7 @@ def settingsFunc():
     elif page == 3:
         nextP = False
         prevP = True
-        page3Extra = " only"
+        page3Extra = " only"  # added to choice input (numbers only!)
         print(
             "<< page 3 - keybinds ##\n"
             f"1. up: [{conf.settings['up']}]\n"
@@ -250,6 +257,37 @@ def settingsFunc():
                 conf.settings["caret"] = settingsChoice
                 print(f"caret set to {conf.settings["caret"]}.\n")
                 h.sleepadv(1)
+
+            elif choice in ['3', 'caret color', 'color']:
+                foregroundChoice = h.inputadv(
+                    "changes the front and back of the caret - default: white, black\n"
+                    "examples: 'light blue, magenta' means light blue caret on magenta background.\n\n"
+                    "foreground:"
+                )
+                if h.getColorAlt(foregroundChoice, 'cf.') is not None:
+                    conf.settings['caretFore'] = foregroundChoice
+                    print(f'caret forecolor set to {conf.settings['caretFore']}.\n')
+                    h.sleepadv(1)
+
+                    backgroundChoice = h.inputadv(
+                        "background:"
+                    )
+                    if h.getColorAlt(backgroundChoice, 'cb.') is not None:
+                        conf.settings['caretBack'] = backgroundChoice
+                        print(f'caret backcolor set to {conf.settings['caretBack']}.\n')
+                        h.sleepadv(1)
+                    else:
+                        print('try a different color.\n'
+                              'colors: '
+                              '[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n'
+                              'add "light" before color to make it brighter!\n')
+                        h.inputadv('[enter] to leave')
+                else:
+                    print('try a different color.\n'
+                          'colors: '
+                          '[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n'
+                          'add "light" before color to make it brighter!\n')
+                    h.inputadv('[enter] to leave')
 
         # pg 2. messages
         elif page == 2:
@@ -587,7 +625,8 @@ actionCount = 3
 
 
 def gameLoop(actions=actionCount):
-    cr.curs_set(2) # block cursor
+    # cr.initscr()
+    cr.curs_set(2)  # block cursor
 
     for _ in range(actions):
         print(f"you have {actions} actions.")
@@ -666,4 +705,3 @@ while True:
         caret3 = cf.LIGHTBLUE_EX + caret3 + cs.RESET_ALL
     elif currentCaret == 4:
         caret4 = cf.LIGHTBLUE_EX + caret4 + cs.RESET_ALL
-

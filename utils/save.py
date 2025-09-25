@@ -39,19 +39,34 @@ defaultConfig = {
 
 
 def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
+    savedAlready = False
     if slot == "config":
         filePath = os.path.join(saveDir, f"conf.json")
-        slotAlt = 'conf'
+        slotAlt = "conf"
     else:
         filePath = os.path.join(saveDir, f"savefile{slot}.json")
-        slotAlt = 'saveFile' + str(slot) + '.json'
-    if os.path.exists(filePath):
-        os.makedirs(os.path.join(saveDir, slotAlt), exist_ok=True)
-    with open(filePath, "w") as f:
-        json.dump(saveData, f, indent=4)
+        slotAlt = "saveFile" + str(slot) + ".json"
+    if not os.path.exists(filePath):
+        # create path if it doesnt already exist
+        if slotAlt == 'conf':
+            with open(filePath, 'w') as configFile:
+                json.dump(configFile, defaultConfig)
+                savedAlready = True
+        else:
+            with open(filePath, 'w') as saveFile:
+                json.dump(saveFile, defaultData)
+                savedAlready = True
+    if not savedAlready:
+        # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
+        with open(filePath, "w") as saveFile:
+            json.dump(saveData, saveFile, indent=4)
     if msg:
-        print(c.settings['saveMsg'].format(saveNum=saveNum))
+        # saveNum = slot number
+        print(c.settings["saveMsg"].format(saveNum=slot))
+    elif msg and slot == 'config':
+        # saveNum = 'conf'
 
+        print(c.settings['saveMsg'].format(saveNum=slotAlt))
 
 def saveDict(newDict, newData, saveData):
     saveData[newDict].update(newData)
@@ -65,7 +80,7 @@ def load(saveDirectory, saveNum, msg=c.settings["loadMsg"]):
         with open(filePath, "r") as f:
             loadData = json.load(f)
             if msg:
-                print(c.settings['loadMsg'].format(saveNum=saveNum))
+                print(c.settings["loadMsg"].format(saveNum=saveNum))
     else:
         print(f"save not found, check {filePath}.")
         loadData = defaultData.copy()
@@ -81,15 +96,20 @@ def merge(target, data):
         elif isinstance(value, dict):
             merge(target[key], value)
 
-#
+
+
 # choice = input("save/load")
 # if choice == "save":
-#     slot = int(input("slot num?"))
-#     save(defaultData, slot)
+#     slot = input("slot num?")
+#     if slot == 'config':
+#         save(defaultConfig, slot)
+#     else:
+#         save(defaultData, slot)
 #
 # elif choice == "load":
-#     choice = int(input("slot num?"))
-#     saveData = load(saveDir, choice)
+#     slot = input("slot num?")
+#     saveData = load(saveDir, slot)
 #     print(saveData)
+
 
 # im so snart
