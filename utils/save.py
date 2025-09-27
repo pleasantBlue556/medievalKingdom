@@ -2,7 +2,6 @@ import json, os
 from utils import config as c
 
 saveDir = os.path.join("..", "savefiles")
-saveDirAlt = "savefiles"
 os.makedirs(saveDir, exist_ok=True)
 saveNum = str(len(os.listdir(saveDir)))
 currentSave: 0
@@ -38,39 +37,30 @@ defaultConfig = {
 }
 
 
+# yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
 def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
-    savedAlready = False
+
+    # define filepath
     if slot == "config":
-        filePath = os.path.join(saveDir, f"conf.json")
-        slotAlt = "conf"
+        slotAlt = "conf.json"
     else:
-        filePath = os.path.join(saveDir, f"savefile{slot}.json")
-        slotAlt = "saveFile" + str(slot) + ".json"
-    if not os.path.exists(filePath):
-        # create path if it doesnt already exist
-        if slotAlt == 'conf':
-            with open(filePath, 'w') as configFile:
-                json.dump(configFile, defaultConfig)
-                savedAlready = True
-        else:
-            with open(filePath, 'w') as saveFile:
-                json.dump(saveFile, defaultData)
-                savedAlready = True
-    if not savedAlready:
-        # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
-        with open(filePath, "w") as saveFile:
-            json.dump(saveData, saveFile, indent=4)
-    if msg:
-        # saveNum = slot number
+        slotAlt = "savefile" + str(slot) + ".json"
+    filePath = os.path.join(saveDir, slotAlt)
+
+    # write
+    with open(filePath, "w") as savefile:
+        json.dump(saveData, savefile, indent=4)
+
+    # msg logic
+    if msg and slot == 'config':
+        print(c.settings['saveMsg'].format(saveNum='config'))
+    elif msg:
         print(c.settings["saveMsg"].format(saveNum=slot))
-    elif msg and slot == 'config':
-        # saveNum = 'conf'
-        print(c.settings['saveMsg'].format(saveNum=slotAlt))
 
 def saveDict(newDict, newData, saveData):
     saveData[newDict].update(newData)
     save(saveData, msg=False)
-    print(f"saved {newDict}.")
+    print(c.settings['saveMsg'].format(saveNum=newDict))
 
 
 def load(saveDirectory, saveNum, msg=c.settings["loadMsg"]):
@@ -94,7 +84,6 @@ def merge(target, data):
             target[key] = value
         elif isinstance(value, dict):
             merge(target[key], value)
-
 
 
 # choice = input("save/load")

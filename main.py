@@ -11,7 +11,6 @@ userVer = platform.release()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
 
-
 # ↑↓←→
 currentCaret = 1
 conf.settings['caret'] = conf.settings['caretFore'] + conf.settings['caretBack'] + conf.settings["caret"] + cs.RESET_ALL
@@ -27,7 +26,7 @@ currentSaveAlt = ""
 loadDataAlt = ""
 currentSave = 0
 breakOut = False
-saveDirList = os.listdir(sv.saveDirAlt)
+saveDirList = os.listdir('savefiles')
 
 # shorter keybind var
 w = conf.settings["up"]
@@ -85,9 +84,9 @@ def fileFunc():
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
     # split .json off
-    saveFileListAlt = os.listdir(sv.saveDirAlt)
+    saveFileListAlt = os.listdir('savefiles')
     saveFileList = []
-    for i in range(len(os.listdir(sv.saveDirAlt))):
+    for i in range(len(os.listdir('savefiles'))):
         # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
@@ -96,11 +95,11 @@ def fileFunc():
     else:
         # list prints
         files = [
-            f for f in sorted(os.listdir(sv.saveDirAlt))
+            f for f in sorted(os.listdir('savefiles'))
             if f.endswith(".json") and f != 'conf.json'
         ]
         for displayIndex, fileName in enumerate(files):
-            filePath = os.path.join(sv.saveDirAlt, fileName)
+            filePath = os.path.join('savefiles', fileName)
 
             with open(filePath, "r") as f:
                 data = json.load(f)
@@ -132,25 +131,28 @@ def fileFunc():
         return
     elif choiceInt:
         currentSave = choice
-        loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
+        loadDataAlt = sv.load('savefiles', currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
         return
     elif choice in [z, "*"]:
-        loadDataAlt = sv.load(sv.saveDirAlt, currentSave)
+        loadDataAlt = sv.load('savefiles', currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
         return
     elif choice == c:
-        print(os.listdir(sv.saveDirAlt))
+        if 'conf.json' not in os.listdir('savefiles'):
+            sv.save(sv.defaultConfig)
+            print(saveFileListAlt)
         if not files:
+            currentSave = 0
             sv.save(sv.defaultData, 0)
         else:
             sv.save(sv.defaultData, sv.saveNum)
-        if not os.path.exists(os.path.join(sv.saveDirAlt, "conf.json")):
             sv.save(sv.defaultConfig, "config")
+            currentSave = sv.saveNum
         h.sleepadv(1)
     else:
         print("did not understand.\n")
@@ -625,7 +627,7 @@ actionCount = 3
 
 def gameLoop(actions=actionCount):
     # cr.initscr()
-    cr.curs_set(2)  # block cursor
+    # cr.curs_set(2)  # block cursor
 
     for _ in range(actions):
         print(f"you have {actions} actions.")
