@@ -158,7 +158,7 @@ def fileFunc():
         else:
             sv.save(sv.defaultData, sv.saveNum)
             currentSave = sv.saveNum
-        h.inputadv('')
+        h.sleepadv(1)
     else:
         print("did not understand.\n")
         h.sleepadv(1)
