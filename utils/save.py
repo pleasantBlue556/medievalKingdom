@@ -52,15 +52,15 @@ def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
         json.dump(saveData, savefile, indent=4)
 
     # msg logic
-    if msg and slot == 'config':
-        print(c.settings['saveMsg'].format(saveNum='config'))
+    if msg and slot == "config":
+        print(c.settings["saveMsg"].format(saveNum="config"))
     elif msg:
         print(c.settings["saveMsg"].format(saveNum=slot))
+
 
 def saveDict(newDict, newData, saveData):
     saveData[newDict].update(newData)
     save(saveData, msg=False)
-    print(c.settings['saveMsg'].format(saveNum=newDict))
 
 
 def load(saveDirectory, saveNum, msg=c.settings["loadMsg"]):

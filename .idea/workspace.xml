@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="important string fix">
+    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="nvm bro newfile doesnt work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/savefiles/conf.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/savefiles/warning.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/helpers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/save.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/save.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +88,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757978346081</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="nvm bro newfile doesnt work">
+      <option name="closed" value="true" />
+      <created>1758943148439</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1758943148439</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -129,6 +135,7 @@
     <MESSAGE value="improved keybinds" />
     <MESSAGE value="squash! improved keybinds" />
     <MESSAGE value="important string fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="important string fix" />
+    <MESSAGE value="nvm bro newfile doesnt work" />
+    <option name="LAST_COMMIT_MESSAGE" value="nvm bro newfile doesnt work" />
   </component>
 </project>

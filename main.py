@@ -1,4 +1,4 @@
-import json, os, platform, sys, curses as cr
+import json, os, platform, sys
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 from utils import config as conf, save as sv, helpers as h
 
@@ -13,8 +13,13 @@ if userSys == "Windows":
 
 # ↑↓←→
 currentCaret = 1
-conf.settings['caret'] = conf.settings['caretFore'] + conf.settings['caretBack'] + conf.settings["caret"] + cs.RESET_ALL
-caret1 = conf.settings['caret']
+conf.settings["caret"] = (
+    conf.settings["caretFore"]
+    + conf.settings["caretBack"]
+    + conf.settings["caret"]
+    + cs.RESET_ALL
+)
+caret1 = conf.settings["caret"]
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
@@ -26,7 +31,7 @@ currentSaveAlt = ""
 loadDataAlt = ""
 currentSave = 0
 breakOut = False
-saveDirList = os.listdir('savefiles')
+saveDirList = os.listdir("savefiles")
 
 # shorter keybind var
 w = conf.settings["up"]
@@ -44,8 +49,8 @@ settingsKeywords = [
     "text speed",
     "speed",
     "caret",
-    'caret color',
-    'color',
+    "caret color",
+    "color",
     "save",
     "save message",
     "load",
@@ -84,9 +89,9 @@ def fileFunc():
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
     # split .json off
-    saveFileListAlt = os.listdir('savefiles')
+    saveFileListAlt = os.listdir("savefiles")
     saveFileList = []
-    for i in range(len(os.listdir('savefiles'))):
+    for i in range(len(os.listdir("savefiles"))):
         # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
@@ -95,11 +100,12 @@ def fileFunc():
     else:
         # list prints
         files = [
-            f for f in sorted(os.listdir('savefiles'))
-            if f.endswith(".json") and f != 'conf.json'
+            f
+            for f in sorted(os.listdir("savefiles"))
+            if f.endswith(".json") and f != "conf.json"
         ]
         for displayIndex, fileName in enumerate(files):
-            filePath = os.path.join('savefiles', fileName)
+            filePath = os.path.join("savefiles", fileName)
 
             with open(filePath, "r") as f:
                 data = json.load(f)
@@ -131,24 +137,24 @@ def fileFunc():
         return
     elif choiceInt:
         currentSave = choice
-        loadDataAlt = sv.load('savefiles', currentSave)
+        loadDataAlt = sv.load("savefiles", currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
         return
     elif choice in [z, "*"]:
-        loadDataAlt = sv.load('savefiles', currentSave)
+        loadDataAlt = sv.load("savefiles", currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
         return
     elif choice == c:
-        if 'conf.json' not in os.listdir('savefiles'):
+        if "conf.json" not in os.listdir("savefiles"):
             sv.save(sv.defaultConfig)
             print(saveFileListAlt)
         if not files:
-            currentSave = 0
-            sv.save(sv.defaultData, 0)
+            print(sv.saveDir, "savefiles")
+            sv.save(sv.defaultData)
         else:
             sv.save(sv.defaultData, sv.saveNum)
             sv.save(sv.defaultConfig, "config")
@@ -256,39 +262,42 @@ def settingsFunc():
                     "note: the newline and extra space after the caret are given automatically.\n"
                 )
                 conf.settings["caret"] = settingsChoice
-                print(f"caret set to {conf.settings["caret"]}.\n")
+                print(f"caret set to {conf.settings['caret']}.\n")
                 h.sleepadv(1)
 
-            elif choice in ['3', 'caret color', 'color']:
+            # caret color
+            elif choice in ["3", "caret color", "color"]:
                 foregroundChoice = h.inputadv(
                     "changes the front and back of the caret - default: white, black\n"
                     "examples: 'light blue, magenta' means light blue caret on magenta background.\n\n"
                     "foreground:"
                 )
-                if h.getColorAlt(foregroundChoice, 'cf.') is not None:
-                    conf.settings['caretFore'] = foregroundChoice
-                    print(f'caret forecolor set to {conf.settings['caretFore']}.\n')
+                if h.getColorAlt(foregroundChoice, "cf.") is not None:
+                    conf.settings["caretFore"] = foregroundChoice
+                    print(f'caret forecolor set to {conf.settings["caretFore"]}.\n')
                     h.sleepadv(1)
 
-                    backgroundChoice = h.inputadv(
-                        "background:"
-                    )
-                    if h.getColorAlt(backgroundChoice, 'cb.') is not None:
-                        conf.settings['caretBack'] = backgroundChoice
-                        print(f'caret backcolor set to {conf.settings['caretBack']}.\n')
+                    backgroundChoice = h.inputadv("background:")
+                    if h.getColorAlt(backgroundChoice, "cb.") is not None:
+                        conf.settings["caretBack"] = backgroundChoice
+                        print(f'caret backcolor set to {conf.settings["caretBack"]}.\n')
                         h.sleepadv(1)
                     else:
-                        print('try a different color.\n'
-                              'colors: '
-                              '[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n'
-                              'add "light" before color to make it brighter!\n')
-                        h.inputadv('[enter] to leave')
+                        print(
+                            "try a different color.\n"
+                            "colors: "
+                            "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
+                            'add "light" before color to make it brighter!\n'
+                        )
+                        h.inputadv("[enter] to leave")
                 else:
-                    print('try a different color.\n'
-                          'colors: '
-                          '[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n'
-                          'add "light" before color to make it brighter!\n')
-                    h.inputadv('[enter] to leave')
+                    print(
+                        "try a different color.\n"
+                        "colors: "
+                        "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
+                        'add "light" before color to make it brighter!\n'
+                    )
+                    h.inputadv("[enter] to leave")
 
         # pg 2. messages
         elif page == 2:

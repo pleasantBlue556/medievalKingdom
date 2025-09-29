@@ -50,7 +50,7 @@ def huh(msg="dnu", sleepTime=1, returnArea=False):
 #         clearAll()
 
 
-def getColor(colorType, mode='cf.') -> str:
+def getColor(colorType, mode="cf.") -> str:
     colorType.lower()
     if colorType == mode + "BLUE":
         print(colorType, mode + "BLUE")
@@ -88,7 +88,8 @@ def getColor(colorType, mode='cf.') -> str:
     else:
         return None
 
-def getColorAlt(colorType, mode='cf.') -> str:
+
+def getColorAlt(colorType, mode="cf.") -> str:
     colorType.lower()
     if colorType == "blue":
         return mode + "BLUE"
@@ -124,6 +125,7 @@ def getColorAlt(colorType, mode='cf.') -> str:
         return mode + "YELLOW"
     else:
         return None
+
 
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:
     endResult = ""
