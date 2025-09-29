@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="nvm bro newfile doesnt work">
+    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="what is workspace.xml???">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/helpers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/save.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/save.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,6 +29,9 @@
     &quot;accountId&quot;: &quot;349ba11e-567f-4496-b6a3-be765ba2dbb9&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -96,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758943148439</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="what is workspace.xml???">
+      <option name="closed" value="true" />
+      <created>1759107357833</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1759107357833</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -136,6 +146,7 @@
     <MESSAGE value="squash! improved keybinds" />
     <MESSAGE value="important string fix" />
     <MESSAGE value="nvm bro newfile doesnt work" />
-    <option name="LAST_COMMIT_MESSAGE" value="nvm bro newfile doesnt work" />
+    <MESSAGE value="what is workspace.xml???" />
+    <option name="LAST_COMMIT_MESSAGE" value="what is workspace.xml???" />
   </component>
 </project>

@@ -1,10 +1,9 @@
 import json, os
 from utils import config as c
 
-saveDir = os.path.join("..", "savefiles")
-os.makedirs(saveDir, exist_ok=True)
-saveNum = str(len(os.listdir(saveDir)))
-currentSave: 0
+os.makedirs('savefiles', exist_ok=True)
+saveNum = str(len(os.listdir('savefiles')))
+currentSave = 0
 
 # default save
 defaultData = {
@@ -45,7 +44,7 @@ def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
         slotAlt = "conf.json"
     else:
         slotAlt = "savefile" + str(slot) + ".json"
-    filePath = os.path.join(saveDir, slotAlt)
+    filePath = os.path.join('savefiles', slotAlt)
 
     # write
     with open(filePath, "w") as savefile:
@@ -63,7 +62,7 @@ def saveDict(newDict, newData, saveData):
     save(saveData, msg=False)
 
 
-def load(saveDirectory, saveNum, msg=c.settings["loadMsg"]):
+def load(saveDirectory='savefiles', saveNum=saveNum, msg=c.settings["loadMsg"]):
     filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
@@ -96,7 +95,7 @@ def merge(target, data):
 #
 # elif choice == "load":
 #     slot = input("slot num?")
-#     saveData = load(saveDir, slot)
+#     saveData = load('savefiles', slot)
 #     print(saveData)
 
 

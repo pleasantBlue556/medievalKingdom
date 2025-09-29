@@ -84,7 +84,7 @@ credPage = 1
 def fileFunc():
     """runs whenever file is picked"""
     global currentSaveAlt, currentSave, loadDataAlt, breakOut
-    files = []
+
     h.clearAll()
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
@@ -95,7 +95,8 @@ def fileFunc():
         # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
-    if len(files) == 0:
+    if len(saveFileList) == 0:
+        files = []
         print("use 'c' to start a new file.")
     else:
         # list prints
@@ -129,6 +130,7 @@ def fileFunc():
         choiceInt = True
     except ValueError:
         choiceInt = False
+        # collapsable
     if choice == "help":
         print(f"[{z}]: continue (*)\n" f"[{x}]: exit\n" f"[{c}]: new file\n")
         h.inputadv("[enter] to leave")
@@ -149,17 +151,14 @@ def fileFunc():
         h.clearAll()
         return
     elif choice == c:
-        if "conf.json" not in os.listdir("savefiles"):
-            sv.save(sv.defaultConfig)
-            print(saveFileListAlt)
+        if "conf.json" not in saveFileList:
+            sv.save(sv.defaultConfig, 'config')
         if not files:
-            print(sv.saveDir, "savefiles")
-            sv.save(sv.defaultData)
+            sv.save(sv.defaultData, 0)
         else:
             sv.save(sv.defaultData, sv.saveNum)
-            sv.save(sv.defaultConfig, "config")
             currentSave = sv.saveNum
-        h.sleepadv(1)
+        h.inputadv('')
     else:
         print("did not understand.\n")
         h.sleepadv(1)
