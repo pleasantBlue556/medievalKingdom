@@ -23,22 +23,21 @@ def clearAll():
     elif platform.system() == "Linux":
         os.system("clear")
 
-
-def huh(msg="dnu", sleepTime=1, returnArea=False):
-    if msg == "min":
-        print("please enter a higher number.")
-    elif msg == "max":
-        print("please enter a lower number.")
-    elif msg == "dnu":
-        print("did not understand.")
-    else:
-        print(msg)
-    sleepadv(sleepTime)
-    if returnArea:
-        return returnArea
-    elif not returnArea:
-        return
-
+# doesnt work
+# def huh(msg="dnu", sleepTime=1, returnArea=False):
+#     if msg == "min":
+#         print("please enter a higher number.")
+#     elif msg == "max":
+#         print("please enter a lower number.")
+#     elif msg == "dnu":
+#         print("did not understand.")
+#     else:
+#         print(msg)
+#     sleepadv(sleepTime)
+#     if returnArea:
+#         return returnArea
+#     elif not returnArea:
+#         return
 
 # looks too chaotic
 # def printadv(text):
@@ -48,7 +47,6 @@ def huh(msg="dnu", sleepTime=1, returnArea=False):
 #         print(textAlt)
 #         sleepadv(0.02)
 #         clearAll()
-
 
 def getColor(colorType, mode="cf.") -> str:
     colorType.lower()

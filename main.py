@@ -24,15 +24,6 @@ caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
 
-# file
-saveFileList = []
-saveFileListAlt = []
-currentSaveAlt = ""
-loadDataAlt = ""
-currentSave = 0
-breakOut = False
-saveDirList = os.listdir("savefiles")
-
 # shorter keybind var
 w = conf.settings["up"]
 a = conf.settings["left"]
@@ -80,10 +71,20 @@ page3Extra = ""
 credPage = 1
 # nextP and prevP carry on with credits page
 
+# file
+saveFileList = []
+saveFileListAlt = []
+currentSaveAlt = ""
+loadDataAlt = ""
+currentSave = 0
+breakOut = False
+saveDirList = os.listdir("savefiles")
+fileRangeMin = 0
+fileRangeMax = 9
 
 def fileFunc():
     """runs whenever file is picked"""
-    global currentSaveAlt, currentSave, loadDataAlt, breakOut
+    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax
 
     h.clearAll()
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
@@ -103,7 +104,7 @@ def fileFunc():
         files = [
             f
             for f in sorted(os.listdir("savefiles"))
-            if f.endswith(".json") and f != "conf.json"
+            if f.endswith(".json") and f != "conf.json" and f in range(fileRangeMin, fileRangeMax)
         ]
         for displayIndex, fileName in enumerate(files):
             filePath = os.path.join("savefiles", fileName)
@@ -151,13 +152,13 @@ def fileFunc():
         h.clearAll()
         return
     elif choice == c:
-        if "conf.json" not in saveFileList:
+        if "conf.json" not in saveFileListAlt:
             sv.save(sv.defaultConfig, 'config')
         if not files:
             sv.save(sv.defaultData, 0)
         else:
-            sv.save(sv.defaultData, sv.saveNum)
-            currentSave = sv.saveNum
+            sv.save(sv.defaultData, sv.initSaveNum())
+            currentSave = sv.initSaveNum()
         h.sleepadv(1)
     else:
         print("did not understand.\n")

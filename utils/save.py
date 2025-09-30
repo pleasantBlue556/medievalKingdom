@@ -2,8 +2,14 @@ import json, os
 from utils import config as c
 
 os.makedirs('savefiles', exist_ok=True)
-saveNum = str(len(os.listdir('savefiles')))
+saveNumAlt = 0
 currentSave = 0
+
+def initSaveNum(saveNum=saveNumAlt):
+    for i in range(len(os.listdir('savefiles'))):
+        if os.listdir('savefiles')[i] != 'conf.json':
+            saveNum += 1
+    return saveNum
 
 # default save
 defaultData = {
@@ -22,8 +28,8 @@ defaultConfig = {
     "caret": ">",
     # page 2
     "actionMsg": "what is your action? ",
-    "saveMsg": f"file {saveNum} saved.",
-    "loadMsg": f"file {saveNum} loaded.",
+    "saveMsg": f"file {initSaveNum()} saved.",
+    "loadMsg": f"file {initSaveNum()} loaded.",
     "newDayMsg": "the day is ending...",
     # page 3
     "up": "w",
@@ -37,7 +43,7 @@ defaultConfig = {
 
 
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
-def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
+def save(saveData, slot=initSaveNum(), msg=c.settings["saveMsg"]):
 
     # define filepath
     if slot == "config":
@@ -62,7 +68,7 @@ def saveDict(newDict, newData, saveData):
     save(saveData, msg=False)
 
 
-def load(saveDirectory='savefiles', saveNum=saveNum, msg=c.settings["loadMsg"]):
+def load(saveDirectory='savefiles', saveNum=initSaveNum(), msg=c.settings["loadMsg"]):
     filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
@@ -85,18 +91,18 @@ def merge(target, data):
             merge(target[key], value)
 
 
-# choice = input("save/load")
-# if choice == "save":
-#     slot = input("slot num?")
-#     if slot == 'config':
-#         save(defaultConfig, slot)
-#     else:
-#         save(defaultData, slot)
-#
-# elif choice == "load":
-#     slot = input("slot num?")
-#     saveData = load('savefiles', slot)
-#     print(saveData)
+choice = input("save/load")
+if choice == "save":
+    slot = input("slot num?")
+    if slot == 'config':
+        save(defaultConfig, slot)
+    else:
+        save(defaultData, slot)
+
+elif choice == "load":
+    slot = input("slot num?")
+    saveData = load('savefiles', slot)
+    print(saveData)
 
 
 # im so snart
