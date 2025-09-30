@@ -91,18 +91,18 @@ def merge(target, data):
             merge(target[key], value)
 
 
-choice = input("save/load")
-if choice == "save":
-    slot = input("slot num?")
-    if slot == 'config':
-        save(defaultConfig, slot)
-    else:
-        save(defaultData, slot)
-
-elif choice == "load":
-    slot = input("slot num?")
-    saveData = load('savefiles', slot)
-    print(saveData)
+# choice = input("save/load")
+# if choice == "save":
+#     slot = input("slot num?")
+#     if slot == 'config':
+#         save(defaultConfig, slot)
+#     else:
+#         save(defaultData, slot)
+#
+# elif choice == "load":
+#     slot = input("slot num?")
+#     saveData = load('savefiles', slot)
+#     print(saveData)
 
 
 # im so snart

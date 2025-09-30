@@ -69,7 +69,7 @@ page = 1
 page3Extra = ""
 # credits var
 credPage = 1
-# nextP and prevP carry on with credits page
+# nextP and prevP carry
 
 # file
 saveFileList = []
@@ -80,14 +80,31 @@ currentSave = 0
 breakOut = False
 saveDirList = os.listdir("savefiles")
 fileRangeMin = 0
-fileRangeMax = 9
+if len(saveDirList) < 9:
+    fileRangeMax = len(saveDirList)
+else:
+    fileRangeMax = 9
+filePage = 1
 
 def fileFunc():
     """runs whenever file is picked"""
-    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax
+    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage
 
     h.clearAll()
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
+
+    # next/prev page
+    statement = ''
+    if prevP:
+        statement += "<< "
+    else:
+        statement += "## "
+    statement += f'page {filePage} ({fileRangeMin}-{fileRangeMax})'
+    if nextP:
+        statement += " >>"
+    else:
+        statement += " ##"
+    print(statement)
 
     # split .json off
     saveFileListAlt = os.listdir("savefiles")
@@ -104,25 +121,28 @@ def fileFunc():
         files = [
             f
             for f in sorted(os.listdir("savefiles"))
-            if f.endswith(".json") and f != "conf.json" and f in range(fileRangeMin, fileRangeMax)
+            if f.endswith(".json") and f != "conf.json"
         ]
         for displayIndex, fileName in enumerate(files):
-            filePath = os.path.join("savefiles", fileName)
+            for i in range(fileRangeMin, fileRangeMax):
+                filePath = os.path.join("savefiles", fileName)
 
-            with open(filePath, "r") as f:
-                data = json.load(f)
-            name = data.get("kingdom", None).get("name", "")
-            gold = data.get("kingdom", None).get("gold", 0)
+                with open(filePath, "r") as f:
+                    data = json.load(f)
+                name = data.get("kingdom", None).get("name", "")
+                gold = data.get("kingdom", None).get("gold", 0)
 
-            # add mark
-            if displayIndex == currentSave:
-                currentSaveAlt = "*"
-            else:
-                currentSaveAlt = ""
-            print(
-                f"{displayIndex}{currentSaveAlt}: {fileName} // "
-                f"'{name}', {gold} gold"
-            )
+                # add mark
+                if displayIndex == currentSave:
+                    currentSaveAlt = "*"
+                else:
+                    currentSaveAlt = ""
+                print(
+                    f"{displayIndex}{currentSaveAlt}: {fileName} // "
+                    f"'{name}', {gold} gold"
+                )
+                fileRangeMin += 10
+                fileRangeMax += 10
 
     print("")
     choice = h.inputadv(f"[#] [{z}] [{x}] [{c}] [help]")
