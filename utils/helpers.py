@@ -23,6 +23,7 @@ def clearAll():
     elif platform.system() == "Linux":
         os.system("clear")
 
+
 # doesnt work
 # def huh(msg="dnu", sleepTime=1, returnArea=False):
 #     if msg == "min":
@@ -47,6 +48,7 @@ def clearAll():
 #         print(textAlt)
 #         sleepadv(0.02)
 #         clearAll()
+
 
 def getColor(colorType, mode="cf.") -> str:
     colorType.lower()

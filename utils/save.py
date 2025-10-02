@@ -1,15 +1,19 @@
 import json, os
 from utils import config as c
+from colorama import init, Fore as cf, Back as cb, Style as cs
 
-os.makedirs('savefiles', exist_ok=True)
+os.makedirs("savefiles", exist_ok=True)
+saveDirList = os.listdir("savefiles")
 saveNumAlt = 0
 currentSave = 0
 
+
 def initSaveNum(saveNum=saveNumAlt):
-    for i in range(len(os.listdir('savefiles'))):
-        if os.listdir('savefiles')[i] != 'conf.json':
+    for i in range(len(saveDirList)):
+        if saveDirList[i] not in ["warning.txt", "conf.json"]:
             saveNum += 1
     return saveNum
+
 
 # default save
 defaultData = {
@@ -23,23 +27,7 @@ defaultData = {
         "stop smuggling!!!": True,
     },
 }
-defaultConfig = {
-    "textSpeed": 1,
-    "caret": ">",
-    # page 2
-    "actionMsg": "what is your action? ",
-    "saveMsg": f"file {initSaveNum()} saved.",
-    "loadMsg": f"file {initSaveNum()} loaded.",
-    "newDayMsg": "the day is ending...",
-    # page 3
-    "up": "w",
-    "left": "a",
-    "down": "s",
-    "right": "d",
-    "select": "z",
-    "cancel": "x",
-    "misc": "c",
-}
+defaultConfig = c.settings
 
 
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
@@ -50,7 +38,7 @@ def save(saveData, slot=initSaveNum(), msg=c.settings["saveMsg"]):
         slotAlt = "conf.json"
     else:
         slotAlt = "savefile" + str(slot) + ".json"
-    filePath = os.path.join('savefiles', slotAlt)
+    filePath = os.path.join("savefiles", slotAlt)
 
     # write
     with open(filePath, "w") as savefile:
@@ -68,7 +56,7 @@ def saveDict(newDict, newData, saveData):
     save(saveData, msg=False)
 
 
-def load(saveDirectory='savefiles', saveNum=initSaveNum(), msg=c.settings["loadMsg"]):
+def load(saveDirectory="savefiles", saveNum=initSaveNum(), msg=c.settings["loadMsg"]):
     filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
@@ -91,18 +79,18 @@ def merge(target, data):
             merge(target[key], value)
 
 
-# choice = input("save/load")
-# if choice == "save":
-#     slot = input("slot num?")
-#     if slot == 'config':
-#         save(defaultConfig, slot)
-#     else:
-#         save(defaultData, slot)
+choice = input("save/load")
+if choice == "save":
+    slot = input("slot num?")
+    if slot == "config":
+        save(defaultConfig, slot)
+    else:
+        save(defaultData, slot)
+
+elif choice == "load":
+    slot = input("slot num?")
+    saveData = load("savefiles", slot)
+    print(saveData)
 #
-# elif choice == "load":
-#     slot = input("slot num?")
-#     saveData = load('savefiles', slot)
-#     print(saveData)
-
-
+#
 # im so snart

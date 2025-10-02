@@ -1,0 +1,18 @@
+{
+    "textSpeed": 1,
+    "caretColorless": ">",
+    "caret": "\u001b[97m\u001b[40m\u001b[97m\u001b[40m>\u001b[0m\u001b[0m",
+    "caretFore": "\u001b[97m",
+    "caretBack": "\u001b[40m",
+    "actionMsg": "what is your action? ",
+    "saveMsg": "file {saveNum} saved.",
+    "loadMsg": "file {saveNum} loaded.",
+    "newDayMsg": "the day is ending...",
+    "up": "w",
+    "left": "a",
+    "down": "s",
+    "right": "d",
+    "select": "z",
+    "cancel": "x",
+    "misc": "c"
+}

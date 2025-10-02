@@ -78,13 +78,13 @@ currentSaveAlt = ""
 loadDataAlt = ""
 currentSave = 0
 breakOut = False
-saveDirList = os.listdir("savefiles")
 fileRangeMin = 0
-if len(saveDirList) < 9:
-    fileRangeMax = len(saveDirList)
+if len(sv.saveDirList) < 9:
+    fileRangeMax = len(sv.saveDirList)
 else:
     fileRangeMax = 9
 filePage = 1
+
 
 def fileFunc():
     """runs whenever file is picked"""
@@ -94,12 +94,12 @@ def fileFunc():
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
     # next/prev page
-    statement = ''
+    statement = ""
     if prevP:
         statement += "<< "
     else:
         statement += "## "
-    statement += f'page {filePage} ({fileRangeMin}-{fileRangeMax})'
+    statement += f"page {filePage} ({fileRangeMin}-{fileRangeMax})"
     if nextP:
         statement += " >>"
     else:
@@ -109,7 +109,7 @@ def fileFunc():
     # split .json off
     saveFileListAlt = os.listdir("savefiles")
     saveFileList = []
-    for i in range(len(os.listdir("savefiles"))):
+    for i in range(len(saveFileListAlt)):
         # REALLY weird looking but just cuts the .json off
         saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
 
@@ -124,7 +124,7 @@ def fileFunc():
             if f.endswith(".json") and f != "conf.json"
         ]
         for displayIndex, fileName in enumerate(files):
-            for i in range(fileRangeMin, fileRangeMax):
+            if displayIndex in range(fileRangeMin, fileRangeMax):
                 filePath = os.path.join("savefiles", fileName)
 
                 with open(filePath, "r") as f:
@@ -141,8 +141,6 @@ def fileFunc():
                     f"{displayIndex}{currentSaveAlt}: {fileName} // "
                     f"'{name}', {gold} gold"
                 )
-                fileRangeMin += 10
-                fileRangeMax += 10
 
     print("")
     choice = h.inputadv(f"[#] [{z}] [{x}] [{c}] [help]")
@@ -153,8 +151,13 @@ def fileFunc():
         choiceInt = False
         # collapsable
     if choice == "help":
-        print(f"[{z}]: continue (*)\n" f"[{x}]: exit\n" f"[{c}]: new file\n")
-        h.inputadv("[enter] to leave")
+        f"[<]: previous page (also use {a})\n"
+        f"[>]: next page (also use {d})\n"
+        f"[<<]: first page\n"
+        f"[>>]: last page\n"
+        f"[{z}]: continue\n"
+        f"[{x}]: exit\n"
+        f"[{c}]: new file\n"
     elif choice == x:
         h.clearAll()
         return
@@ -165,7 +168,7 @@ def fileFunc():
         h.sleepadv(1)
         h.clearAll()
         return
-    elif choice in [z, "*"]:
+    elif choice in [z, "*"] or not choice:
         loadDataAlt = sv.load("savefiles", currentSave)
         breakOut = True
         h.sleepadv(1)
@@ -173,13 +176,28 @@ def fileFunc():
         return
     elif choice == c:
         if "conf.json" not in saveFileListAlt:
-            sv.save(sv.defaultConfig, 'config')
+            sv.save(sv.defaultConfig, "config")
         if not files:
             sv.save(sv.defaultData, 0)
         else:
             sv.save(sv.defaultData, sv.initSaveNum())
             currentSave = sv.initSaveNum()
         h.sleepadv(1)
+    elif choice in [a, "prev", "previous", "<"] and prevP:
+        fileRangeMin -= fileRangeMax - fileRangeMin
+        fileRangeMax -= fileRangeMax - fileRangeMin
+    elif choice in [d, "next", ">"] and nextP:
+        fileRangeMin += fileRangeMax - fileRangeMin
+        fileRangeMax += fileRangeMax - fileRangeMin
+    elif (
+        choice in ["next", ">", d]
+        and not nextP
+        or choice in ["prev", "previous", "<", a]
+        and not prevP
+    ):
+        print("that page is unavailable (unavailable pages are marked by #'s)")
+        h.sleepadv(1.5)
+
     else:
         print("did not understand.\n")
         h.sleepadv(1)

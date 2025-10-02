@@ -1,12 +1,13 @@
 from colorama import init as coloramaInit, Fore as cf, Back as cb, Style as cs
 
 coloramaInit(autoreset=True)
+
 settings = {
     # page 1
     "textSpeed": 1,
     "caretColorless": ">",
     "caret": ">",
-    "caretFore": cf.WHITE,
+    "caretFore": cf.LIGHTWHITE_EX,
     "caretBack": cb.BLACK,
     # page 2
     "actionMsg": "what is your action? ",
