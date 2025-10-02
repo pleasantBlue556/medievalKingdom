@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="saveNum changes">
+    <list default="true" id="e219d0b6-8225-41e4-95f4-2abd8d2cc5ef" name="Changes" comment="buggy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/save.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/save.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +166,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759201709076</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="buggy">
+      <option name="closed" value="true" />
+      <created>1759202424222</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1759202424222</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -213,6 +219,7 @@
     <MESSAGE value="test" />
     <MESSAGE value="test again" />
     <MESSAGE value="saveNum changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="saveNum changes" />
+    <MESSAGE value="buggy" />
+    <option name="LAST_COMMIT_MESSAGE" value="buggy" />
   </component>
 </project>
