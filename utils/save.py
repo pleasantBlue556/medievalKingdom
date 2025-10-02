@@ -4,14 +4,17 @@ from colorama import init, Fore as cf, Back as cb, Style as cs
 
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
+sDirListFilt = []
+for i in range(len(saveDirList)):
+    if saveDirList[i].endswith('.json') and saveDirList[i].startswith('savefile'):
+        sDirListFilt.append(saveDirList[i])
 saveNumAlt = 0
 currentSave = 0
 
 
 def initSaveNum(saveNum=saveNumAlt):
-    for i in range(len(saveDirList)):
-        if saveDirList[i] not in ["warning.txt", "conf.json"]:
-            saveNum += 1
+    for i in range(len(sDirListFilt)):
+        saveNum += 1
     return saveNum
 
 
@@ -78,19 +81,19 @@ def merge(target, data):
         elif isinstance(value, dict):
             merge(target[key], value)
 
-
-choice = input("save/load")
-if choice == "save":
-    slot = input("slot num?")
-    if slot == "config":
-        save(defaultConfig, slot)
-    else:
-        save(defaultData, slot)
-
-elif choice == "load":
-    slot = input("slot num?")
-    saveData = load("savefiles", slot)
-    print(saveData)
+#
+# choice = input("save/load")
+# if choice == "save":
+#     slot = input("slot num?")
+#     if slot == "config":
+#         save(defaultConfig, slot)
+#     else:
+#         save(defaultData, slot)
+#
+# elif choice == "load":
+#     slot = input("slot num?")
+#     saveData = load("savefiles", slot)
+#     print(saveData)
 #
 #
 # im so snart

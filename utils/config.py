@@ -9,6 +9,7 @@ settings = {
     "caret": ">",
     "caretFore": cf.LIGHTWHITE_EX,
     "caretBack": cb.BLACK,
+    "saveListCap": 4,
     # page 2
     "actionMsg": "what is your action? ",
     "saveMsg": "file {saveNum} saved.",

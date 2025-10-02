@@ -2,6 +2,8 @@ import json, os, platform, sys
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 from utils import config as conf, save as sv, helpers as h
 
+
+
 userSys = platform.system()
 userVer = platform.release()
 # if distro.name():
@@ -77,33 +79,45 @@ saveFileListAlt = []
 currentSaveAlt = ""
 loadDataAlt = ""
 currentSave = 0
-breakOut = False
-fileRangeMin = 0
-if len(sv.saveDirList) < 9:
-    fileRangeMax = len(sv.saveDirList)
-else:
-    fileRangeMax = 9
 filePage = 1
 
 
+saveListCap = conf.settings['saveListCap']
+fileRangeMin = 0
+if len(sv.saveDirList) < saveListCap:
+    fileRangeMax = len(sv.saveDirList)
+else:
+    fileRangeMax = saveListCap
+
+filePageNum = 0
+for _ in range(filePageNum % saveListCap):
+    filePageNum += 1
+breakOut = False
+
 def fileFunc():
     """runs whenever file is picked"""
-    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage
-
+    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
+    if len(sv.saveDirList) > saveListCap:
+        nextP = True
+    elif filePage == filePageNum:
+        nextP = False
+    else:
+        nextP = False
     h.clearAll()
+
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
 
     # next/prev page
     statement = ""
     if prevP:
-        statement += "<< "
+        statement += "<<"
     else:
-        statement += "## "
-    statement += f"page {filePage} ({fileRangeMin}-{fileRangeMax})"
+        statement += "##"
+    statement += f" page {filePage} ({fileRangeMin}-{fileRangeMax}) "
     if nextP:
-        statement += " >>"
+        statement += ">>"
     else:
-        statement += " ##"
+        statement += "##"
     print(statement)
 
     # split .json off
@@ -158,6 +172,7 @@ def fileFunc():
         f"[{z}]: continue\n"
         f"[{x}]: exit\n"
         f"[{c}]: new file\n"
+        h.inputadv('[enter] to leave')
     elif choice == x:
         h.clearAll()
         return
@@ -691,6 +706,7 @@ def gameLoop(actions=actionCount):
 # start!
 while True:
     h.clearAll()
+
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [medievalKingdom]{cs.RESET_ALL}")
     print(
         f"{caret1} [files]\n"
@@ -753,3 +769,6 @@ while True:
         caret3 = cf.LIGHTBLUE_EX + caret3 + cs.RESET_ALL
     elif currentCaret == 4:
         caret4 = cf.LIGHTBLUE_EX + caret4 + cs.RESET_ALL
+
+# notes:
+# sz36, cascadia semibold -> 23*94

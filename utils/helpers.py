@@ -51,7 +51,7 @@ def clearAll():
 
 
 def getColor(colorType, mode="cf.") -> str:
-    colorType.lower()
+    colorType.upper()
     if colorType == mode + "BLUE":
         print(colorType, mode + "BLUE")
         return "blue"
