@@ -13,6 +13,8 @@ userVer = platform.release()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
 
+__name__ = "__main__"
+
 # ↑↓←→
 currentCaret = 1
 conf.settings["caret"] = (
@@ -90,7 +92,7 @@ else:
     fileRangeMax = saveListCap
 
 filePageNum = 0
-for _ in range(filePageNum % saveListCap):
+for _ in range(filePageNum // saveListCap):
     filePageNum += 1
 breakOut = False
 
@@ -103,6 +105,13 @@ def fileFunc():
         nextP = False
     else:
         nextP = False
+
+    if len(sv.saveDirList) < saveListCap:
+        prevP = True
+    elif filePage == 1:
+        prevP = False
+    else:
+        prevP = False
     h.clearAll()
 
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
@@ -135,7 +144,7 @@ def fileFunc():
         files = [
             f
             for f in sorted(os.listdir("savefiles"))
-            if f.endswith(".json") and f != "conf.json"
+            if f.endswith('.json') and f.startswith('savefile')
         ]
         for displayIndex, fileName in enumerate(files):
             if displayIndex in range(fileRangeMin, fileRangeMax):
@@ -204,6 +213,13 @@ def fileFunc():
     elif choice in [d, "next", ">"] and nextP:
         fileRangeMin += fileRangeMax - fileRangeMin
         fileRangeMax += fileRangeMax - fileRangeMin
+    elif choice == '<<':
+        filePage = 1
+    elif choice == '>>':
+        while True:
+            filePage += 1
+            if not nextP:
+                break
     elif (
         choice in ["next", ">", d]
         and not nextP
@@ -223,6 +239,10 @@ def settingsFunc():
     """recursive settings function, calls data from config and saves(?)"""
     global nextP, prevP, page, page3Extra, saveFileList, saveFileListAlt
     h.clearAll()
+
+    with open(os.path.join('savefiles', 'conf.json'), 'r') as confData:
+        print(confData)
+
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
         nextP = True
@@ -232,8 +252,8 @@ def settingsFunc():
             "## page 1 - customization >>\n"
             f"1. text speed: {conf.settings['textSpeed']}\n"
             f"2. caret: '{conf.settings['caretColorless']}'\n"
-            f"3. caret color: {h.getColor(conf.settings['caretFore'])}, "
-            f"{h.getColor(conf.settings['caretBack'])}"
+            f"3. caret color: {h.getColorAlt(conf.settings['caretFore'])}, "
+            f"{h.getColorAlt(conf.settings['caretBack'])}"
         )
     elif page == 2:
         nextP = True
