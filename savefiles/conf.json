@@ -1,9 +1,9 @@
 {
-    "textSpeed": 0.5,
+    "textSpeed": 1,
     "caretColorless": ">",
-    "caret": "\u001b[97m\u001b[40m\u001b[97m\u001b[40m>\u001b[0m\u001b[0m",
-    "caretFore": "\u001b[97m",
-    "caretBack": "\u001b[40m",
+    "caret": "\u001b[97m\u001b[40m>\u001b[0m",
+    "caretFore": "green",
+    "caretBack": "blue",
     "saveListCap": 4,
     "actionMsg": "what is your action? ",
     "saveMsg": "file {saveNum} saved.",

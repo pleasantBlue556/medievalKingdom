@@ -1,8 +1,9 @@
 import json, os, platform, sys
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
-from utils import config as conf, save as sv, helpers as h
+from utils import save as sv, helpers as h
 
-
+with open(os.path.join('savefiles', 'conf.json'), 'r') as _confData:
+    confData = json.load(_confData)
 
 userSys = platform.system()
 userVer = platform.release()
@@ -17,25 +18,25 @@ __name__ = "__main__"
 
 # ↑↓←→
 currentCaret = 1
-conf.settings["caret"] = (
-    conf.settings["caretFore"]
-    + conf.settings["caretBack"]
-    + conf.settings["caret"]
+confData["caret"] = (
+    confData["caretFore"]
+    + confData["caretBack"]
+    + confData["caret"]
     + cs.RESET_ALL
 )
-caret1 = conf.settings["caret"]
+caret1 = confData["caret"]
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
 
 # shorter keybind var
-w = conf.settings["up"]
-a = conf.settings["left"]
-s = conf.settings["down"]
-d = conf.settings["right"]
-z = conf.settings["select"]
-x = conf.settings["cancel"]
-c = conf.settings["misc"]
+w = confData["up"]
+a = confData["left"]
+s = confData["down"]
+d = confData["right"]
+z = confData["select"]
+x = confData["cancel"]
+c = confData["misc"]
 keybindList = [w, a, s, d, z, x, c]
 
 # settings keywords
@@ -77,14 +78,12 @@ credPage = 1
 
 # file
 saveFileList = []
-saveFileListAlt = []
-currentSaveAlt = ""
+_saveFileList = []
+_currentSave = ""
 loadDataAlt = ""
 currentSave = 0
 filePage = 1
-
-
-saveListCap = conf.settings['saveListCap']
+saveListCap = confData['saveListCap']
 fileRangeMin = 0
 if len(sv.saveDirList) < saveListCap:
     fileRangeMax = len(sv.saveDirList)
@@ -98,7 +97,7 @@ breakOut = False
 
 def fileFunc():
     """runs whenever file is picked"""
-    global currentSaveAlt, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
+    global _currentSave, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
     if len(sv.saveDirList) > saveListCap:
         nextP = True
     elif filePage == filePageNum:
@@ -130,14 +129,13 @@ def fileFunc():
     print(statement)
 
     # split .json off
-    saveFileListAlt = os.listdir("savefiles")
+    _saveFileList = os.listdir("savefiles")
     saveFileList = []
-    for i in range(len(saveFileListAlt)):
+    for i in range(len(_saveFileList)):
         # REALLY weird looking but just cuts the .json off
-        saveFileList.append(os.path.splitext(saveFileListAlt[i])[0])
+        saveFileList.append(os.path.splitext(_saveFileList[i])[0])
 
     if len(saveFileList) == 0:
-        files = []
         print("use 'c' to start a new file.")
     else:
         # list prints
@@ -157,11 +155,11 @@ def fileFunc():
 
                 # add mark
                 if displayIndex == currentSave:
-                    currentSaveAlt = "*"
+                    _currentSave = "*"
                 else:
-                    currentSaveAlt = ""
+                    _currentSave = ""
                 print(
-                    f"{displayIndex}{currentSaveAlt}: {fileName} // "
+                    f"{displayIndex}{_currentSave}: {fileName} // "
                     f"'{name}', {gold} gold"
                 )
 
@@ -199,20 +197,17 @@ def fileFunc():
         h.clearAll()
         return
     elif choice == c:
-        if "conf.json" not in saveFileListAlt:
-            sv.save(sv.defaultConfig, "config")
-        if not files:
-            sv.save(sv.defaultData, 0)
-        else:
-            sv.save(sv.defaultData, sv.initSaveNum())
-            currentSave = sv.initSaveNum()
+        if "conf.json" not in _saveFileList:
+            sv.save(sv.defaultConfig, "conf")
+        sv.save(sv.defaultData, sv.saveNum)
+        currentSave = sv.saveNum
         h.sleepadv(1)
     elif choice in [a, "prev", "previous", "<"] and prevP:
-        fileRangeMin -= fileRangeMax - fileRangeMin
-        fileRangeMax -= fileRangeMax - fileRangeMin
+        fileRangeMin -= saveListCap
+        fileRangeMax -= saveListCap
     elif choice in [d, "next", ">"] and nextP:
-        fileRangeMin += fileRangeMax - fileRangeMin
-        fileRangeMax += fileRangeMax - fileRangeMin
+        fileRangeMin += saveListCap
+        fileRangeMax += saveListCap
     elif choice == '<<':
         filePage = 1
     elif choice == '>>':
@@ -228,7 +223,6 @@ def fileFunc():
     ):
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
-
     else:
         print("did not understand.\n")
         h.sleepadv(1)
@@ -236,12 +230,10 @@ def fileFunc():
 
 
 def settingsFunc():
-    """recursive settings function, calls data from config and saves(?)"""
-    global nextP, prevP, page, page3Extra, saveFileList, saveFileListAlt
+    """recursive settings function, calls data from confDataig and saves(?)"""
+    global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
-    with open(os.path.join('savefiles', 'conf.json'), 'r') as confData:
-        print(confData)
 
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
@@ -250,10 +242,10 @@ def settingsFunc():
         page3Extra = ""
         print(
             "## page 1 - customization >>\n"
-            f"1. text speed: {conf.settings['textSpeed']}\n"
-            f"2. caret: '{conf.settings['caretColorless']}'\n"
-            f"3. caret color: {h.getColorAlt(conf.settings['caretFore'])}, "
-            f"{h.getColorAlt(conf.settings['caretBack'])}"
+            f"1. text speed: {confData['textSpeed']}\n"
+            f"2. caret: '{confData['caretColorless']}'\n"
+            f"3. caret color: {h.getColorAlt(confData['caretFore'])}, "
+            f"{h.getColorAlt(confData['caretBack'])}"
         )
     elif page == 2:
         nextP = True
@@ -261,10 +253,10 @@ def settingsFunc():
         page3Extra = ""
         print(
             "<< page 2 - messages >>\n"
-            f"1. save message: {conf.settings['saveMsg']}\n"
-            f"2. load message: {conf.settings['loadMsg']}\n"
-            f"3. new day message: {conf.settings['newDayMsg']}\n"
-            f"4. action message: {conf.settings['actionMsg']}\n"
+            f"1. save message: {confData['saveMsg']}\n"
+            f"2. load message: {confData['loadMsg']}\n"
+            f"3. new day message: {confData['newDayMsg']}\n"
+            f"4. action message: {confData['actionMsg']}\n"
         )
     elif page == 3:
         nextP = False
@@ -272,13 +264,13 @@ def settingsFunc():
         page3Extra = " only"  # added to choice input (numbers only!)
         print(
             "<< page 3 - keybinds ##\n"
-            f"1. up: [{conf.settings['up']}]\n"
-            f"2. left: [{conf.settings['left']}]\n"
-            f"3. down: [{conf.settings['down']}]\n"
-            f"4. right: [{conf.settings['right']}]\n"
-            f"5. select: [{conf.settings['select']}]\n"
-            f"6. cancel: [{conf.settings['cancel']}]\n"
-            f"7. misc: [{conf.settings['misc']}]\n"
+            f"1. up: [{confData['up']}]\n"
+            f"2. left: [{confData['left']}]\n"
+            f"3. down: [{confData['down']}]\n"
+            f"4. right: [{confData['right']}]\n"
+            f"5. select: [{confData['select']}]\n"
+            f"6. cancel: [{confData['cancel']}]\n"
+            f"7. misc: [{confData['misc']}]\n"
         )
     choice = h.inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{c}] [help]").strip()
     try:
@@ -319,8 +311,8 @@ def settingsFunc():
                         settingsChoice = "0.25"
                     elif settingsChoice == "1/2":
                         settingsChoice = "0.5"
-                    conf.settings["textSpeed"] = float(settingsChoice)
-                    print(f"speed set to {conf.settings['textSpeed']}.\n")
+                    confData["textSpeed"] = float(settingsChoice)
+                    print(f"speed set to {confData['textSpeed']}.\n")
                     h.sleepadv(1)
 
                 else:
@@ -334,8 +326,9 @@ def settingsFunc():
                     "examples: ->, -, o\n"
                     "note: the newline and extra space after the caret are given automatically.\n"
                 )
-                conf.settings["caret"] = settingsChoice
-                print(f"caret set to {conf.settings['caret']}.\n")
+                confData["caret"] = settingsChoice
+                confData["colorlessCaret"] = settingsChoice
+                print(f"caret set to {confData['caret']}.\n")
                 h.sleepadv(1)
 
             # caret color
@@ -346,14 +339,14 @@ def settingsFunc():
                     "foreground:"
                 )
                 if h.getColorAlt(foregroundChoice, "cf.") is not None:
-                    conf.settings["caretFore"] = foregroundChoice
-                    print(f'caret forecolor set to {conf.settings["caretFore"]}.\n')
+                    confData["caretFore"] = foregroundChoice
+                    print(f'caret forecolor set to {confData["caretFore"]}.\n')
                     h.sleepadv(1)
 
                     backgroundChoice = h.inputadv("background:")
                     if h.getColorAlt(backgroundChoice, "cb.") is not None:
-                        conf.settings["caretBack"] = backgroundChoice
-                        print(f'caret backcolor set to {conf.settings["caretBack"]}.\n')
+                        confData["caretBack"] = backgroundChoice
+                        print(f'caret backcolor set to {confData["caretBack"]}.\n')
                         h.sleepadv(1)
                     else:
                         print(
@@ -382,12 +375,12 @@ def settingsFunc():
                 )
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    conf.settings["saveMsg"] = settingsChoice
+                    confData["saveMsg"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    conf.settings["saveMsg"] = ""
+                    confData["saveMsg"] = ""
                     h.sleepadv(1)
 
                 else:
@@ -402,12 +395,12 @@ def settingsFunc():
                 )
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    conf.settings["loadMsg"] = settingsChoice
+                    confData["loadMsg"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    conf.settings["loadMsg"] = ""
+                    confData["loadMsg"] = ""
                     h.sleepadv(1)
 
                 else:
@@ -422,12 +415,12 @@ def settingsFunc():
                 )
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    conf.settings["newDayMsg"] = settingsChoice
+                    confData["newDayMsg"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    conf.settings["newDayMsg"] = ""
+                    confData["newDayMsg"] = ""
                     h.sleepadv(1)
 
                 else:
@@ -442,12 +435,12 @@ def settingsFunc():
                 )
                 if settingsChoice != "":
                     print(f"message '{settingsChoice}' added.\n")
-                    conf.settings["actionMsg"] = settingsChoice
+                    confData["actionMsg"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice.strip() == "":
                     print("messages removed.\n")
-                    conf.settings["newDayMsg"] = ""
+                    confData["newDayMsg"] = ""
                     h.sleepadv(1)
 
                 else:
@@ -467,7 +460,7 @@ def settingsFunc():
                     # collapsable
                 elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
-                    conf.settings["up"] = settingsChoice
+                    confData["up"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -488,7 +481,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
-                    conf.settings["left"] = settingsChoice
+                    confData["left"] = settingsChoice
                     h.sleepadv(1)
                 elif settingsChoice in keybindList:
                     print(f"keybind {settingsChoice} already used.")
@@ -506,7 +499,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
-                    conf.settings["down"] = settingsChoice
+                    confData["down"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -527,7 +520,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
-                    conf.settings["right"] = settingsChoice
+                    confData["right"] = settingsChoice
                     h.sleepadv(1)
                 elif settingsChoice in keybindList:
                     print(f"keybind {settingsChoice} already used.")
@@ -545,7 +538,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
-                    conf.settings["select"] = settingsChoice
+                    confData["select"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -568,7 +561,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
-                    conf.settings["cancel"] = settingsChoice
+                    confData["cancel"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -589,7 +582,7 @@ def settingsFunc():
                     return
                 elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
-                    conf.settings["misc"] = settingsChoice
+                    confData["misc"] = settingsChoice
                     h.sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -612,13 +605,13 @@ def settingsFunc():
         h.clearAll()
         return
     elif choice == c:
-        # universal settings config
-        saveData = sv.save(conf.settings, "config")
-        print(saveData)
+        # universal settings confDataig
+        sv.save(confData, "confDataig")
         h.sleepadv(1)
     else:
         print("did not understand.")
         h.sleepadv(1)
+    sv.save(confData, 'confDataig')
     return settingsFunc()
 
 
@@ -716,7 +709,7 @@ def gameLoop(actions=actionCount):
         if loadDataAlt == sv.defaultData:
             command = h.inputadv('welcome to medievalKingdom! to start, type "help".')
         else:
-            command = h.inputadv(f"{conf.settings['actionMsg']}")
+            command = h.inputadv(f"{confData['actionMsg']}")
         if command == "help":
             pass
         h.clearAll()
@@ -740,29 +733,29 @@ while True:
         if currentCaret == 2:
             currentCaret -= 1
             caret2 = "↓"
-            caret1 = conf.settings["caret"]
+            caret1 = confData["caret"]
         elif currentCaret == 3:
             currentCaret -= 1
             caret3 = "↓"
-            caret2 = conf.settings["caret"]
+            caret2 = confData["caret"]
         elif currentCaret == 4:
             currentCaret -= 1
             caret4 = "↓"
-            caret3 = conf.settings["caret"]
+            caret3 = confData["caret"]
     # down
     elif choice == s:
         if currentCaret == 1:
             currentCaret += 1
             caret1 = "↑"
-            caret2 = conf.settings["caret"]
+            caret2 = confData["caret"]
         elif currentCaret == 2:
             currentCaret += 1
             caret2 = "↑"
-            caret3 = conf.settings["caret"]
+            caret3 = confData["caret"]
         elif currentCaret == 3:
             currentCaret += 1
             caret3 = "↑"
-            caret4 = conf.settings["caret"]
+            caret4 = confData["caret"]
     # select
     elif choice == z or not choice.strip():
         if currentCaret == 1:
@@ -782,13 +775,13 @@ while True:
         gameLoop()
         break
     if currentCaret == 1:
-        caret1 = cf.LIGHTBLUE_EX + caret1 + cs.RESET_ALL
+        caret1 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
     elif currentCaret == 2:
-        caret2 = cf.LIGHTBLUE_EX + caret2 + cs.RESET_ALL
+        caret2 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
     elif currentCaret == 3:
-        caret3 = cf.LIGHTBLUE_EX + caret3 + cs.RESET_ALL
+        caret3 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
     elif currentCaret == 4:
-        caret4 = cf.LIGHTBLUE_EX + caret4 + cs.RESET_ALL
+        caret4 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
 
 # notes:
 # sz36, cascadia semibold -> 23*94

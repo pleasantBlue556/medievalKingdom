@@ -1,5 +1,4 @@
-from colorama import init as coloramaInit, Fore as cf, Back as cb, Style as cs
-
+from colorama import init as coloramaInit, Fore as cf, Back as cb
 coloramaInit(autoreset=True)
 
 settings = {
@@ -24,6 +23,3 @@ settings = {
     "cancel": "x",
     "misc": "c",
 }
-settings["caret"] = (
-    settings["caretFore"] + settings["caretBack"] + settings["caret"] + cs.RESET_ALL
-)

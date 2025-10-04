@@ -8,14 +8,10 @@ sDirListFilt = []
 for i in range(len(saveDirList)):
     if saveDirList[i].endswith('.json') and saveDirList[i].startswith('savefile'):
         sDirListFilt.append(saveDirList[i])
-saveNumAlt = 0
 currentSave = 0
-
-
-def initSaveNum(saveNum=saveNumAlt):
-    for i in range(len(sDirListFilt)):
-        saveNum += 1
-    return saveNum
+saveNum = 0
+for i in range(len(sDirListFilt)):
+    saveNum += 1
 
 
 # default save
@@ -34,7 +30,7 @@ defaultConfig = c.settings
 
 
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
-def save(saveData, slot=initSaveNum(), msg=c.settings["saveMsg"]):
+def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
 
     # define filepath
     if slot == "config":
@@ -59,7 +55,7 @@ def saveDict(newDict, newData, saveData):
     save(saveData, msg=False)
 
 
-def load(saveDirectory="savefiles", saveNum=initSaveNum(), msg=c.settings["loadMsg"]):
+def load(saveDirectory="savefiles", saveNum=saveNum, msg=c.settings["loadMsg"]):
     filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
