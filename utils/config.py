@@ -1,4 +1,5 @@
 from colorama import init as coloramaInit, Fore as cf, Back as cb
+
 coloramaInit(autoreset=True)
 
 settings = {

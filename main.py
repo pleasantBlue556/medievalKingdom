@@ -2,8 +2,13 @@ import json, os, platform, sys
 from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
 from utils import save as sv, helpers as h
 
-with open(os.path.join('savefiles', 'conf.json'), 'r') as _confData:
-    confData = json.load(_confData)
+try:
+    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
+        confData = json.load(_confData)
+except FileNotFoundError:
+    sv.save(sv.defaultConfig, 'config', msg=False)
+    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
+        confData = json.load(_confData)
 
 userSys = platform.system()
 userVer = platform.release()
@@ -19,10 +24,7 @@ __name__ = "__main__"
 # ↑↓←→
 currentCaret = 1
 confData["caret"] = (
-    confData["caretFore"]
-    + confData["caretBack"]
-    + confData["caret"]
-    + cs.RESET_ALL
+    confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
 )
 caret1 = confData["caret"]
 caret2 = "↓"
@@ -83,7 +85,7 @@ _currentSave = ""
 loadDataAlt = ""
 currentSave = 0
 filePage = 1
-saveListCap = confData['saveListCap']
+saveListCap = confData["saveListCap"]
 fileRangeMin = 0
 if len(sv.saveDirList) < saveListCap:
     fileRangeMax = len(sv.saveDirList)
@@ -94,6 +96,7 @@ filePageNum = 0
 for _ in range(filePageNum // saveListCap):
     filePageNum += 1
 breakOut = False
+
 
 def fileFunc():
     """runs whenever file is picked"""
@@ -142,7 +145,7 @@ def fileFunc():
         files = [
             f
             for f in sorted(os.listdir("savefiles"))
-            if f.endswith('.json') and f.startswith('savefile')
+            if f.endswith(".json") and f.startswith("savefile")
         ]
         for displayIndex, fileName in enumerate(files):
             if displayIndex in range(fileRangeMin, fileRangeMax):
@@ -179,7 +182,7 @@ def fileFunc():
         f"[{z}]: continue\n"
         f"[{x}]: exit\n"
         f"[{c}]: new file\n"
-        h.inputadv('[enter] to leave')
+        h.inputadv("[enter] to leave")
     elif choice == x:
         h.clearAll()
         return
@@ -208,9 +211,9 @@ def fileFunc():
     elif choice in [d, "next", ">"] and nextP:
         fileRangeMin += saveListCap
         fileRangeMax += saveListCap
-    elif choice == '<<':
+    elif choice == "<<":
         filePage = 1
-    elif choice == '>>':
+    elif choice == ">>":
         while True:
             filePage += 1
             if not nextP:
@@ -230,10 +233,11 @@ def fileFunc():
 
 
 def settingsFunc():
-    """recursive settings function, calls data from confDataig and saves(?)"""
+    """recursive settings function, calls data from config and saves(?)"""
     global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
+    print(confData)
 
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
@@ -244,8 +248,8 @@ def settingsFunc():
             "## page 1 - customization >>\n"
             f"1. text speed: {confData['textSpeed']}\n"
             f"2. caret: '{confData['caretColorless']}'\n"
-            f"3. caret color: {h.getColorAlt(confData['caretFore'])}, "
-            f"{h.getColorAlt(confData['caretBack'])}"
+            f"3. caret color: {h.getColor(confData['caretFore'])}, "
+            f"{h.getColor(confData['caretBack'])}"
         )
     elif page == 2:
         nextP = True
@@ -338,14 +342,14 @@ def settingsFunc():
                     "examples: 'light blue, magenta' means light blue caret on magenta background.\n\n"
                     "foreground:"
                 )
-                if h.getColorAlt(foregroundChoice, "cf.") is not None:
-                    confData["caretFore"] = foregroundChoice
+                if h.getColorAlt(foregroundChoice) is not None:
+                    confData["caretFore"] = h.resolveColor('cf', h.getColorAlt(foregroundChoice))
                     print(f'caret forecolor set to {confData["caretFore"]}.\n')
                     h.sleepadv(1)
 
                     backgroundChoice = h.inputadv("background:")
-                    if h.getColorAlt(backgroundChoice, "cb.") is not None:
-                        confData["caretBack"] = backgroundChoice
+                    if h.getColorAlt(backgroundChoice) is not None:
+                        confData["caretBack"] = h.resolveColor('cb', h.getColorAlt(backgroundChoice))
                         print(f'caret backcolor set to {confData["caretBack"]}.\n')
                         h.sleepadv(1)
                     else:
@@ -353,7 +357,7 @@ def settingsFunc():
                             "try a different color.\n"
                             "colors: "
                             "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
-                            'add "light" before color to make it brighter!\n'
+                            '+[light]\n'
                         )
                         h.inputadv("[enter] to leave")
                 else:
@@ -605,13 +609,13 @@ def settingsFunc():
         h.clearAll()
         return
     elif choice == c:
-        # universal settings confDataig
-        sv.save(confData, "confDataig")
+        # universal settings config
+        sv.save(confData, "config")
         h.sleepadv(1)
     else:
         print("did not understand.")
         h.sleepadv(1)
-    sv.save(confData, 'confDataig')
+    sv.save(confData, "config")
     return settingsFunc()
 
 
@@ -775,13 +779,33 @@ while True:
         gameLoop()
         break
     if currentCaret == 1:
-        caret1 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+        caret1 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 2:
-        caret2 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+        caret2 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 3:
-        caret3 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+        caret3 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 4:
-        caret4 = confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+        caret4 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
 
 # notes:
 # sz36, cascadia semibold -> 23*94
