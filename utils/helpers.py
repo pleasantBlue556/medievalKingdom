@@ -49,85 +49,90 @@ def clearAll():
 #         sleepadv(0.02)
 #         clearAll()
 
-def resolveColor(mode, name):
-    mode, color = name.split('.')
-    nameSpace = {'cf': cf, 'cb': cb, 'cs': cs}
+
+def resolveColor(name):
+    mode, color = name.split(".")
+    nameSpace = {"cf": cf, "cb": cb, "cs": cs}
     return getattr(nameSpace[mode], color)
 
-def getColor(colorType) -> str:
-    colorType.upper()
-    if colorType == "BLUE":
-        return "blue"
-    elif colorType == "LIGHTBLUE_EX":
-        return "light blue"
-    elif colorType == "BLACK":
-        return "black"
-    elif colorType == "LIGHTWHITE_EX":
-        return "white"
-    elif colorType == "LIGHTBLACK_EX":
-        return "gray"
-    elif colorType == "CYAN":
-        return "cyan"
-    elif colorType == "GREEN":
-        return "green"
-    elif colorType == "LIGHTCYAN_EX":
-        return "light cyan"
-    elif colorType == "LIGHTGREEN_EX":
-        return "light green"
-    elif colorType == "LIGHTMAGENTA_EX":
-        return "light magenta"
-    elif colorType == "LIGHTRED_EX":
-        return "pink"
-    elif colorType == "LIGHTYELLOW_EX":
-        return "light yellow"
-    elif colorType == "MAGENTA":
-        return "magenta"
-    elif colorType == "RED":
-        return "red"
-    elif colorType == "WHITE":
-        return "light gray"
-    elif colorType == "YELLOW":
-        return "yellow"
-    else:
-        return None
 
-
-def getColorAlt(colorType) -> str:
-    colorType.lower()
-    if colorType == "blue":
-        return "BLUE" # use resolveColor later
-    elif colorType == "light blue":
-        return "LIGHTBLUE_EX"
-    elif colorType == "black":
-        return "BLACK"
-    elif colorType == "white":
-        return "LIGHTWHITE_EX"
-    elif colorType == "gray":
-        return "LIGHTBLACK_EX"
-    elif colorType == "cyan":
-        return "CYAN"
-    elif colorType == "green":
-        return "GREEN"
-    elif colorType == "light cyan":
-        return "LIGHTCYAN_EX"
-    elif colorType == "light green":
-        return "LIGHTGREEN_EX"
-    elif colorType == "light magenta":
-        return "LIGHTMAGENTA_EX"
-    elif colorType == "pink":
-        return "LIGHTRED_EX"
-    elif colorType == "light yellow":
-        return "LIGHTYELLOW_EX"
-    elif colorType == "magenta":
-        return "MAGENTA"
-    elif colorType == "red":
-        return "RED"
-    elif colorType == "light gray":
-        return "WHITE"
-    elif colorType == "yellow":
-        return "YELLOW"
-    else:
-        return None
+#
+# def getColor(_colorType) -> str:
+#     str(_colorType.upper())
+#     print(_colorType)
+#     n, colorType = _colorType.split(".")
+#     if colorType == "BLUE":
+#         return "blue"
+#     elif colorType == "LIGHTBLUE_EX":
+#         return "light blue"
+#     elif colorType == "BLACK":
+#         return "black"
+#     elif colorType == "LIGHTWHITE_EX":
+#         return "white"
+#     elif colorType == "LIGHTBLACK_EX":
+#         return "gray"
+#     elif colorType == "CYAN":
+#         return "cyan"
+#     elif colorType == "GREEN":
+#         return "green"
+#     elif colorType == "LIGHTCYAN_EX":
+#         return "light cyan"
+#     elif colorType == "LIGHTGREEN_EX":
+#         return "light green"
+#     elif colorType == "LIGHTMAGENTA_EX":
+#         return "light magenta"
+#     elif colorType == "LIGHTRED_EX":
+#         return "pink"
+#     elif colorType == "LIGHTYELLOW_EX":
+#         return "light yellow"
+#     elif colorType == "MAGENTA":
+#         return "magenta"
+#     elif colorType == "RED":
+#         return "red"
+#     elif colorType == "WHITE":
+#         return "light gray"
+#     elif colorType == "YELLOW":
+#         return "yellow"
+#     else:
+#         return None
+#
+#
+# def getColorAlt(colorType) -> str:
+#     colorType.lower()
+#     if colorType == "blue":
+#         return "BLUE" # use resolveColor later
+#     elif colorType == "light blue":
+#         return "LIGHTBLUE_EX"
+#     elif colorType == "black":
+#         return "BLACK"
+#     elif colorType == "white":
+#         return "LIGHTWHITE_EX"
+#     elif colorType == "gray":
+#         return "LIGHTBLACK_EX"
+#     elif colorType == "cyan":
+#         return "CYAN"
+#     elif colorType == "green":
+#         return "GREEN"
+#     elif colorType == "light cyan":
+#         return "LIGHTCYAN_EX"
+#     elif colorType == "light green":
+#         return "LIGHTGREEN_EX"
+#     elif colorType == "light magenta":
+#         return "LIGHTMAGENTA_EX"
+#     elif colorType == "pink":
+#         return "LIGHTRED_EX"
+#     elif colorType == "light yellow":
+#         return "LIGHTYELLOW_EX"
+#     elif colorType == "magenta":
+#         return "MAGENTA"
+#     elif colorType == "red":
+#         return "RED"
+#     elif colorType == "light gray":
+#         return "WHITE"
+#     elif colorType == "yellow":
+#         return "YELLOW"
+#     else:
+#         return None
 
 
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:

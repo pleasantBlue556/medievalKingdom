@@ -6,7 +6,7 @@ try:
     with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
         confData = json.load(_confData)
 except FileNotFoundError:
-    sv.save(sv.defaultConfig, 'config', msg=False)
+    sv.save(sv.defaultConfig, "config", msg=False)
     with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
         confData = json.load(_confData)
 
@@ -153,8 +153,12 @@ def fileFunc():
 
                 with open(filePath, "r") as f:
                     data = json.load(f)
-                name = data.get("kingdom", None).get("name", "")
-                gold = data.get("kingdom", None).get("gold", 0)
+                if data.get("kingdom", ""):
+                    name = data.get("kingdom", "").get("name", "")
+                    gold = data.get("kingdom", "").get("gold", 0)
+                else:
+                    name = ""
+                    gold = 0
 
                 # add mark
                 if displayIndex == currentSave:
@@ -237,6 +241,8 @@ def settingsFunc():
     global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
+    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
+        confData = json.load(_confData)
     print(confData)
 
     print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
@@ -248,8 +254,8 @@ def settingsFunc():
             "## page 1 - customization >>\n"
             f"1. text speed: {confData['textSpeed']}\n"
             f"2. caret: '{confData['caretColorless']}'\n"
-            f"3. caret color: {h.getColor(confData['caretFore'])}, "
-            f"{h.getColor(confData['caretBack'])}"
+            f"3. caret color: {confData['caretFore'] + 'fore' + cs.RESET_ALL}, "
+            f"{confData['caretBack'] + 'back' + cs.RESET_ALL}"
         )
     elif page == 2:
         nextP = True
@@ -342,22 +348,30 @@ def settingsFunc():
                     "examples: 'light blue, magenta' means light blue caret on magenta background.\n\n"
                     "foreground:"
                 )
-                if h.getColorAlt(foregroundChoice) is not None:
-                    confData["caretFore"] = h.resolveColor('cf', h.getColorAlt(foregroundChoice))
-                    print(f'caret forecolor set to {confData["caretFore"]}.\n')
+                if h.getColorAlt(foregroundChoice).strip():
+                    confData["caretFore"] = h.resolveColor(
+                        "cf." + h.getColorAlt(foregroundChoice)
+                    )
+                    print(
+                        f'caret forecolor set to {confData["caretFore"] + foregroundChoice}.{cs.RESET_ALL}\n'
+                    )
                     h.sleepadv(1)
 
                     backgroundChoice = h.inputadv("background:")
-                    if h.getColorAlt(backgroundChoice) is not None:
-                        confData["caretBack"] = h.resolveColor('cb', h.getColorAlt(backgroundChoice))
-                        print(f'caret backcolor set to {confData["caretBack"]}.\n')
+                    if h.getColorAlt(backgroundChoice).strip():
+                        confData["caretBack"] = h.resolveColor(
+                            "cb." + h.getColorAlt(backgroundChoice)
+                        )
+                        print(
+                            f'caret backcolor set to {confData["caretBack"] + backgroundChoice}.{cs.RESET_ALL}\n'
+                        )
                         h.sleepadv(1)
                     else:
                         print(
                             "try a different color.\n"
                             "colors: "
                             "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
-                            '+[light]\n'
+                            "+[light]\n"
                         )
                         h.inputadv("[enter] to leave")
                 else:
