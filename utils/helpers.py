@@ -3,8 +3,8 @@ import platform
 import time
 
 from colorama import Style as cs, init as coloramaInit
-from colorama_ex.ansi_ex_back import Back as cb
-from colorama_ex.ansi_ex_fore import Fore as cf
+from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
+from colorama_ex.ansi_ex_fore import Fore as cf, Fore_EX as cfx, Fore_Gray as cfg
 
 from utils import config as c
 
@@ -58,12 +58,12 @@ def clearAll():
 
 def resolveColor(name):
     mode, color = name.split(".")
-    nameSpace = {"cf": cf, "cb": cb, "cs": cs}
+    nameSpace = {"cf": cf, "cb": cb, "cs": cs, "cfx": cfx, "cbx": cbx, "cfg": cfg, "cbg": cbg}
     return getattr(nameSpace[mode], color)
 
 
 #
-# def getColor(_colorType) -> str:
+# def getColorAlt(_colorType) -> str:
 #     str(_colorType.upper())
 #     print(_colorType)
 #     n, colorType = _colorType.split(".")
@@ -103,40 +103,48 @@ def resolveColor(name):
 #         return None
 #
 
-def getColorAlt(colorType) -> str:
+def getColor(colorType) -> str:
     colorType.lower()
     if colorType == "blue":
-        return "BLUE"  # use resolveColor later
+        return cf.BLUE
     elif colorType == "light blue":
-        return "LIGHTBLUE_EX"
+        return cfx.MALIBUBLUE
     elif colorType == "black":
-        return "BLACK"
+        return cfg.BLACK
     elif colorType == "white":
-        return "LIGHTWHITE_EX"
+        return cfg.WHITE
     elif colorType == "gray":
-        return "LIGHTBLACK_EX"
+        return cfg.GRAY16
     elif colorType == "cyan":
-        return "CYAN"
+        return cfx.ROBINBLUE
     elif colorType == "green":
-        return "GREEN"
+        return cf.GREEN
     elif colorType == "light cyan":
-        return "LIGHTCYAN_EX"
+        return cfx.TURQUISE
     elif colorType == "light green":
-        return "LIGHTGREEN_EX"
+        return cfx.GREEN_EX
     elif colorType == "light magenta":
-        return "LIGHTMAGENTA_EX"
+        return cfx.PINKFLAMINGO
     elif colorType == "pink":
-        return "LIGHTRED_EX"
+        return cfx.RAZZLEDAZZLE
     elif colorType == "light yellow":
-        return "LIGHTYELLOW_EX"
+        return cfx.LASERLEMON
     elif colorType == "magenta":
-        return "MAGENTA"
+        return cfx.MAGENTA
     elif colorType == "red":
-        return "RED"
+        return cfx.RED
     elif colorType == "light gray":
-        return "WHITE"
+        return cfg.GRAY20
     elif colorType == "yellow":
-        return "YELLOW"
+        return cfx.YELLOW
+    elif colorType == "purple":
+        return cfx.ELECTRICVIOLET
+    elif colorType == "light purple":
+        return cfx.LIGHTELECTRICVIOLET
+    elif colorType == "orange":
+        return cfx.ORANGEPEEL
+    elif colorType == "light orange":
+        return cfx.NEONCARROT
     else:
         return None
 

@@ -4,8 +4,15 @@ import platform
 import sys
 
 from colorama import Style as cs, init as coloramaInit
-from colorama_ex.ansi_ex_back import Back_Gray as cbg
-from colorama_ex.ansi_ex_fore import Fore_Gray as cfg
+from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
+from colorama_ex.ansi_ex_fore import Fore as cf, Fore_EX as cfx, Fore_Gray as cfg
+cfxList = cfx.__dict__.items()
+cfList = cf.__dict__.items()
+cfgList = cfg.__dict__.items()
+cbxList = cbx.__dict__.items()
+cbList = cb.__dict__.items()
+cbgList = cbg.__dict__.items()
+
 
 from utils import save as sv, helpers as h
 
@@ -233,9 +240,7 @@ def settingsFunc():
     global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
-    sv.load(saveNum='conf', msg=False)
-    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
-        confData = json.load(_confData)
+    confData = sv.load(saveNum='config', msg=False)
 
     print(f"{cbg.WHITE}{cfg.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
@@ -335,43 +340,69 @@ def settingsFunc():
 
             # caret color
             elif choice in ["3", "caret color", "color"]:
-                foregroundChoice = h.inputadv(
-                    "changes the front and back of the caret - default: white, black\n"
-                    "examples: 'black, white' means black caret on white background.\n\n"
-                    "foreground:"
-                )
-                if foregroundChoice.strip() and h.getColorAlt(foregroundChoice) is not None:
-                    confData["caretFore"] = h.resolveColor(
-                        "cf." + h.getColorAlt(foregroundChoice)
-                    )
+                print( "changes the front and back of the caret - default: white, black\n"
+                    "examples: 'black, white' means black caret on white background. try it!\n")
+                foregroundChoice = h.inputadv("foreground:")
+                if foregroundChoice.strip() and h.getColor(foregroundChoice) is not None:
+                    if h.resolveColor(foregroundChoice.strip()) in cfg.__dict__.items():
+                        confData["caretFore"] = h.resolveColor(
+                            "cfg." + h.getColor(foregroundChoice)
+                        )
+                    elif h.resolveColor(foregroundChoice.strip()) in cfList:
+                        confData["caretFore"] = h.resolveColor(
+                            "cf." + h.getColor(foregroundChoice)
+                        )
+                    elif h.resolveColor(foregroundChoice.strip()) in cfxList:
+                        confData["caretFore"] = h.resolveColor(
+                            "cfx." + h.getColor(foregroundChoice)
+                        )
+                    else:
+                        print(
+                            "try a different color.\n"
+                            "colors: "
+                            '+[light]\n'
+                            "[red] [orange] [yellow] [green] [cyan] [blue] [purple] [magenta] [white] [black]\n"
+                        )
+                        h.inputadv("[enter] to leave")
+                        return settingsFunc()
                     print(
                         f'caret forecolor set to {confData["caretFore"] + foregroundChoice}.{cs.RESET_ALL}\n'
                     )
                     h.sleepadv(1)
 
-                    backgroundChoice = h.inputadv("background:")
-                    if backgroundChoice.strip() and h.getColorAlt(backgroundChoice) is not None:
+                backgroundChoice = h.inputadv("background:")
+                if backgroundChoice.strip() and h.getColor(backgroundChoice) is not None:
+                    if backgroundChoice.strip() in cbgList:
                         confData["caretBack"] = h.resolveColor(
-                            "cb." + h.getColorAlt(backgroundChoice)
+                            "cbg." + h.getColor(backgroundChoice)
                         )
-                        print(
-                            f'caret backcolor set to {confData["caretBack"] + backgroundChoice}.{cs.RESET_ALL}\n'
+                    elif backgroundChoice.strip() in cbList:
+                        confData["caretBack"] = h.resolveColor(
+                            "cb." + h.getColor(backgroundChoice)
                         )
-                        h.sleepadv(1)
+                    elif backgroundChoice.strip() in cbxList:
+                        confData["caretBack"] = h.resolveColor(
+                            "cbx." + h.getColor(backgroundChoice)
+                        )
                     else:
                         print(
                             "try a different color.\n"
                             "colors: "
-                            "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
-                            "+[light]\n"
+                            '+[light]\n'
+                            "[red] [orange] [yellow] [green] [cyan] [blue] [purple] [magenta] [white] [black]\n"
                         )
                         h.inputadv("[enter] to leave")
+                    print(
+                        f'caret backcolor set to {confData["caretBack"] + backgroundChoice}.{cs.RESET_ALL}\n'
+                    )
+                    h.sleepadv(1)
+                    return settingsFunc()
                 else:
                     print(
                         "try a different color.\n"
                         "colors: "
                         "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
-                        'add "light" before color to make it brighter!\n'
+                        "+[light]\n"
                     )
                     h.inputadv("[enter] to leave")
 

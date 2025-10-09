@@ -1,6 +1,6 @@
 from colorama import init as coloramaInit
-from colorama_ex.ansi_ex_back import Back as cb
-from colorama_ex.ansi_ex_fore import Fore as cf
+from colorama_ex.ansi_ex_back import Back_Gray as cbg
+from colorama_ex.ansi_ex_fore import Fore_Gray as cfg
 
 coloramaInit(autoreset=True)
 
@@ -9,8 +9,8 @@ settings = {
     "textSpeed": 1,
     "caretColorless": ">",
     "caret": ">",
-    "caretFore": cf.LIGHTWHITE_EX,
-    "caretBack": cb.BLACK,
+    "caretFore": cfg.WHITE,
+    "caretBack": cbg.BLACK,
     "saveListCap": 4,
     # page 2
     "actionMsg": "what is your action? ",
