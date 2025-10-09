@@ -1,6 +1,12 @@
-import time, os, platform
+import os
+import platform
+import time
+
+from colorama import Style as cs, init as coloramaInit
+from colorama_ex.ansi_ex_back import Back as cb
+from colorama_ex.ansi_ex_fore import Fore as cf
+
 from utils import config as c
-from colorama import init as coloramaInit, Fore as cf, Back as cb, Style as cs
 
 userSys = platform.system()
 if userSys == "Windows":
@@ -96,43 +102,43 @@ def resolveColor(name):
 #     else:
 #         return None
 #
-#
-# def getColorAlt(colorType) -> str:
-#     colorType.lower()
-#     if colorType == "blue":
-#         return "BLUE" # use resolveColor later
-#     elif colorType == "light blue":
-#         return "LIGHTBLUE_EX"
-#     elif colorType == "black":
-#         return "BLACK"
-#     elif colorType == "white":
-#         return "LIGHTWHITE_EX"
-#     elif colorType == "gray":
-#         return "LIGHTBLACK_EX"
-#     elif colorType == "cyan":
-#         return "CYAN"
-#     elif colorType == "green":
-#         return "GREEN"
-#     elif colorType == "light cyan":
-#         return "LIGHTCYAN_EX"
-#     elif colorType == "light green":
-#         return "LIGHTGREEN_EX"
-#     elif colorType == "light magenta":
-#         return "LIGHTMAGENTA_EX"
-#     elif colorType == "pink":
-#         return "LIGHTRED_EX"
-#     elif colorType == "light yellow":
-#         return "LIGHTYELLOW_EX"
-#     elif colorType == "magenta":
-#         return "MAGENTA"
-#     elif colorType == "red":
-#         return "RED"
-#     elif colorType == "light gray":
-#         return "WHITE"
-#     elif colorType == "yellow":
-#         return "YELLOW"
-#     else:
-#         return None
+
+def getColorAlt(colorType) -> str:
+    colorType.lower()
+    if colorType == "blue":
+        return "BLUE"  # use resolveColor later
+    elif colorType == "light blue":
+        return "LIGHTBLUE_EX"
+    elif colorType == "black":
+        return "BLACK"
+    elif colorType == "white":
+        return "LIGHTWHITE_EX"
+    elif colorType == "gray":
+        return "LIGHTBLACK_EX"
+    elif colorType == "cyan":
+        return "CYAN"
+    elif colorType == "green":
+        return "GREEN"
+    elif colorType == "light cyan":
+        return "LIGHTCYAN_EX"
+    elif colorType == "light green":
+        return "LIGHTGREEN_EX"
+    elif colorType == "light magenta":
+        return "LIGHTMAGENTA_EX"
+    elif colorType == "pink":
+        return "LIGHTRED_EX"
+    elif colorType == "light yellow":
+        return "LIGHTYELLOW_EX"
+    elif colorType == "magenta":
+        return "MAGENTA"
+    elif colorType == "red":
+        return "RED"
+    elif colorType == "light gray":
+        return "WHITE"
+    elif colorType == "yellow":
+        return "YELLOW"
+    else:
+        return None
 
 
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:
@@ -144,7 +150,6 @@ def highlight(mode="digit", text="", color=cf.BLUE) -> str:
             else:
                 endResult += letter
         return endResult
-
 
 # debug
 # for i in range(10):

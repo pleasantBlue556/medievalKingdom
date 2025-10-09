@@ -1,4 +1,6 @@
-from colorama import init as coloramaInit, Fore as cf, Back as cb
+from colorama import init as coloramaInit
+from colorama_ex.ansi_ex_back import Back as cb
+from colorama_ex.ansi_ex_fore import Fore as cf
 
 coloramaInit(autoreset=True)
 

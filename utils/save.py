@@ -1,7 +1,7 @@
-import json, os
-from utils import config as c
+import json
+import os
 
-# from colorama import init, Fore as cf, Back as cb, Style as cs
+from utils import config as c
 
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
@@ -31,7 +31,6 @@ defaultConfig = c.settings
 
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
 def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
-
     # define filepath
     if slot == "config":
         _slot = "conf.json"
@@ -56,7 +55,10 @@ def saveDict(newDict, newData, saveData):
 
 
 def load(saveDirectory="savefiles", saveNum=saveNum, msg=c.settings["loadMsg"]):
-    filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
+    if saveNum != 'config':
+        filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
+    else:
+        filePath = os.path.join(saveDirectory, 'conf.json')
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
             loadData = json.load(f)
@@ -76,7 +78,6 @@ def merge(target, data):
             target[key] = value
         elif isinstance(value, dict):
             merge(target[key], value)
-
 
 #
 # choice = input("save/load")

@@ -1,6 +1,15 @@
-import json, os, platform, sys
-from colorama import init as coloramaInit, Fore as cf, Style as cs, Back as cb
+import json
+import os
+import platform
+import sys
+
+from colorama import Style as cs, init as coloramaInit
+from colorama_ex.ansi_ex_back import Back_Gray as cbg
+from colorama_ex.ansi_ex_fore import Fore_Gray as cfg
+
 from utils import save as sv, helpers as h
+
+# INIT VARIABLES
 
 try:
     with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
@@ -24,7 +33,7 @@ __name__ = "__main__"
 # ↑↓←→
 currentCaret = 1
 confData["caret"] = (
-    confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+        confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
 )
 caret1 = confData["caret"]
 caret2 = "↓"
@@ -82,41 +91,22 @@ credPage = 1
 saveFileList = []
 _saveFileList = []
 _currentSave = ""
-loadDataAlt = ""
+_loadData = ""
 currentSave = 0
 filePage = 1
 saveListCap = confData["saveListCap"]
 fileRangeMin = 0
-if len(sv.saveDirList) < saveListCap:
-    fileRangeMax = len(sv.saveDirList)
-else:
-    fileRangeMax = saveListCap
-
+fileRangeMax = confData['saveListCap'] - 1
 filePageNum = 0
-for _ in range(filePageNum // saveListCap):
-    filePageNum += 1
 breakOut = False
 
 
 def fileFunc():
     """runs whenever file is picked"""
-    global _currentSave, currentSave, loadDataAlt, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
-    if len(sv.saveDirList) > saveListCap:
-        nextP = True
-    elif filePage == filePageNum:
-        nextP = False
-    else:
-        nextP = False
-
-    if len(sv.saveDirList) < saveListCap:
-        prevP = True
-    elif filePage == 1:
-        prevP = False
-    else:
-        prevP = False
+    global _currentSave, currentSave, _loadData, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
     h.clearAll()
 
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [files]{cs.RESET_ALL}")
+    print(f"{cbg.WHITE}{cfg.BLACK}// [files]{cs.RESET_ALL}")
 
     # next/prev page
     statement = ""
@@ -192,13 +182,13 @@ def fileFunc():
         return
     elif choiceInt:
         currentSave = choice
-        loadDataAlt = sv.load("savefiles", currentSave)
+        _loadData = sv.load("savefiles", currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
         return
     elif choice in [z, "*"] or not choice:
-        loadDataAlt = sv.load("savefiles", currentSave)
+        _loadData = sv.load("savefiles", currentSave)
         breakOut = True
         h.sleepadv(1)
         h.clearAll()
@@ -212,9 +202,11 @@ def fileFunc():
     elif choice in [a, "prev", "previous", "<"] and prevP:
         fileRangeMin -= saveListCap
         fileRangeMax -= saveListCap
+        filePage -= 1
     elif choice in [d, "next", ">"] and nextP:
         fileRangeMin += saveListCap
         fileRangeMax += saveListCap
+        filePage += 1
     elif choice == "<<":
         filePage = 1
     elif choice == ">>":
@@ -223,10 +215,10 @@ def fileFunc():
             if not nextP:
                 break
     elif (
-        choice in ["next", ">", d]
-        and not nextP
-        or choice in ["prev", "previous", "<", a]
-        and not prevP
+            choice in ["next", ">", d]
+            and not nextP
+            or choice in ["prev", "previous", "<", a]
+            and not prevP
     ):
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
@@ -241,11 +233,11 @@ def settingsFunc():
     global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
+    sv.load(saveNum='conf', msg=False)
     with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
         confData = json.load(_confData)
-    print(confData)
 
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [settings]{cs.RESET_ALL}")
+    print(f"{cbg.WHITE}{cfg.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
         nextP = True
         prevP = False
@@ -254,8 +246,8 @@ def settingsFunc():
             "## page 1 - customization >>\n"
             f"1. text speed: {confData['textSpeed']}\n"
             f"2. caret: '{confData['caretColorless']}'\n"
-            f"3. caret color: {confData['caretFore'] + 'fore' + cs.RESET_ALL}, "
-            f"{confData['caretBack'] + 'back' + cs.RESET_ALL}"
+            f"3. caret color: {'[' + confData['caretFore'] + '█' + cs.RESET_ALL + ']' +
+                               ' ' + '[' + confData['caretBack'] + ' ' + cs.RESET_ALL + ']'}\n"
         )
     elif page == 2:
         nextP = True
@@ -345,10 +337,10 @@ def settingsFunc():
             elif choice in ["3", "caret color", "color"]:
                 foregroundChoice = h.inputadv(
                     "changes the front and back of the caret - default: white, black\n"
-                    "examples: 'light blue, magenta' means light blue caret on magenta background.\n\n"
+                    "examples: 'black, white' means black caret on white background.\n\n"
                     "foreground:"
                 )
-                if h.getColorAlt(foregroundChoice).strip():
+                if foregroundChoice.strip() and h.getColorAlt(foregroundChoice) is not None:
                     confData["caretFore"] = h.resolveColor(
                         "cf." + h.getColorAlt(foregroundChoice)
                     )
@@ -358,7 +350,7 @@ def settingsFunc():
                     h.sleepadv(1)
 
                     backgroundChoice = h.inputadv("background:")
-                    if h.getColorAlt(backgroundChoice).strip():
+                    if backgroundChoice.strip() and h.getColorAlt(backgroundChoice) is not None:
                         confData["caretBack"] = h.resolveColor(
                             "cb." + h.getColorAlt(backgroundChoice)
                         )
@@ -612,10 +604,10 @@ def settingsFunc():
                     h.sleepadv(1)
 
     elif (
-        choice in ["next", ">", d]
-        and not nextP
-        or choice in ["prev", "previous", "<", a]
-        and not prevP
+            choice in ["next", ">", d]
+            and not nextP
+            or choice in ["prev", "previous", "<", a]
+            and not prevP
     ):
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
@@ -629,14 +621,14 @@ def settingsFunc():
     else:
         print("did not understand.")
         h.sleepadv(1)
-    sv.save(confData, "config")
+    sv.save(confData, "config", msg=False)
     return settingsFunc()
 
 
 def creditsFunc():
     global credPage, nextP, prevP
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [credits]{cs.RESET_ALL}")
+    print(f"{cbg.WHITE}{cfg.BLACK}// [credits]{cs.RESET_ALL}")
     if credPage == 1:
         nextP = True
         prevP = False
@@ -682,10 +674,10 @@ def creditsFunc():
         h.clearAll()
         return
     elif (
-        choice in ["next", ">", d]
-        and not nextP
-        or choice in ["prev", "previous", "<", a]
-        and not prevP
+            choice in ["next", ">", d]
+            and not nextP
+            or choice in ["prev", "previous", "<", a]
+            and not prevP
     ):
         print("that page is unavailable (unavailable pages are marked by #'s)")
         h.sleepadv(1.5)
@@ -706,25 +698,24 @@ def creditsFunc():
 
 def quitFunc():
     h.clearAll()
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [quit]{cs.RESET_ALL}")
-    # sv.save()
+    print(f"{cbg.WHITE}{cfg.BLACK}// [quit]{cs.RESET_ALL}")
     print("thanks for playing!")
     h.sleepadv(1)
     h.clearAll()
     sys.exit()
 
 
-loadData = loadDataAlt
+# gameloop var
+loadData = _loadData
 actionCount = 3
 
 
 def gameLoop(actions=actionCount):
     # cr.initscr()
     # cr.curs_set(2)  # block cursor
-
     for _ in range(actions):
         print(f"you have {actions} actions.")
-        if loadDataAlt == sv.defaultData:
+        if _loadData == sv.defaultData:
             command = h.inputadv('welcome to medievalKingdom! to start, type "help".')
         else:
             command = h.inputadv(f"{confData['actionMsg']}")
@@ -738,7 +729,7 @@ def gameLoop(actions=actionCount):
 while True:
     h.clearAll()
 
-    print(f"{cb.LIGHTWHITE_EX}{cf.BLACK}// [medievalKingdom]{cs.RESET_ALL}")
+    print(f"{cbg.WHITE}{cfg.BLACK}// [medievalKingdom]{cs.RESET_ALL}")
     print(
         f"{caret1} [files]\n"
         f"{caret2} [settings]\n"
@@ -794,32 +785,33 @@ while True:
         break
     if currentCaret == 1:
         caret1 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
+                confData["caretFore"]
+                + confData["caretBack"]
+                + confData["caret"]
+                + cs.RESET_ALL
         )
     elif currentCaret == 2:
         caret2 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
+                confData["caretFore"]
+                + confData["caretBack"]
+                + confData["caret"]
+                + cs.RESET_ALL
         )
     elif currentCaret == 3:
         caret3 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
+                confData["caretFore"]
+                + confData["caretBack"]
+                + confData["caret"]
+                + cs.RESET_ALL
         )
     elif currentCaret == 4:
         caret4 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
+                confData["caretFore"]
+                + confData["caretBack"]
+                + confData["caret"]
+                + cs.RESET_ALL
         )
 
 # notes:
 # sz36, cascadia semibold -> 23*94
+# sz16, cascadia semibold -> 48*208
