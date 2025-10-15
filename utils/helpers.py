@@ -6,12 +6,54 @@ from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
 from colorama_ex.ansi_ex_fore import Fore as cf, Fore_EX as cfx, Fore_Gray as cfg
 
-from utils import config as c
+# fore
+blue = cf.BLUE
+lightblue = cfx.MALIBUBLUE
+black = cfg.BLACK
+white = cfg.WHITE
+gray = cfg.GRAY16
+cyan = cfx.ROBINBLUE
+green = cf.GREEN
+lightcyan = cfx.BRIGHTTURQUISE
+lightgreen = cfx.GREEN_EX
+lightmagenta = cfx.PINKFLAMINGO
+pink = cfx.RAZZLEDAZZLE
+lightyellow = cfx.LASERLEMON
+magenta = cfx.MAGENTA
+red = cfx.RED
+lightgray = cfg.GRAY20
+yellow = cfx.YELLOW
+purple = cfx.ELECTRICVIOLET
+lightpurple = cfx.LIGHTELECTRICVIOLET
+orange = cfx.ORANGEPEEL
+lightorange = cfx.NEONCARROT
+# back
+bblue = cb.BLUE
+blightblue = cbx.MALIBUBLUE
+bblack = cbg.BLACK
+bwhite = cbg.WHITE
+bgray = cbg.GRAY16
+bcyan = cbx.ROBINBLUE
+bgreen = cb.GREEN
+blightcyan = cbx.BRIGHTTURQUISE
+blightgreen = cbx.GREEN_EX
+blightmagenta = cbx.PINKFLAMINGO
+bpink = cbx.RAZZLEDAZZLE
+blightyellow = cbx.LASERLEMON
+bmagenta = cbx.MAGENTA
+bred = cbx.RED
+blightgray = cbg.GRAY20
+byellow = cbx.YELLOW
+bpurple = cbx.ELECTRICVIOLET
+blightpurple = cbx.LIGHTELECTRICVIOLET
+borange = cbx.ORANGEPEEL
+blightorange = cbx.NEONCARROT
+
+import config as c
 
 userSys = platform.system()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
-
 
 # adv = advanced
 def inputadv(msg="", caret=c.settings["caret"]):
@@ -46,107 +88,104 @@ def clearAll():
 #     elif not returnArea:
 #         return
 
-# looks too chaotic
-# def printadv(text):
-#     textAlt = ''
-#     for letter in text:
-#         textAlt += letter
-#         print(textAlt)
-#         sleepadv(0.02)
-#         clearAll()
-
-
 def resolveColor(name):
     mode, color = name.split(".")
+    # print(mode, color)
     nameSpace = {"cf": cf, "cb": cb, "cs": cs, "cfx": cfx, "cbx": cbx, "cfg": cfg, "cbg": cbg}
+    # print(nameSpace[mode])
     return getattr(nameSpace[mode], color)
 
-
-#
-# def getColorAlt(_colorType) -> str:
-#     str(_colorType.upper())
-#     print(_colorType)
-#     n, colorType = _colorType.split(".")
-#     if colorType == "BLUE":
-#         return "blue"
-#     elif colorType == "LIGHTBLUE_EX":
-#         return "light blue"
-#     elif colorType == "BLACK":
-#         return "black"
-#     elif colorType == "LIGHTWHITE_EX":
-#         return "white"
-#     elif colorType == "LIGHTBLACK_EX":
-#         return "gray"
-#     elif colorType == "CYAN":
-#         return "cyan"
-#     elif colorType == "GREEN":
-#         return "green"
-#     elif colorType == "LIGHTCYAN_EX":
-#         return "light cyan"
-#     elif colorType == "LIGHTGREEN_EX":
-#         return "light green"
-#     elif colorType == "LIGHTMAGENTA_EX":
-#         return "light magenta"
-#     elif colorType == "LIGHTRED_EX":
-#         return "pink"
-#     elif colorType == "LIGHTYELLOW_EX":
-#         return "light yellow"
-#     elif colorType == "MAGENTA":
-#         return "magenta"
-#     elif colorType == "RED":
-#         return "red"
-#     elif colorType == "WHITE":
-#         return "light gray"
-#     elif colorType == "YELLOW":
-#         return "yellow"
+# def getColor(colorType, colorMode='f') -> str:
+#     global blue, lightblue, black, black, white, gray, cyan, lightcyan, \
+#         lightgreen, lightmagenta, pink, green, lightyellow, magenta, red,\
+#         lightgray, yellow, purple, lightpurple, orange, lightorange
+#     # fore
+#     if colorMode == 'f':
+#         blue = cf.BLUE
+#         lightblue = cfx.MALIBUBLUE
+#         black = cfg.BLACK
+#         white = cfg.WHITE
+#         gray = cfg.GRAY16
+#         cyan = cfx.ROBINBLUE
+#         green = cf.GREEN
+#         lightcyan = cfx.BRIGHTTURQUISE
+#         lightgreen = cfx.GREEN_EX
+#         lightmagenta = cfx.PINKFLAMINGO
+#         pink = cfx.RAZZLEDAZZLE
+#         lightyellow = cfx.LASERLEMON
+#         magenta = cfx.MAGENTA
+#         red = cfx.RED
+#         lightgray = cfg.GRAY20
+#         yellow = cfx.YELLOW
+#         purple = cfx.ELECTRICVIOLET
+#         lightpurple = cfx.LIGHTELECTRICVIOLET
+#         orange = cfx.ORANGEPEEL
+#         lightorange = cfx.NEONCARROT
+#     # back
+#     elif colorMode == 'b':
+#         blue = cb.BLUE
+#         lightblue = cbx.MALIBUBLUE
+#         black = cbg.BLACK
+#         white = cbg.WHITE
+#         gray = cbg.GRAY16
+#         cyan = cbx.ROBINBLUE
+#         green = cb.GREEN
+#         lightcyan = cbx.BRIGHTTURQUISE
+#         lightgreen = cbx.GREEN_EX
+#         lightmagenta = cbx.PINKFLAMINGO
+#         pink = cbx.RAZZLEDAZZLE
+#         lightyellow = cbx.LASERLEMON
+#         magenta = cbx.MAGENTA
+#         red = cbx.RED
+#         lightgray = cbg.GRAY20
+#         yellow = cbx.YELLOW
+#         purple = cbx.ELECTRICVIOLET
+#         lightpurple = cbx.LIGHTELECTRICVIOLET
+#         orange = (cbx
+#                   .ORANGEPEEL)
+#         lightorange = cbx.NEONCARROT
+#     if colorType == 'blue':
+#         return blue
+#     elif colorType == "light blue":
+#         return lightblue
+#     elif colorType == "black":
+#         return black
+#     elif colorType == "white":
+#         return white
+#     elif colorType == "gray":
+#         return gray
+#     elif colorType == "cyan":
+#         return cyan
+#     elif colorType == "green":
+#         return green
+#     elif colorType == "light cyan":
+#         return lightcyan
+#     elif colorType == "light green":
+#         return lightgreen
+#     elif colorType == "light magenta":
+#         return lightmagenta
+#     elif colorType == "pink":
+#         return pink
+#     elif colorType == "light yellow":
+#         return lightyellow
+#     elif colorType == "magenta":
+#         return magenta
+#     elif colorType == "red":
+#         return red
+#     elif colorType == "light gray":
+#         return lightgray
+#     elif colorType == "yellow":
+#         return yellow
+#     elif colorType == "purple":
+#         return purple
+#     elif colorType == "light purple":
+#         return lightpurple
+#     elif colorType == "orange":
+#         return orange
+#     elif colorType == "light orange":
+#         return lightorange
 #     else:
 #         return None
-#
-
-def getColor(colorType) -> str:
-    colorType.lower()
-    if colorType == "blue":
-        return cf.BLUE
-    elif colorType == "light blue":
-        return cfx.MALIBUBLUE
-    elif colorType == "black":
-        return cfg.BLACK
-    elif colorType == "white":
-        return cfg.WHITE
-    elif colorType == "gray":
-        return cfg.GRAY16
-    elif colorType == "cyan":
-        return cfx.ROBINBLUE
-    elif colorType == "green":
-        return cf.GREEN
-    elif colorType == "light cyan":
-        return cfx.TURQUISE
-    elif colorType == "light green":
-        return cfx.GREEN_EX
-    elif colorType == "light magenta":
-        return cfx.PINKFLAMINGO
-    elif colorType == "pink":
-        return cfx.RAZZLEDAZZLE
-    elif colorType == "light yellow":
-        return cfx.LASERLEMON
-    elif colorType == "magenta":
-        return cfx.MAGENTA
-    elif colorType == "red":
-        return cfx.RED
-    elif colorType == "light gray":
-        return cfg.GRAY20
-    elif colorType == "yellow":
-        return cfx.YELLOW
-    elif colorType == "purple":
-        return cfx.ELECTRICVIOLET
-    elif colorType == "light purple":
-        return cfx.LIGHTELECTRICVIOLET
-    elif colorType == "orange":
-        return cfx.ORANGEPEEL
-    elif colorType == "light orange":
-        return cfx.NEONCARROT
-    else:
-        return None
 
 
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:
@@ -159,7 +198,8 @@ def highlight(mode="digit", text="", color=cf.BLUE) -> str:
                 endResult += letter
         return endResult
 
-# debug
 # for i in range(10):
 #     print(highlight('digit', f'savefile{i}'))
 # sleepadv(2)
+
+print(blue + '0000')

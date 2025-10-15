@@ -342,69 +342,29 @@ def settingsFunc():
             elif choice in ["3", "caret color", "color"]:
                 print( "changes the front and back of the caret - default: white, black\n"
                     "examples: 'black, white' means black caret on white background. try it!\n")
-                foregroundChoice = h.inputadv("foreground:")
-                if foregroundChoice.strip() and h.getColor(foregroundChoice) is not None:
-                    if h.resolveColor(foregroundChoice.strip()) in cfg.__dict__.items():
-                        confData["caretFore"] = h.resolveColor(
-                            "cfg." + h.getColor(foregroundChoice)
-                        )
-                    elif h.resolveColor(foregroundChoice.strip()) in cfList:
-                        confData["caretFore"] = h.resolveColor(
-                            "cf." + h.getColor(foregroundChoice)
-                        )
-                    elif h.resolveColor(foregroundChoice.strip()) in cfxList:
-                        confData["caretFore"] = h.resolveColor(
-                            "cfx." + h.getColor(foregroundChoice)
-                        )
+                foregroundChoice = h.inputadv("foreground:").strip()
+                if foregroundChoice:
+                    if foregroundChoice == 'white':
+                        col = h.white
+                    elif foregroundChoice == 'black':
+                        col = h.black
+                    elif foregroundChoice == 'gray':
+                        col = h.gray
+                    elif foregroundChoice == 'light gray':
+                        col = h.lightgray
                     else:
-                        print(
-                            "try a different color.\n"
-                            "colors: "
-                            '+[light]\n'
-                            "[red] [orange] [yellow] [green] [cyan] [blue] [purple] [magenta] [white] [black]\n"
-                        )
-                        h.inputadv("[enter] to leave")
-                        return settingsFunc()
-                    print(
-                        f'caret forecolor set to {confData["caretFore"] + foregroundChoice}.{cs.RESET_ALL}\n'
-                    )
+                        print('use colors:'
+                              '[white] [black]'
+                              '[gray] [red] [orange] [yellow] [green] [blue] [purple] ~ add [light]')
+                        h.inputadv('[enter] to exit')
+                    print
+                else:
+                    print('did not understand.')
                     h.sleepadv(1)
 
                 backgroundChoice = h.inputadv("background:")
-                if backgroundChoice.strip() and h.getColor(backgroundChoice) is not None:
-                    if backgroundChoice.strip() in cbgList:
-                        confData["caretBack"] = h.resolveColor(
-                            "cbg." + h.getColor(backgroundChoice)
-                        )
-                    elif backgroundChoice.strip() in cbList:
-                        confData["caretBack"] = h.resolveColor(
-                            "cb." + h.getColor(backgroundChoice)
-                        )
-                    elif backgroundChoice.strip() in cbxList:
-                        confData["caretBack"] = h.resolveColor(
-                            "cbx." + h.getColor(backgroundChoice)
-                        )
-                    else:
-                        print(
-                            "try a different color.\n"
-                            "colors: "
-                            '+[light]\n'
-                            "[red] [orange] [yellow] [green] [cyan] [blue] [purple] [magenta] [white] [black]\n"
-                        )
-                        h.inputadv("[enter] to leave")
-                    print(
-                        f'caret backcolor set to {confData["caretBack"] + backgroundChoice}.{cs.RESET_ALL}\n'
-                    )
-                    h.sleepadv(1)
-                    return settingsFunc()
-                else:
-                    print(
-                        "try a different color.\n"
-                        "colors: "
-                        "[red] [blue] [green] [yellow] [cyan] [magenta] [white] [black]\n"
-                        "+[light]\n"
-                    )
-                    h.inputadv("[enter] to leave")
+
+
 
         # pg 2. messages
         elif page == 2:

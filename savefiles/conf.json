@@ -1,7 +1,7 @@
 {
     "textSpeed": 1,
     "caretColorless": ">",
-    "caret": ">",
+    "caret": "-",
     "caretFore": "\u001b[30m",
     "caretBack": "\u001b[107m",
     "saveListCap": 4,
@@ -24,5 +24,6 @@
         "version": 1.0,
         "timesPlayed": 0,
         "stop smuggling!!!": true
-    }
+    },
+    "colorlessCaret": "-"
 }
