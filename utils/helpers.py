@@ -6,63 +6,9 @@ from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
 from colorama_ex.ansi_ex_fore import Fore as cf, Fore_EX as cfx, Fore_Gray as cfg
 
-# fore
-blue = cf.BLUE
-lightblue = cfx.MALIBUBLUE
-black = cfg.BLACK
-white = cfg.WHITE
-gray = cfg.GRAY16
-cyan = cfx.ROBINBLUE
-green = cf.GREEN
-lightcyan = cfx.BRIGHTTURQUISE
-lightgreen = cfx.GREEN_EX
-lightmagenta = cfx.PINKFLAMINGO
-pink = cfx.RAZZLEDAZZLE
-lightyellow = cfx.LASERLEMON
-magenta = cfx.MAGENTA
-red = cfx.RED
-lightgray = cfg.GRAY20
-yellow = cfx.YELLOW
-purple = cfx.ELECTRICVIOLET
-lightpurple = cfx.LIGHTELECTRICVIOLET
-orange = cfx.ORANGEPEEL
-lightorange = cfx.NEONCARROT
-# back
-bblue = cb.BLUE
-blightblue = cbx.MALIBUBLUE
-bblack = cbg.BLACK
-bwhite = cbg.WHITE
-bgray = cbg.GRAY16
-bcyan = cbx.ROBINBLUE
-bgreen = cb.GREEN
-blightcyan = cbx.BRIGHTTURQUISE
-blightgreen = cbx.GREEN_EX
-blightmagenta = cbx.PINKFLAMINGO
-bpink = cbx.RAZZLEDAZZLE
-blightyellow = cbx.LASERLEMON
-bmagenta = cbx.MAGENTA
-bred = cbx.RED
-blightgray = cbg.GRAY20
-byellow = cbx.YELLOW
-bpurple = cbx.ELECTRICVIOLET
-blightpurple = cbx.LIGHTELECTRICVIOLET
-borange = cbx.ORANGEPEEL
-blightorange = cbx.NEONCARROT
-
-import config as c
-
 userSys = platform.system()
 if userSys == "Windows":
     coloramaInit(autoreset=True)
-
-# adv = advanced
-def inputadv(msg="", caret=c.settings["caret"]):
-    inp = input(f"{msg}\n{caret} ").lower()
-    return inp
-
-
-def sleepadv(length=1, speed=c.settings["textSpeed"]):
-    time.sleep(length * speed)
 
 
 def clearAll():
@@ -88,12 +34,22 @@ def clearAll():
 #     elif not returnArea:
 #         return
 
+
 def resolveColor(name):
     mode, color = name.split(".")
     # print(mode, color)
-    nameSpace = {"cf": cf, "cb": cb, "cs": cs, "cfx": cfx, "cbx": cbx, "cfg": cfg, "cbg": cbg}
+    nameSpace = {
+        "cf": cf,
+        "cb": cb,
+        "cs": cs,
+        "cfx": cfx,
+        "cbx": cbx,
+        "cfg": cfg,
+        "cbg": cbg,
+    }
     # print(nameSpace[mode])
     return getattr(nameSpace[mode], color)
+
 
 # def getColor(colorType, colorMode='f') -> str:
 #     global blue, lightblue, black, black, white, gray, cyan, lightcyan, \
@@ -198,8 +154,9 @@ def highlight(mode="digit", text="", color=cf.BLUE) -> str:
                 endResult += letter
         return endResult
 
+
 # for i in range(10):
 #     print(highlight('digit', f'savefile{i}'))
 # sleepadv(2)
 
-print(blue + '0000')
+print(blue + "0000")

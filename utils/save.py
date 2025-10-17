@@ -55,10 +55,10 @@ def saveDict(newDict, newData, saveData):
 
 
 def load(saveDirectory="savefiles", saveNum=saveNum, msg=c.settings["loadMsg"]):
-    if saveNum != 'config':
+    if saveNum != "config":
         filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
     else:
-        filePath = os.path.join(saveDirectory, 'conf.json')
+        filePath = os.path.join(saveDirectory, "conf.json")
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
             loadData = json.load(f)
@@ -78,6 +78,7 @@ def merge(target, data):
             target[key] = value
         elif isinstance(value, dict):
             merge(target[key], value)
+
 
 #
 # choice = input("save/load")
