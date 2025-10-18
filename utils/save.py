@@ -5,13 +5,15 @@ from utils import config as c
 
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
-sDirListFilt = []
+print(saveDirList)
+saveDirListFiltered = []
 for i in range(len(saveDirList)):
+    print(saveDirListFiltered)
     if saveDirList[i].endswith(".json") and saveDirList[i].startswith("savefile"):
-        sDirListFilt.append(saveDirList[i])
+        saveDirListFiltered.append(saveDirList[i])
 currentSave = 0
 saveNum = 0
-for i in range(len(sDirListFilt)):
+for i in range(len(saveDirListFiltered)):
     saveNum += 1
 
 # default save
@@ -69,7 +71,7 @@ def load(saveDirectory="savefiles", saveNum=saveNum, msg=c.settings["loadMsg"]):
                 print(c.settings["loadMsg"].format(saveNum=saveNum))
     else:
         print(f"save not found, check {filePath}.")
-        loadData = defaultData.copy()
+        return None
 
     merge(loadData, defaultData)
     return loadData
@@ -84,18 +86,18 @@ def merge(target, data):
 
 
 #
-# choice = input("save/load")
-# if choice == "save":
-#     slot = input("slot num?")
-#     if slot == "config":
-#         save(defaultConfig, slot)
-#     else:
-#         save(defaultData, slot)
-#
-# elif choice == "load":
-#     slot = input("slot num?")
-#     saveData = load("savefiles", slot)
-#     print(saveData)
+choice = input("save/load")
+if choice == "save":
+    slot = input("slot num?")
+    if slot == "config":
+        save(defaultConfig, slot)
+    else:
+        save(defaultData, slot)
+
+elif choice == "load":
+    slot = input("slot num?")
+    saveData = load("savefiles", slot)
+    print(saveData)
 #
 #
 # im so snart

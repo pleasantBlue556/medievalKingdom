@@ -1,9 +1,9 @@
 {
     "textSpeed": 1,
-    "caretColorless": "*",
-    "caret": "*",
-    "caretFore": "\u001b[38;5;111m",
-    "caretBack": "\u001b[48;5;111m",
+    "caretColorless": "-",
+    "caret": "-",
+    "caretFore": "\u001b[38;5;255m",
+    "caretBack": "\u001b[48;5;4m",
     "saveListCap": 4,
     "actionMsg": "what is your action? ",
     "saveMsg": "file {saveNum} saved.",

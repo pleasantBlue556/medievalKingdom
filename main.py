@@ -1,16 +1,18 @@
-import json, os, platform, sys, time, curses as crs
-crs.initscr()
+import json, os, platform, sys, time
+# import curses as crs
+# crs.initscr()
+# crs.curs_set(2)
 
 from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
 from colorama_ex.ansi_ex_fore import Fore as cf, Fore_EX as cfx, Fore_Gray as cfg
 
-cfxList = cfx.__dict__.items()
-cfList = cf.__dict__.items()
-cfgList = cfg.__dict__.items()
-cbxList = cbx.__dict__.items()
-cbList = cb.__dict__.items()
-cbgList = cbg.__dict__.items()
+cfxList = list(cfx.__dict__.items())
+cfList = list(cf.__dict__.items())
+cfgList = list(cfg.__dict__.items())
+cbxList = list(cbx.__dict__.items())
+cbList = list(cb.__dict__.items())
+cbgList = list(cbg.__dict__.items())
 
 
 from utils import save as sv, helpers as h
@@ -43,7 +45,8 @@ def sleepadv(length=1, speed=confData["textSpeed"]):
 fCol = {
     "blue": cf.BLUE,
     "light blue": cfx.MALIBUBLUE,
-    "black": cfg.BLACK,
+    "black": cfg.GRAY2,
+    "true black": cfg.BLACK,
     "white": cfg.WHITE,
     "gray": cfg.GRAY16,
     "cyan": cfx.ROBINBLUE,
@@ -58,14 +61,17 @@ fCol = {
     "light gray": cfg.GRAY20,
     "yellow": cfx.YELLOW,
     "purple": cfx.ELECTRICVIOLET,
-    "light purple": cfx.LIGHTELECTRICVIOLET,
+    "light purple": cfx.ELECTRICVIOLETLIGHT_EX,
     "orange": cfx.ORANGEPEEL,
-    "light orange": cfx.NEONCARROT
+    "light orange": cfx.NEONCARROT,
+    "none": cs.RESET_ALL
 }
+# back
 bCol = {
     "blue": cb.BLUE,
     "light blue": cbx.MALIBUBLUE,
-    "black": cbg.BLACK,
+    "black": cbg.GRAY2,
+    "true black": cbg.BLACK,
     "white": cbg.WHITE,
     "gray": cbg.GRAY16,
     "cyan": cbx.ROBINBLUE,
@@ -80,9 +86,10 @@ bCol = {
     "light gray": cbg.GRAY20,
     "yellow": cbx.YELLOW,
     "purple": cbx.ELECTRICVIOLET,
-    "light purple": cbx.LIGHTELECTRICVIOLET,
+    "light purple": cbx.ELECTRICVIOLETLIGHT_EX,
     "orange": cbx.ORANGEPEEL,
-    "light orange": cbx.NEONCARROT
+    "light orange": cbx.NEONCARROT,
+    "none": cs.RESET_ALL
 }
 
 userSys = platform.system()
@@ -98,10 +105,7 @@ __name__ = "__main__"
 
 # ↑↓←→
 currentCaret = 1
-confData["caret"] = (
-    confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
-)
-caret1 = confData["caret"]
+caret1 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
@@ -151,18 +155,20 @@ page = 1
 page3Extra = ""
 # credits var
 credPage = 1
-# nextP and prevP carry
 
 # file
 saveFileList = []
 _saveFileList = []
 _currentSave = ""
 _loadData = ""
+saveNeeded = cs.RESET_ALL # on default, does not affect color
+
+# file var
 currentSave = 0
 filePage = 1
 saveListCap = confData["saveListCap"]
 fileRangeMin = 0
-fileRangeMax = confData["saveListCap"] - 1 # account for 0
+fileRangeMax = confData["saveListCap"] - 1
 filePageNum = 0
 breakOut = False
 
@@ -243,31 +249,6 @@ def fileFunc():
         f"[{x}]: exit\n"
         f"[{c}]: new file\n"
         inputadv("[enter] to leave")
-    elif choice == x:
-        h.clearAll()
-        return
-    elif choiceInt:
-        currentSave = choice
-        _loadData = sv.load("savefiles", currentSave)
-        breakOut = True
-        confData['timesPlayed'] += 1
-        sleepadv(1)
-        h.clearAll()
-        return
-    elif choice in [z, "*"] or not choice:
-        _loadData = sv.load("savefiles", currentSave)
-        breakOut = True
-        confData[data]['timesPlayed'] += 1
-        sleepadv(1)
-        h.clearAll()
-        return
-    elif choice == c:
-        # new file
-        if "conf.json" not in _saveFileList:
-            sv.save(sv.defaultConfig, "conf", msg=False)
-        sv.save(sv.defaultData, sv.saveNum, msg=False)
-        currentSave = sv.saveNum
-        sleepadv(1)
     elif choice in [a, "prev", "previous", "<"] and prevP:
         fileRangeMin -= saveListCap
         fileRangeMax -= saveListCap
@@ -278,6 +259,7 @@ def fileFunc():
         filePage += 1
     elif choice == "<<":
         filePage = 1
+        # collapsable
     elif choice == ">>":
         while True:
             filePage += 1
@@ -291,18 +273,42 @@ def fileFunc():
     ):
         print("that page is unavailable (unavailable pages are marked by #'s)")
         sleepadv(1.5)
-    else:
-        print("did not understand.\n")
+    elif choice == x:
+        h.clearAll()
+        return
+    # load
+    elif choiceInt:
+        currentSave = choice
+        _loadData = sv.load("savefiles", currentSave)
+        breakOut = True
+        confData['data']['timesPlayed'] += 1
         sleepadv(1)
+        h.clearAll()
+        return
+    elif choice in [z, "*"] or not choice:
+        _loadData = sv.load("savefiles", currentSave)
+        breakOut = True
+        confData['data']['timesPlayed'] += 1
+        sleepadv(1)
+        h.clearAll()
+        return
+    # new file
+    elif choice == c:
+        if "conf.json" not in _saveFileList:
+            sv.save(sv.defaultConfig, "conf", msg=False)
+        sv.save(sv.defaultData, sv.saveNum)
+        currentSave = sv.saveNum
+        sleepadv(1)
+
     return fileFunc()
 
 
 def settingsFunc():
     """recursive settings function, calls data from config and saves(?)"""
-    global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
+    global nextP, prevP, page, page3Extra, saveFileList, _saveFileList, saveNeeded
     h.clearAll()
 
-    print(confData)
+    # print(confData)
 
     print(f"{cbg.WHITE}{cfg.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
@@ -340,7 +346,7 @@ def settingsFunc():
             f"6. cancel: [{confData['cancel']}]\n"
             f"7. misc: [{confData['misc']}]\n"
         )
-    choice = inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{c}{cs.RESET_ALL}] [help]").strip()
+    choice = inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{saveNeeded}{c}{cs.RESET_ALL}] [help]").strip()
     try:
         int(choice)
         choiceInt = True
@@ -365,8 +371,10 @@ def settingsFunc():
         page = 1
     elif choice == ">>":
         page = 3
-    # HERE
+    # HERE!!!
     elif choiceInt or choice in settingsKeywords:
+        saveNeeded = fCol['yellow']
+
         # pg 1. customization
         if page == 1:
             # text spd
@@ -520,8 +528,7 @@ def settingsFunc():
                     "[:]"
                 )
                 if settingsChoice == ":":
-                    return
-                    # collapsable
+                    pass # return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
                     confData["up"] = settingsChoice
@@ -542,7 +549,7 @@ def settingsFunc():
                     f"[:]"
                 )
                 if settingsChoice == ":":
-                    return
+                    pass
                 elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
                     confData["left"] = settingsChoice
@@ -560,7 +567,7 @@ def settingsFunc():
                     f"[:]"
                 )
                 if settingsChoice == ":":
-                    return
+                    pass
                 elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
                     confData["down"] = settingsChoice
@@ -581,7 +588,7 @@ def settingsFunc():
                     f"[:]"
                 )
                 if settingsChoice == ":":
-                    return
+                    pass
                 elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
                     confData["right"] = settingsChoice
@@ -622,7 +629,7 @@ def settingsFunc():
                     f"[:]"
                 )
                 if settingsChoice == ":":
-                    return
+                    pass
                 elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
                     confData["cancel"] = settingsChoice
@@ -643,7 +650,7 @@ def settingsFunc():
                     f"[:]"
                 )
                 if settingsChoice == ":":
-                    return
+                    pass
                 elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
                     confData["misc"] = settingsChoice
@@ -671,9 +678,7 @@ def settingsFunc():
     elif choice == c:
         # universal settings config
         sv.save(confData, "config")
-        sleepadv(1)
-    else:
-        print("did not understand.")
+        saveNeeded = cs.RESET_ALL # 'none'
         sleepadv(1)
     return settingsFunc()
 
@@ -743,9 +748,6 @@ def creditsFunc():
                 "its kinda my first time coding (emphasis on 'kinda'), so... i try :)\n"
             )
             inputadv("[enter] to leave")
-    else:
-        print("did not understand.")
-        sleepadv(1)
     return creditsFunc()
 
 
@@ -821,10 +823,13 @@ while True:
     # select
     elif choice == z or not choice.strip():
         if currentCaret == 1:
+            filePage = 1
             fileFunc()
         elif currentCaret == 2:
+            page = 1
             settingsFunc()
         elif currentCaret == 3:
+            credPage = 1
             creditsFunc()
         elif currentCaret == 4:
             quitFunc()
@@ -835,6 +840,7 @@ while True:
     if breakOut:
         gameLoop()
         break
+    # can be optimized when i learn how to
     if currentCaret == 1:
         caret1 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
     elif currentCaret == 2:
