@@ -39,8 +39,11 @@ def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
     filePath = os.path.join("savefiles", _slot)
 
     # write
-    with open(filePath, "w") as savefile:
-        json.dump(saveData, savefile, indent=4)
+    try:
+        with open(filePath, "w") as savefile:
+            json.dump(saveData, savefile, indent=4)
+    except FileNotFoundError:
+        print(f'could not find {filePath}.')
 
     # msg logic
     if msg and slot == "config":

@@ -1,4 +1,5 @@
-import json, os, platform, sys, time
+import json, os, platform, sys, time, curses as crs
+crs.initscr()
 
 from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
@@ -26,8 +27,11 @@ except FileNotFoundError:
 
 
 # adv = advanced
-def inputadv(msg="", caret=confData["caret"]):
-    inp = input(f"{msg}\n{caret} ").lower()
+def inputadv(msg="", caret=confData['caret']):
+    if caret:
+        inp = input(f"{msg}\n{confData['caretFore']}{confData['caretBack']}{confData['caret']}{cs.RESET_ALL} ").lower()
+    else:
+        inp = input(f'{msg}\n{cs.RESET_ALL} ').lower()
     return inp
 
 
@@ -36,47 +40,50 @@ def sleepadv(length=1, speed=confData["textSpeed"]):
 
 
 # fore
-blue = cf.BLUE
-lightblue = cfx.MALIBUBLUE
-black = cfg.BLACK
-white = cfg.WHITE
-gray = cfg.GRAY16
-cyan = cfx.ROBINBLUE
-green = cf.GREEN
-lightcyan = cfx.BRIGHTTURQUISE
-lightgreen = cfx.GREEN_EX
-lightmagenta = cfx.PINKFLAMINGO
-pink = cfx.RAZZLEDAZZLE
-lightyellow = cfx.LASERLEMON
-magenta = cfx.MAGENTA
-red = cfx.RED
-lightgray = cfg.GRAY20
-yellow = cfx.YELLOW
-purple = cfx.ELECTRICVIOLET
-lightpurple = cfx.LIGHTELECTRICVIOLET
-orange = cfx.ORANGEPEEL
-lightorange = cfx.NEONCARROT
-# back
-bblue = cb.BLUE
-blightblue = cbx.MALIBUBLUE
-bblack = cbg.BLACK
-bwhite = cbg.WHITE
-bgray = cbg.GRAY16
-bcyan = cbx.ROBINBLUE
-bgreen = cb.GREEN
-blightcyan = cbx.BRIGHTTURQUISE
-blightgreen = cbx.GREEN_EX
-blightmagenta = cbx.PINKFLAMINGO
-bpink = cbx.RAZZLEDAZZLE
-blightyellow = cbx.LASERLEMON
-bmagenta = cbx.MAGENTA
-bred = cbx.RED
-blightgray = cbg.GRAY20
-byellow = cbx.YELLOW
-bpurple = cbx.ELECTRICVIOLET
-blightpurple = cbx.LIGHTELECTRICVIOLET
-borange = cbx.ORANGEPEEL
-blightorange = cbx.NEONCARROT
+fCol = {
+    "blue": cf.BLUE,
+    "light blue": cfx.MALIBUBLUE,
+    "black": cfg.BLACK,
+    "white": cfg.WHITE,
+    "gray": cfg.GRAY16,
+    "cyan": cfx.ROBINBLUE,
+    "green": cf.GREEN,
+    "light cyan": cfx.BRIGHTTURQUISE,
+    "light green": cfx.GREEN_EX,
+    "light magenta": cfx.PINKFLAMINGO,
+    "pink": cfx.RAZZLEDAZZLE,
+    "light yellow": cfx.LASERLEMON,
+    "magenta": cfx.MAGENTA,
+    "red": cfx.RED,
+    "light gray": cfg.GRAY20,
+    "yellow": cfx.YELLOW,
+    "purple": cfx.ELECTRICVIOLET,
+    "light purple": cfx.LIGHTELECTRICVIOLET,
+    "orange": cfx.ORANGEPEEL,
+    "light orange": cfx.NEONCARROT
+}
+bCol = {
+    "blue": cb.BLUE,
+    "light blue": cbx.MALIBUBLUE,
+    "black": cbg.BLACK,
+    "white": cbg.WHITE,
+    "gray": cbg.GRAY16,
+    "cyan": cbx.ROBINBLUE,
+    "green": cb.GREEN,
+    "light cyan": cbx.BRIGHTTURQUISE,
+    "light green": cbx.GREEN_EX,
+    "light magenta": cbx.PINKFLAMINGO,
+    "pink": cbx.RAZZLEDAZZLE,
+    "light yellow": cbx.LASERLEMON,
+    "magenta": cbx.MAGENTA,
+    "red": cbx.RED,
+    "light gray": cbg.GRAY20,
+    "yellow": cbx.YELLOW,
+    "purple": cbx.ELECTRICVIOLET,
+    "light purple": cbx.LIGHTELECTRICVIOLET,
+    "orange": cbx.ORANGEPEEL,
+    "light orange": cbx.NEONCARROT
+}
 
 userSys = platform.system()
 userVer = platform.release()
@@ -155,7 +162,7 @@ currentSave = 0
 filePage = 1
 saveListCap = confData["saveListCap"]
 fileRangeMin = 0
-fileRangeMax = confData["saveListCap"] - 1
+fileRangeMax = confData["saveListCap"] - 1 # account for 0
 filePageNum = 0
 breakOut = False
 
@@ -243,19 +250,22 @@ def fileFunc():
         currentSave = choice
         _loadData = sv.load("savefiles", currentSave)
         breakOut = True
+        confData['timesPlayed'] += 1
         sleepadv(1)
         h.clearAll()
         return
     elif choice in [z, "*"] or not choice:
         _loadData = sv.load("savefiles", currentSave)
         breakOut = True
+        confData[data]['timesPlayed'] += 1
         sleepadv(1)
         h.clearAll()
         return
     elif choice == c:
+        # new file
         if "conf.json" not in _saveFileList:
-            sv.save(sv.defaultConfig, "conf")
-        sv.save(sv.defaultData, sv.saveNum)
+            sv.save(sv.defaultConfig, "conf", msg=False)
+        sv.save(sv.defaultData, sv.saveNum, msg=False)
         currentSave = sv.saveNum
         sleepadv(1)
     elif choice in [a, "prev", "previous", "<"] and prevP:
@@ -292,7 +302,7 @@ def settingsFunc():
     global nextP, prevP, page, page3Extra, saveFileList, _saveFileList
     h.clearAll()
 
-    confData = sv.load(saveNum="config", msg=False)
+    print(confData)
 
     print(f"{cbg.WHITE}{cfg.BLACK}// [settings]{cs.RESET_ALL}")
     if page == 1:
@@ -303,8 +313,7 @@ def settingsFunc():
             "## page 1 - customization >>\n"
             f"1. text speed: {confData['textSpeed']}\n"
             f"2. caret: '{confData['caretColorless']}'\n"
-            f"3. caret color: {'[' + confData['caretFore'] + '█' + cs.RESET_ALL + ']' +
-                               ' ' + '[' + confData['caretBack'] + ' ' + cs.RESET_ALL + ']'}\n"
+            f"3. caret color: '{confData['caretFore']}{confData['caretBack']}{confData['caretColorless']}{cs.RESET_ALL}'\n"
         )
     elif page == 2:
         nextP = True
@@ -331,7 +340,7 @@ def settingsFunc():
             f"6. cancel: [{confData['cancel']}]\n"
             f"7. misc: [{confData['misc']}]\n"
         )
-    choice = inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{c}] [help]").strip()
+    choice = inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{c}{cs.RESET_ALL}] [help]").strip()
     try:
         int(choice)
         choiceInt = True
@@ -356,6 +365,7 @@ def settingsFunc():
         page = 1
     elif choice == ">>":
         page = 3
+    # HERE
     elif choiceInt or choice in settingsKeywords:
         # pg 1. customization
         if page == 1:
@@ -386,7 +396,7 @@ def settingsFunc():
                     "note: the newline and extra space after the caret are given automatically.\n"
                 )
                 confData["caret"] = settingsChoice
-                confData["colorlessCaret"] = settingsChoice
+                confData["caretColorless"] = settingsChoice
                 print(f"caret set to {confData['caret']}.\n")
                 sleepadv(1)
 
@@ -397,13 +407,27 @@ def settingsFunc():
                     "examples: 'black, white' means black caret on white background. try it!\n"
                 )
                 for i in range(2):
+                    foregroundChoice = ''
+                    backgroundChoice = ''
                     if i == 0:
                         foregroundChoice = inputadv("foreground:").strip()
                     elif i == 1:
                         backgroundChoice = inputadv("background:").strip()
 
-                    print("did not understand.")
-                    sleepadv(1)
+                    if foregroundChoice in fCol:
+                        print(f'set foreground to {fCol[foregroundChoice]}{foregroundChoice}{cs.RESET_ALL}.\n')
+                        confData['caretFore'] = fCol[foregroundChoice]
+                        sleepadv(1)
+                    elif backgroundChoice in bCol:
+                        print(f'set background to {bCol[backgroundChoice]}{backgroundChoice}{cs.RESET_ALL}.\n')
+                        confData['caretBack'] = bCol[backgroundChoice]
+                        sleepadv(1)
+                    else:
+                        print("did not understand. use colors:\n"
+                              '[white] [black]\n'
+                              '[red] [orange] [yellow] [green] [blue] [purple] +[light]')
+                        inputadv('[enter] to leave')
+                        break
 
         # pg 2. messages
         elif page == 2:
@@ -651,7 +675,6 @@ def settingsFunc():
     else:
         print("did not understand.")
         sleepadv(1)
-    sv.save(confData, "config", msg=False)
     return settingsFunc()
 
 
@@ -805,7 +828,6 @@ while True:
             creditsFunc()
         elif currentCaret == 4:
             quitFunc()
-
     # quit
     elif choice == x:
         quitFunc()
@@ -814,33 +836,13 @@ while True:
         gameLoop()
         break
     if currentCaret == 1:
-        caret1 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
-        )
+        caret1 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
     elif currentCaret == 2:
-        caret2 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
-        )
+        caret2 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
     elif currentCaret == 3:
-        caret3 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
-        )
+        caret3 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
     elif currentCaret == 4:
-        caret4 = (
-            confData["caretFore"]
-            + confData["caretBack"]
-            + confData["caret"]
-            + cs.RESET_ALL
-        )
+        caret4 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
 
 # notes:
 # sz36, cascadia semibold -> 23*94

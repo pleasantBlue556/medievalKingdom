@@ -1,9 +1,9 @@
 {
     "textSpeed": 1,
-    "caretColorless": ">",
-    "caret": "-",
-    "caretFore": "\u001b[30m",
-    "caretBack": "\u001b[107m",
+    "caretColorless": "*",
+    "caret": "*",
+    "caretFore": "\u001b[38;5;111m",
+    "caretBack": "\u001b[48;5;111m",
     "saveListCap": 4,
     "actionMsg": "what is your action? ",
     "saveMsg": "file {saveNum} saved.",
@@ -24,6 +24,5 @@
         "version": 1.0,
         "timesPlayed": 0,
         "stop smuggling!!!": true
-    },
-    "colorlessCaret": "-"
+    }
 }

@@ -1,6 +1,4 @@
-import os
-import platform
-import time
+import os, platform
 
 from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
@@ -159,4 +157,3 @@ def highlight(mode="digit", text="", color=cf.BLUE) -> str:
 #     print(highlight('digit', f'savefile{i}'))
 # sleepadv(2)
 
-print(blue + "0000")
