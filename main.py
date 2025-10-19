@@ -1,4 +1,5 @@
 import json, os, platform, sys, time
+
 # import curses as crs
 # crs.initscr()
 # crs.curs_set(2)
@@ -29,11 +30,13 @@ except FileNotFoundError:
 
 
 # adv = advanced
-def inputadv(msg="", caret=confData['caret']):
+def inputadv(msg="", caret=confData["caret"]):
     if caret:
-        inp = input(f"{msg}\n{confData['caretFore']}{confData['caretBack']}{confData['caret']}{cs.RESET_ALL} ").lower()
+        inp = input(
+            f"{msg}\n{confData['caretFore']}{confData['caretBack']}{confData['caret']}{cs.RESET_ALL} "
+        ).lower()
     else:
-        inp = input(f'{msg}\n{cs.RESET_ALL} ').lower()
+        inp = input(f"{msg}\n{cs.RESET_ALL} ").lower()
     return inp
 
 
@@ -64,7 +67,7 @@ fCol = {
     "light purple": cfx.ELECTRICVIOLETLIGHT_EX,
     "orange": cfx.ORANGEPEEL,
     "light orange": cfx.NEONCARROT,
-    "none": cs.RESET_ALL
+    "none": cs.RESET_ALL,
 }
 # back
 bCol = {
@@ -89,7 +92,7 @@ bCol = {
     "light purple": cbx.ELECTRICVIOLETLIGHT_EX,
     "orange": cbx.ORANGEPEEL,
     "light orange": cbx.NEONCARROT,
-    "none": cs.RESET_ALL
+    "none": cs.RESET_ALL,
 }
 
 userSys = platform.system()
@@ -105,7 +108,9 @@ __name__ = "__main__"
 
 # ↑↓←→
 currentCaret = 1
-caret1 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
+caret1 = (
+    confData["caretFore"] + confData["caretBack"] + confData["caret"] + cs.RESET_ALL
+)
 caret2 = "↓"
 caret3 = "↓"
 caret4 = "↓"
@@ -161,16 +166,16 @@ saveFileList = []
 _saveFileList = []
 _currentSave = ""
 _loadData = ""
-saveNeeded = cs.RESET_ALL # on default, does not affect color
+saveNeeded = cs.RESET_ALL  # on default, does not affect color
 
 # file var
 currentSave = 0
 filePage = 1
 fileRangeMin = 0
-if len(sv.saveDirListFiltered) < confData['saveListCap']:
-    fileRangeMax = len(sv.saveDirListFiltered) - 1
+if len(sv.saveDirListFiltered) < confData["saveListCap"]:
+    fileRangeMax = len(sv.saveDirListFiltered)
 else:
-    fileRangeMax = confData['saveListCap']
+    fileRangeMax = confData["saveListCap"]
 breakOut = False
 
 
@@ -186,10 +191,10 @@ def fileFunc():
     if filePage == 1:
         nextP = True
         prevP = False
-    if type(filePage / confData['saveListCap']) is not int:
+    if type(filePage / confData["saveListCap"]) is not int:
         nextP = False
         prevP = True
-    if type(filePage / confData['saveListCap']) is not int and filePage == 1:
+    if type(filePage / confData["saveListCap"]) is not int and filePage == 1:
         nextP = False
         prevP = False
     else:
@@ -202,7 +207,7 @@ def fileFunc():
         statement += "<<"
     else:
         statement += "##"
-    statement += f" page {filePage} ({fileRangeMin}-{fileRangeMax}) "
+    statement += f" page {filePage} ({fileRangeMin}-{fileRangeMax - 1}) "
     if nextP:
         statement += ">>"
     else:
@@ -212,7 +217,7 @@ def fileFunc():
     # split .json off
     _saveFileList = os.listdir("savefiles")
     saveFileList = []
-    for i in range(len(_saveFileList) % confData['saveListCap']):
+    for i in range(len(_saveFileList) % confData["saveListCap"]):
         if _saveFileList[i].startswith("savefile"):
             # REALLY weird looking but just cuts the .json off
             saveFileList.append(os.path.splitext(_saveFileList[i])[0])
@@ -267,12 +272,12 @@ def fileFunc():
         f"[{c}]: new file\n"
         inputadv("[enter] to leave")
     elif choice in [a, "prev", "previous", "<"] and prevP:
-        fileRangeMin -= confData['saveListCap']
-        fileRangeMax -= confData['saveListCap']
+        fileRangeMin -= confData["saveListCap"]
+        fileRangeMax -= confData["saveListCap"]
         filePage -= 1
     elif choice in [d, "next", ">"] and nextP:
-        fileRangeMin += confData['saveListCap']
-        fileRangeMax += confData['saveListCap']
+        fileRangeMin += confData["saveListCap"]
+        fileRangeMax += confData["saveListCap"]
         filePage += 1
     elif choice == "<<":
         filePage = 1
@@ -298,14 +303,14 @@ def fileFunc():
         currentSave = choice
         _loadData = sv.load("savefiles", currentSave)
         breakOut = True
-        confData['data']['timesPlayed'] += 1
+        confData["data"]["timesPlayed"] += 1
         sleepadv(1)
         h.clearAll()
         return
     elif choice in [z, "*"] or not choice:
         _loadData = sv.load("savefiles", currentSave)
         breakOut = True
-        confData['data']['timesPlayed'] += 1
+        confData["data"]["timesPlayed"] += 1
         sleepadv(1)
         h.clearAll()
         return
@@ -363,7 +368,9 @@ def settingsFunc():
             f"6. cancel: [{confData['cancel']}]\n"
             f"7. misc: [{confData['misc']}]\n"
         )
-    choice = inputadv(f"[<] [>] [#{page3Extra}] [{x}] [{saveNeeded}{c}{cs.RESET_ALL}] [help]").strip()
+    choice = inputadv(
+        f"[<] [>] [#{page3Extra}] [{x}] [{saveNeeded}{c}{cs.RESET_ALL}] [help]"
+    ).strip()
     try:
         int(choice)
         choiceInt = True
@@ -390,7 +397,7 @@ def settingsFunc():
         page = 3
     # HERE!!!
     elif choiceInt or choice in settingsKeywords:
-        saveNeeded = fCol['yellow']
+        saveNeeded = fCol["yellow"]
 
         # pg 1. customization
         if page == 1:
@@ -432,26 +439,32 @@ def settingsFunc():
                     "examples: 'black, white' means black caret on white background. try it!\n"
                 )
                 for i in range(2):
-                    foregroundChoice = ''
-                    backgroundChoice = ''
+                    foregroundChoice = ""
+                    backgroundChoice = ""
                     if i == 0:
                         foregroundChoice = inputadv("foreground:").strip()
                     elif i == 1:
                         backgroundChoice = inputadv("background:").strip()
 
                     if foregroundChoice in fCol:
-                        print(f'set foreground to {fCol[foregroundChoice]}{foregroundChoice}{cs.RESET_ALL}.\n')
-                        confData['caretFore'] = fCol[foregroundChoice]
+                        print(
+                            f"set foreground to {fCol[foregroundChoice]}{foregroundChoice}{cs.RESET_ALL}.\n"
+                        )
+                        confData["caretFore"] = fCol[foregroundChoice]
                         sleepadv(1)
                     elif backgroundChoice in bCol:
-                        print(f'set background to {bCol[backgroundChoice]}{backgroundChoice}{cs.RESET_ALL}.\n')
-                        confData['caretBack'] = bCol[backgroundChoice]
+                        print(
+                            f"set background to {bCol[backgroundChoice]}{backgroundChoice}{cs.RESET_ALL}.\n"
+                        )
+                        confData["caretBack"] = bCol[backgroundChoice]
                         sleepadv(1)
                     else:
-                        print("did not understand. use colors:\n"
-                              '[white] [black]\n'
-                              '[red] [orange] [yellow] [green] [blue] [purple] +[light]')
-                        inputadv('[enter] to leave')
+                        print(
+                            "did not understand. use colors:\n"
+                            "[white] [black]\n"
+                            "[red] [orange] [yellow] [green] [blue] [purple] +[light]"
+                        )
+                        inputadv("[enter] to leave")
                         break
 
         # pg 2. messages
@@ -545,7 +558,7 @@ def settingsFunc():
                     "[:]"
                 )
                 if settingsChoice == ":":
-                    pass # return settingsFunc()
+                    pass  # return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
                     confData["up"] = settingsChoice
@@ -695,7 +708,7 @@ def settingsFunc():
     elif choice == c:
         # universal settings config
         sv.save(confData, "config")
-        saveNeeded = cs.RESET_ALL # 'none'
+        saveNeeded = cs.RESET_ALL  # 'none'
         sleepadv(1)
     return settingsFunc()
 
@@ -859,13 +872,33 @@ while True:
         break
     # can be optimized when i learn how to
     if currentCaret == 1:
-        caret1 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
+        caret1 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 2:
-        caret2 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
+        caret2 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 3:
-        caret3 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
+        caret3 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
     elif currentCaret == 4:
-        caret4 = confData['caretFore'] + confData['caretBack'] + confData['caret'] + cs.RESET_ALL
+        caret4 = (
+            confData["caretFore"]
+            + confData["caretBack"]
+            + confData["caret"]
+            + cs.RESET_ALL
+        )
 
 # notes:
 # sz36, cascadia semibold -> 23*94
