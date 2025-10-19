@@ -5,10 +5,8 @@ from utils import config as c
 
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
-print(saveDirList)
 saveDirListFiltered = []
 for i in range(len(saveDirList)):
-    print(saveDirListFiltered)
     if saveDirList[i].endswith(".json") and saveDirList[i].startswith("savefile"):
         saveDirListFiltered.append(saveDirList[i])
 currentSave = 0
@@ -86,18 +84,18 @@ def merge(target, data):
 
 
 #
-choice = input("save/load")
-if choice == "save":
-    slot = input("slot num?")
-    if slot == "config":
-        save(defaultConfig, slot)
-    else:
-        save(defaultData, slot)
-
-elif choice == "load":
-    slot = input("slot num?")
-    saveData = load("savefiles", slot)
-    print(saveData)
+# choice = input("save/load")
+# if choice == "save":
+#     slot = input("slot num?")
+#     if slot == "config":
+#         save(defaultConfig, slot)
+#     else:
+#         save(defaultData, slot)
+#
+# elif choice == "load":
+#     slot = input("slot num?")
+#     saveData = load("savefiles", slot)
+#     print(saveData)
 #
 #
 # im so snart

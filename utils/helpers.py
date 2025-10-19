@@ -157,3 +157,7 @@ def highlight(mode="digit", text="", color=cf.BLUE) -> str:
 #     print(highlight('digit', f'savefile{i}'))
 # sleepadv(2)
 
+if type(10) == int:
+    print('success')
+else:
+    print('failure')

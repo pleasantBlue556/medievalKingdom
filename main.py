@@ -166,19 +166,35 @@ saveNeeded = cs.RESET_ALL # on default, does not affect color
 # file var
 currentSave = 0
 filePage = 1
-saveListCap = confData["saveListCap"]
 fileRangeMin = 0
-fileRangeMax = confData["saveListCap"] - 1
-filePageNum = 0
+if len(sv.saveDirListFiltered) < confData['saveListCap']:
+    fileRangeMax = len(sv.saveDirListFiltered) - 1
+else:
+    fileRangeMax = confData['saveListCap']
 breakOut = False
 
 
 def fileFunc():
     """runs whenever file is picked"""
-    global _currentSave, currentSave, _loadData, breakOut, fileRangeMin, fileRangeMax, filePage, saveListCap
+    global _currentSave, currentSave, _loadData, breakOut, fileRangeMin, fileRangeMax, filePage, prevP, nextP
     h.clearAll()
 
+    print(sv.saveDirListFiltered)
     print(f"{cbg.WHITE}{cfg.BLACK}// [files]{cs.RESET_ALL}")
+
+    # nextprevp logic
+    if filePage == 1:
+        nextP = True
+        prevP = False
+    if type(filePage / confData['saveListCap']) is not int:
+        nextP = False
+        prevP = True
+    if type(filePage / confData['saveListCap']) is not int and filePage == 1:
+        nextP = False
+        prevP = False
+    else:
+        nextP = True
+        prevP = True
 
     # next/prev page
     statement = ""
@@ -196,9 +212,10 @@ def fileFunc():
     # split .json off
     _saveFileList = os.listdir("savefiles")
     saveFileList = []
-    for i in range(len(_saveFileList)):
-        # REALLY weird looking but just cuts the .json off
-        saveFileList.append(os.path.splitext(_saveFileList[i])[0])
+    for i in range(len(_saveFileList) % confData['saveListCap']):
+        if _saveFileList[i].startswith("savefile"):
+            # REALLY weird looking but just cuts the .json off
+            saveFileList.append(os.path.splitext(_saveFileList[i])[0])
 
     if len(saveFileList) == 0:
         print("use 'c' to start a new file.")
@@ -250,21 +267,21 @@ def fileFunc():
         f"[{c}]: new file\n"
         inputadv("[enter] to leave")
     elif choice in [a, "prev", "previous", "<"] and prevP:
-        fileRangeMin -= saveListCap
-        fileRangeMax -= saveListCap
+        fileRangeMin -= confData['saveListCap']
+        fileRangeMax -= confData['saveListCap']
         filePage -= 1
     elif choice in [d, "next", ">"] and nextP:
-        fileRangeMin += saveListCap
-        fileRangeMax += saveListCap
+        fileRangeMin += confData['saveListCap']
+        fileRangeMax += confData['saveListCap']
         filePage += 1
     elif choice == "<<":
         filePage = 1
         # collapsable
     elif choice == ">>":
         while True:
-            filePage += 1
             if not nextP:
                 break
+            filePage += 1
     elif (
         choice in ["next", ">", d]
         and not nextP
