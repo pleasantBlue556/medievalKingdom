@@ -5,14 +5,15 @@ from utils import config as c
 
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
+# init sdlf
 saveDirListFiltered = []
 for i in range(len(saveDirList)):
     if saveDirList[i].endswith(".json") and saveDirList[i].startswith("savefile"):
         saveDirListFiltered.append(saveDirList[i])
+
+
 currentSave = 0
-saveNum = 0
-for i in range(len(saveDirListFiltered)):
-    saveNum += 1
+
 
 # default save
 defaultData = {
@@ -30,7 +31,7 @@ defaultConfig = c.settings
 
 
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
-def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
+def save(saveData, slot, msg=c.settings["saveMsg"]):
     # define filepath
     if slot == "config":
         _slot = "conf.json"
@@ -52,16 +53,19 @@ def save(saveData, slot=saveNum, msg=c.settings["saveMsg"]):
         print(c.settings["saveMsg"].format(saveNum=slot))
 
 
-def saveDict(newDict, newData, saveData):
+def saveDict(newDict, newData, saveData, saveNum):
     saveData[newDict].update(newData)
-    save(saveData, msg=False)
+    save(saveData, saveNum, msg=False)
 
 
-def load(saveDirectory="savefiles", saveNum=saveNum, msg=c.settings["loadMsg"]):
+def load(saveDirectory="savefiles", saveNum=None, msg=c.settings["loadMsg"]):
     if saveNum != "config":
         filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
+    elif saveNum == 'config':
+        filePath = os.path.join(saveDirectory, 'conf.json')
     else:
-        filePath = os.path.join(saveDirectory, "conf.json")
+        print('did not have saveNum.')
+        return None
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
             loadData = json.load(f)

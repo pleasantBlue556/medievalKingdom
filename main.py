@@ -177,6 +177,9 @@ if len(sv.saveDirListFiltered) < confData["saveListCap"]:
 else:
     fileRangeMax = confData["saveListCap"]
 breakOut = False
+saveNum = 0
+for i in range(len(sv.saveDirListFiltered)):
+    saveNum += 1
 
 
 def fileFunc():
@@ -318,8 +321,8 @@ def fileFunc():
     elif choice == c:
         if "conf.json" not in _saveFileList:
             sv.save(sv.defaultConfig, "conf", msg=False)
-        sv.save(sv.defaultData, sv.saveNum)
-        currentSave = sv.saveNum
+        sv.save(sv.defaultData, saveNum)
+        currentSave = saveNum
         sleepadv(1)
 
     return fileFunc()
@@ -707,7 +710,7 @@ def settingsFunc():
         return
     elif choice == c:
         # universal settings config
-        sv.save(confData, "config")
+        sv.save(confData, saveNum, "config")
         saveNeeded = cs.RESET_ALL  # 'none'
         sleepadv(1)
     return settingsFunc()
