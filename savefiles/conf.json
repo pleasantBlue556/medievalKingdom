@@ -1,10 +1,10 @@
 {
-    "textSpeed": 0.25,
-    "caretColorless": "~",
-    "caret": "~",
-    "caretFore": "\u001b[38;5;93m",
-    "caretBack": "\u001b[48;5;201m",
-    "saveListCap": 4,
+    "textSpeed": 0.5,
+    "caretColorless": "@",
+    "caret": "@",
+    "caretFore": "\u001b[38;5;226m",
+    "caretBack": "\u001b[48;5;4m",
+    "saveListCap": 10,
     "actionMsg": "?",
     "saveMsg": "save{savenum}",
     "loadMsg": "load{savenum}",
@@ -15,14 +15,5 @@
     "right": "d",
     "select": "z",
     "cancel": "x",
-    "misc": "c",
-    "kingdom": {
-        "name": "",
-        "gold": 0
-    },
-    "data": {
-        "version": 1.0,
-        "timesPlayed": 0,
-        "stop smuggling!!!": true
-    }
+    "misc": "c"
 }
