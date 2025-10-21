@@ -253,7 +253,7 @@ def fileFunc():
                 else:
                     _currentSave = ""
                 print(
-                    f"{displayIndex}{_currentSave}: {fileName} // "
+                    f"{displayIndex}{_currentSave}: {fileName} / "
                     f"'{name}', {gold} gold"
                 )
 
@@ -710,7 +710,7 @@ def settingsFunc():
         return
     elif choice == c:
         # universal settings config
-        sv.save(confData, saveNum, "config")
+        sv.save(confData, 'conf', "config")
         saveNeeded = cs.RESET_ALL  # 'none'
         sleepadv(1)
     return settingsFunc()

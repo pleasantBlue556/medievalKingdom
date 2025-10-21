@@ -33,7 +33,7 @@ defaultConfig = c.settings
 # yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
 def save(saveData, slot, msg=c.settings["saveMsg"]):
     # define filepath
-    if slot == "config":
+    if slot in ["config", "conf"]:
         _slot = "conf.json"
     else:
         _slot = "savefile" + str(slot) + ".json"
@@ -64,7 +64,7 @@ def load(saveDirectory="savefiles", saveNum=None, msg=c.settings["loadMsg"]):
     elif saveNum == 'config':
         filePath = os.path.join(saveDirectory, 'conf.json')
     else:
-        print('did not have saveNum.')
+        print(f'did not have saveNum: {saveNum}.')
         return None
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
