@@ -58,19 +58,19 @@ def saveDict(newDict, newData, saveData, saveNum):
     save(saveData, saveNum, msg=False)
 
 
-def load(saveDirectory="savefiles", saveNum=None, msg=c.settings["loadMsg"]):
-    if saveNum != "config":
-        filePath = os.path.join(saveDirectory, f"savefile{saveNum}.json")
-    elif saveNum == 'config':
+def load(saveDirectory="savefiles", slot=None, msg=c.settings["loadMsg"]):
+    if slot not in ["conf", "config"]:
+        filePath = os.path.join(saveDirectory, f"savefile{slot}.json")
+    elif slot in ["conf", "config"]:
         filePath = os.path.join(saveDirectory, 'conf.json')
     else:
-        print(f'did not have saveNum: {saveNum}.')
+        print(f'did not have saveNum: {slot}.')
         return None
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
             loadData = json.load(f)
             if msg:
-                print(c.settings["loadMsg"].format(saveNum=saveNum))
+                print(c.settings["loadMsg"].format(saveNum=slot))
     else:
         print(f"save not found, check {filePath}.")
         return None

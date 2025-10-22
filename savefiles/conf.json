@@ -4,16 +4,25 @@
     "caret": "@",
     "caretFore": "\u001b[38;5;226m",
     "caretBack": "\u001b[48;5;4m",
-    "saveListCap": 10,
-    "actionMsg": "?",
-    "saveMsg": "save{savenum}",
-    "loadMsg": "load{savenum}",
-    "newDayMsg": "day{day}",
+    "saveListCap": 1,
+    "actionMsg": "",
+    "saveMsg": "",
+    "loadMsg": "",
+    "newDayMsg": "",
     "up": "w",
     "left": "a",
     "down": "s",
     "right": "d",
     "select": "z",
     "cancel": "x",
-    "misc": "c"
+    "misc": "c",
+    "kingdom": {
+        "name": "",
+        "gold": 0
+    },
+    "data": {
+        "version": 1.0,
+        "timesPlayed": 0,
+        "stop smuggling!!!": true
+    }
 }

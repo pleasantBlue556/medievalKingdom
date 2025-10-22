@@ -14,19 +14,24 @@ cfgList = list(cfg.__dict__.items())
 cbxList = list(cbx.__dict__.items())
 cbList = list(cb.__dict__.items())
 cbgList = list(cbg.__dict__.items())
-
+spacingGray = cfg.GRAY12
+# option one---[1] <--spacingGray for -
+# option two---[2]
+# option three-[3]
 
 from utils import save as sv, helpers as h
 
 # INIT VARIABLES
 
 try:
-    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
-        confData = json.load(_confData)
+    confData = sv.load(slot='conf', msg=False)
+    # with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
+    #     confData = json.load(_confData)
 except FileNotFoundError:
     sv.save(sv.defaultConfig, "config", msg=False)
-    with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
-        confData = json.load(_confData)
+    confData = sv.load(slot='conf', msg=False)
+    # with open(os.path.join("savefiles", "conf.json"), "r") as _confData:
+    #     confData = json.load(_confData)
 
 
 # adv = advanced
@@ -42,6 +47,36 @@ def inputadv(msg="", caret=confData["caret"]):
 
 def sleepadv(length=1, speed=confData["textSpeed"]):
     time.sleep(length * speed)
+
+
+def huh(error, returnArea, method=None, msg=''):
+    if error == 'max':
+        _msg = "value is too high."
+    elif error == 'min':
+        _msg = "value is too low."
+    elif error == 'typeStr':
+        _msg = "needed type 'string'."
+    elif error == 'typeInt':
+        _msg = "needed type 'int'."
+    elif error == 'typeFloat':
+        _msg = "needed type 'float'."
+    elif error == 'range':
+        _msg = "out of range."
+    elif error == 'dnu':
+        _msg = 'did not understand.'
+    else:
+        _msg = "did not understand."
+
+    # var 'msg' is an addon message
+    print(_msg + msg)
+
+    if method is None:
+        sleepadv(1)
+    elif method == "input":
+        inputadv("[enter] to leave")
+
+    if returnArea is not None:
+        return returnArea
 
 
 # fore
@@ -161,6 +196,7 @@ prevP = False
 settingsPage = 1
 page3Extra = ""
 rebound = False
+currentConfData = ''
 
 # credits var
 credPage = 1
@@ -185,8 +221,7 @@ def fileFunc():
     """runs whenever file is picked"""
     global _currentSave, currentSave, _loadData, breakOut, fileRangeMin, fileRangeMax, filePage, prevP, nextP
     h.clearAll()
-
-    print(sv.saveDirListFiltered)
+    # print(sv.saveDirListFiltered)
     print(f"{cbg.WHITE}{cfg.BLACK}// [files]{cs.RESET_ALL}")
 
     # nextprevp logic
@@ -224,7 +259,7 @@ def fileFunc():
             # REALLY weird looking but just cuts the .json off
             saveFileList.append(os.path.splitext(_saveFileList[i])[0])
 
-    if len(saveFileList) == 0:
+    if len(sv.saveDirListFiltered) == 0:
         print("use 'c' to start a new file.")
     else:
         # list prints
@@ -249,12 +284,20 @@ def fileFunc():
                 # add mark
                 if displayIndex == currentSave:
                     _currentSave = "*"
+                    print(
+                        f"{displayIndex}{_currentSave}: {fileName}{spacingGray}-{cs.RESET_ALL}"
+                        f"'{name}', {gold} gold"
+                    )
                 else:
                     _currentSave = ""
-                print(
-                    f"{displayIndex}{_currentSave}: {fileName} / "
-                    f"'{name}', {gold} gold"
-                )
+                    print(
+                        f"{displayIndex}{_currentSave}: {fileName}{spacingGray}--{cs.RESET_ALL}"
+                        f"'{name}', {gold} gold"
+                    )
+                # either has 1 or 2 dashes to be lined up
+                # 0*. savefile0-|'abc'
+                # 1. savefile1--|
+
 
     print("")
     choice = inputadv(f"[#] [{z}] [{x}] [{c}] [help]")
@@ -299,7 +342,7 @@ def fileFunc():
         sleepadv(1.5)
     elif choice == x:
         h.clearAll()
-        return
+        return None
     # load
     elif choiceInt:
         currentSave = choice
@@ -331,7 +374,7 @@ def fileFunc():
 
 def settingsFunc():
     """recursive settings function, calls data from config and saves(?)"""
-    global nextP, prevP, settingsPage, page3Extra, saveFileList, _saveFileList, saveNeeded, rebound
+    global nextP, prevP, settingsPage, page3Extra, saveFileList, _saveFileList, saveNeeded, rebound, currentConfData
     h.clearAll()
 
     # print(confData)
@@ -344,21 +387,35 @@ def settingsFunc():
         rebound = False
         print(
             "## page 1 - customization >>\n"
-            f"1. text speed:{cfg.GRAY12}--{cs.RESET_ALL}{confData['textSpeed']}\n"
-            f"2. caret{cfg.GRAY12}--------{cs.RESET_ALL}{confData['caretColorless']}\n"
-            f"3. caret color:{cfg.GRAY12}-{cs.RESET_ALL}{confData['caretFore']}{confData['caretBack']}{confData['caretColorless']}{cs.RESET_ALL}\n"
-            f"4. save cap:{cfg.GRAY12}----{cs.RESET_ALL}{confData['saveListCap']}\n"
+            f"1. text speed:{spacingGray}--{cs.RESET_ALL}{confData['textSpeed']}\n"
+            f"2. caret{spacingGray}--------{cs.RESET_ALL}{confData['caretColorless']}\n"
+            f"3. caret color:{spacingGray}-{cs.RESET_ALL}{confData['caretFore']}{confData['caretBack']}{confData['caretColorless']}{cs.RESET_ALL}\n"
+            f"4. save cap:{spacingGray}----{cs.RESET_ALL}{confData['saveListCap']}\n"
         )
     elif settingsPage == 2:
         nextP = True
         prevP = True
         page3Extra = ""
+
+        saveMsgPlaceholder = confData['saveMsg']
+        loadMsgPlaceholder = confData['loadMsg']
+        newDayMsgPlaceholder = confData['newDayMsg']
+        actionMsgPlaceholder = confData['actionMsg']
+        if not confData['saveMsg']:
+            saveMsgPlaceholder = '#'
+        if not confData['loadMsg']:
+            loadMsgPlaceholder = '#'
+        if not confData['newDayMsg']:
+            newDayMsgPlaceholder = '#'
+        if not confData['actionMsg']:
+            actionMsgPlaceholder = '#'
+
         print(
             "<< page 2 - messages >>\n"
-            f"1. save message:{cfg.GRAY12}----{cs.RESET_ALL}{confData['saveMsg']}\n"
-            f"2. load message:{cfg.GRAY12}----{cs.RESET_ALL}{confData['loadMsg']}\n"
-            f"3. new day message:{cfg.GRAY12}-{cs.RESET_ALL}{confData['newDayMsg']}\n"
-            f"4. action message:{cfg.GRAY12}--{cs.RESET_ALL}{confData['actionMsg']}\n"
+            f"1. save message:{spacingGray}----{cs.RESET_ALL}{saveMsgPlaceholder}\n"
+            f"2. load message:{spacingGray}----{cs.RESET_ALL}{loadMsgPlaceholder}\n"
+            f"3. new day message:{spacingGray}-{cs.RESET_ALL}{newDayMsgPlaceholder}\n"
+            f"4. action message:{spacingGray}--{cs.RESET_ALL}{actionMsgPlaceholder}\n"
         )
     elif settingsPage == 3:
         nextP = False
@@ -367,13 +424,13 @@ def settingsFunc():
         rebound = True # goes backwards
         print(
             "<< page 3 - keybinds ##\n"
-            f"1. up:{cfg.GRAY12}-----{cs.RESET_ALL}[{confData['up']}]\n"
-            f"2. left:{cfg.GRAY12}---{cs.RESET_ALL}[{confData['left']}]\n"
-            f"3. down:{cfg.GRAY12}---{cs.RESET_ALL}[{confData['down']}]\n"
-            f"4. right:{cfg.GRAY12}--{cs.RESET_ALL}[{confData['right']}]\n"
-            f"5. select:{cfg.GRAY12}-{cs.RESET_ALL}[{confData['select']}]\n"
-            f"6. cancel:{cfg.GRAY12}-{cs.RESET_ALL}[{confData['cancel']}]\n"
-            f"7. misc:{cfg.GRAY12}---{cs.RESET_ALL}[{confData['misc']}]\n"
+            f"1. up:{spacingGray}-----{cs.RESET_ALL}[{confData['up']}]\n"
+            f"2. left:{spacingGray}---{cs.RESET_ALL}[{confData['left']}]\n"
+            f"3. down:{spacingGray}---{cs.RESET_ALL}[{confData['down']}]\n"
+            f"4. right:{spacingGray}--{cs.RESET_ALL}[{confData['right']}]\n"
+            f"5. select:{spacingGray}-{cs.RESET_ALL}[{confData['select']}]\n"
+            f"6. cancel:{spacingGray}-{cs.RESET_ALL}[{confData['cancel']}]\n"
+            f"7. misc:{spacingGray}---{cs.RESET_ALL}[{confData['misc']}]\n"
         )
     choice = inputadv(
         f"[<] [>] [#{page3Extra}] [{x}] [{saveNeeded}{c}{cs.RESET_ALL}] [help]"
@@ -404,7 +461,9 @@ def settingsFunc():
         settingsPage = 3
     # HERE!!!
     elif choiceInt or choice in settingsKeywords:
-        saveNeeded = fCol["yellow"]
+        currentConfData = confData
+
+        # saveNeeded = cs.RESET_ALL
 
         # pg 1. customization
         if settingsPage == 1:
@@ -412,38 +471,43 @@ def settingsFunc():
             if choice in ["1", "text", "text speed", "speed"]:
                 settingsChoice = inputadv(
                     "makes the text move faster or slower - default: 1\n"
-                    "speed multipliers: [0] [0.25], [0.5], [1], [2], [3]\n"
+                    "speed multipliers: [1/8-2] [;]\n"
                 )
-                if settingsChoice in ["0", "0.25", "1/4", "0.5", "1/2", "1", "2", "3"]:
-                    if settingsChoice == "1/4":
-                        settingsChoice = "0.25"
-                    elif settingsChoice == "1/2":
-                        settingsChoice = "0.5"
+                try:
+                    float(settingsChoice)
+                    choiceFloat = True
+                except ValueError:
+                    choiceFloat = False
+                if settingsChoice.strip() == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif choiceFloat and 1/8 <= float(settingsChoice) <= 2:
                     confData["textSpeed"] = float(settingsChoice)
                     print(f"speed set to {confData['textSpeed']}.\n")
                     sleepadv(1)
-
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh("typeFloat", returnArea=None)
 
             # caret type
             elif choice in ["2", "caret"]:
                 settingsChoice = inputadv(
                     "change the caret of every input statement - default: >\n"
-                    "examples: ->, -, @\n"
-                    "note: the newline and extra space after the caret are given automatically.\n"
+                    "[-, ->, *...] [;]\n"
                 )
-                confData["caret"] = settingsChoice
-                confData["caretColorless"] = settingsChoice
-                print(f"caret set to {confData['caret']}.\n")
-                sleepadv(1)
+                if settingsChoice.strip() == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                else:
+                    confData["caret"] = settingsChoice
+                    confData["caretColorless"] = settingsChoice
+                    print(f"caret set to {confData['caret']}.\n")
+                    sleepadv(1)
 
             # caret color
             elif choice in ["3", "caret color", "color"]:
                 print(
                     "changes the front and back of the caret - default: none, true black\n"
-                    "examples: 'black, white' means black caret on white background. try it!\n"
+                    "[foreground, background] [;]\n"
                 )
                 for i in range(2):
                     foregroundChoice = ""
@@ -465,38 +529,38 @@ def settingsFunc():
                         )
                         confData["caretBack"] = bCol[backgroundChoice]
                         sleepadv(1)
+                    elif foregroundChoice == ';' or backgroundChoice == ';':
+                        saveNeeded = cs.RESET_ALL
+                        return settingsFunc()
                     else:
-                        print(
-                            "did not understand. use colors:\n"
+                        huh(error='dnu', returnArea=None, method="input", msg="use colors:\n"
                             "[white] [black]\n"
-                            "[red] [orange] [yellow] [green] [blue] [purple] +[light]"
-                        )
-                        inputadv("[enter] to leave")
+                            "[red] [orange] [yellow] [green] [blue] [purple] +[light]")
                         break
 
             # savelistcap
             elif choice in ["4", "save cap", "save list cap"]:
                 settingsChoice = inputadv("changes the amount of files per page in the files menu - default: 4\n"
-                                          "note: max is 10.\n")
+                                          "[1-10] [;]\n")
                 try:
                     int(settingsChoice)
                     choiceInt = True
                 except ValueError:
                     choiceInt = False
-                if 1 <= settingsChoice <= 10 and choiceInt:
+                if settingsChoice.strip() == ';':
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif not choiceInt:
+                    huh('dnu', '')
+                elif 1 <= int(settingsChoice) <= 10 and choiceInt:
                     confData['saveListCap'] = int(settingsChoice)
                     print(f'save list cap changed to {settingsChoice}.')
                     sleepadv(1)
-                elif settingsChoice > 10:
-                    print(f"too high of a number ({settingsChoice} > 10) - defaulting to 10.")
-                    confData['saveListCap'] = 10
-                    sleepadv(1)
-                elif settingsChoice < 1:
-                    print("too low of a number. min:1")
-                    sleepadv(1)
-                elif not choiceInt:
-                    print("did not understand.")
-                    sleepadv(1)
+                elif int(settingsChoice) > 10:
+                    huh('range', '', msg='max:10')
+                elif int(settingsChoice) < 1:
+                    huh('range', '', msg='min:1')
+
 
         # pg 2. messages
         elif settingsPage == 2:
@@ -504,92 +568,96 @@ def settingsFunc():
             if choice in ["1", "save", "save message"]:
                 settingsChoice = inputadv(
                     "edit the save message - default: 'file {saveNum} saved.'\n"
-                    "[{saveNum}: save number] [blank: remove message]\n"
+                    "[{saveNum}: save number] [blank: remove message] [;]\n"
                 )
-                if settingsChoice.strip() != "":
+                if settingsChoice.strip() == ';':
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif settingsChoice.strip():
                     print(f"message '{settingsChoice}' added.\n")
                     confData["saveMsg"] = settingsChoice
                     sleepadv(1)
-
-                elif settingsChoice.strip() == "":
+                elif not settingsChoice.strip():
                     print("messages removed.\n")
                     confData["saveMsg"] = ""
                     sleepadv(1)
 
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu', '')
 
             # load message
             if choice in ["2", "load", "load message"]:
                 settingsChoice = inputadv(
                     "edit the load message - default: 'file {saveNum} loaded.'\n"
-                    "[{saveNum}: save number] [blank: remove message]\n"
+                    "[{saveNum}: save number] [blank: remove message] [;]\n"
                 )
-                if settingsChoice != "":
+                if settingsChoice.strip() == ';':
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif settingsChoice:
                     print(f"message '{settingsChoice}' added.\n")
                     confData["loadMsg"] = settingsChoice
                     sleepadv(1)
-
-                elif settingsChoice.strip() == "":
+                elif not settingsChoice.strip():
                     print("messages removed.\n")
                     confData["loadMsg"] = ""
                     sleepadv(1)
 
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu', '')
 
             # new day message
             if choice in ["3", "new day message", "day message", "end message", "end"]:
                 settingsChoice = inputadv(
                     "edits the 'day is ending' messages - default: 'the day is ending...'\n"
-                    "[{day}: day number] [blank: remove messages]\n"
+                    "[{day}: day number] [blank: remove messages] [;]\n"
                 )
-                if settingsChoice != "":
+                if settingsChoice.strip() == ';':
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif settingsChoice:
                     print(f"message '{settingsChoice}' added.\n")
                     confData["newDayMsg"] = settingsChoice
                     sleepadv(1)
 
-                elif settingsChoice.strip() == "":
+                elif not settingsChoice.strip():
                     print("messages removed.\n")
                     confData["newDayMsg"] = ""
                     sleepadv(1)
-
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu', '')
 
             # act message
             if choice in ["4", "action message", "action", "act"]:
                 settingsChoice = inputadv(
                     "edits the action message - default: 'what is your action?'\n"
-                    "[blank: remove messages]\n"
+                    "[blank: remove messages] [;]\n"
                 )
-                if settingsChoice != "":
+                if settingsChoice.strip() == ';':
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
+                elif settingsChoice:
                     print(f"message '{settingsChoice}' added.\n")
                     confData["actionMsg"] = settingsChoice
                     sleepadv(1)
-
-                elif settingsChoice.strip() == "":
+                elif not settingsChoice.strip():
                     print("messages removed.\n")
-                    confData["newDayMsg"] = ""
+                    confData["actionMsg"] = ""
                     sleepadv(1)
 
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu', '')
 
         # pg 3. keybinds
         elif settingsPage == 3:
             if choice in ["1", "up"]:
                 settingsChoice = inputadv(
                     "edit keybind 'up' - default: w\n"
-                    f"can't use: {keybindList}\n"
-                    "[:]"
+                    f"![{keybindList.remove(w)}] [;]"
                 )
-                if settingsChoice == ":":
-                    pass  # return settingsFunc()
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'up' set to '{settingsChoice}'.")
                     confData["up"] = settingsChoice
@@ -607,10 +675,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'left' - default: a\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    pass
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
                     confData["left"] = settingsChoice
@@ -626,10 +695,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'down' - default: s\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    pass
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
                     confData["down"] = settingsChoice
@@ -647,10 +717,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'right' - default: d\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    pass
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
                     confData["right"] = settingsChoice
@@ -666,10 +737,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'select' - default: z\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    return
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
                     confData["select"] = settingsChoice
@@ -679,7 +751,7 @@ def settingsFunc():
                     print(f"keybind {settingsChoice} already used.")
                     sleepadv(1)
 
-                elif settingsChoice == ":":
+                elif settingsChoice == ";":
                     return
                 else:
                     print("did not understand.")
@@ -689,10 +761,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'cancel' - default: x\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    pass
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
                     confData["cancel"] = settingsChoice
@@ -710,10 +783,11 @@ def settingsFunc():
                 settingsChoice = inputadv(
                     "edit keybind 'misc' - default: c\n"
                     f"can't use: {keybindList}\n"
-                    f"[:]"
+                    f"[;]"
                 )
-                if settingsChoice == ":":
-                    pass
+                if settingsChoice == ";":
+                    saveNeeded = cs.RESET_ALL
+                    return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
                     confData["misc"] = settingsChoice
@@ -722,10 +796,11 @@ def settingsFunc():
                 elif settingsChoice in keybindList:
                     print(f"keybind {settingsChoice} already used.")
                     sleepadv(1)
-                    return
+                    return settingsFunc()
                 else:
                     print("did not understand.")
                     sleepadv(1)
+
 
     elif (
         choice in ["next", ">", d]
@@ -745,20 +820,27 @@ def settingsFunc():
 
         # update savedirlistfiltered
         sv.saveDirListFiltered = [] # clear
-        for i in range(len(sv.saveDirList)):
+        for i in range(len(os.listdir('savefiles'))):
             if sv.saveDirList[i].endswith(".json") and sv.saveDirList[i].startswith("savefile"):
                 sv.saveDirListFiltered.append(sv.saveDirList[i])
         sleepadv(1)
+
+    if currentConfData != confData:
+        saveNeeded = fCol["yellow"]
+    else:
+        saveNeeded = cs.RESET_ALL
+
     return settingsFunc()
 
 
 def creditsFunc():
-    global credPage, nextP, prevP
+    global credPage, nextP, prevP, rebound
     h.clearAll()
     print(f"{cbg.WHITE}{cfg.BLACK}// [credits]{cs.RESET_ALL}")
     if credPage == 1:
         nextP = True
         prevP = False
+        rebound = False
         print("## page 1 - dev >>\n" "1: pleasantBlue\n")
     elif credPage == 2:
         nextP = True
@@ -767,6 +849,7 @@ def creditsFunc():
     elif credPage == 3:
         nextP = False
         prevP = True
+        rebound = True
         print("<< page 3 - special thanks ##\n" "...wip\n")
     choice = inputadv(f"[<] [>] [#] [{x}] [help]")
     try:
@@ -797,9 +880,9 @@ def creditsFunc():
     elif choice in ["prev", "previous", "<", a] and prevP is not False:
         credPage -= 1
         return creditsFunc()
-    elif choice in [x]:
+    elif choice == x:
         h.clearAll()
-        return
+        return None
     elif (
         choice in ["next", ">", d]
         and not nextP
@@ -817,6 +900,10 @@ def creditsFunc():
                 "its kinda my first time coding (emphasis on 'kinda'), so... i try :)\n"
             )
             inputadv("[enter] to leave")
+    elif not choice and not rebound:
+        credPage += 1
+    elif not choice and rebound:
+        credPage -= 1
     return creditsFunc()
 
 
@@ -896,9 +983,11 @@ while True:
             fileFunc()
         elif currentCaret == 2:
             settingsPage = 1
+            rebound = False
             settingsFunc()
         elif currentCaret == 3:
             credPage = 1
+            rebound = False
             creditsFunc()
         elif currentCaret == 4:
             quitFunc()
