@@ -720,133 +720,123 @@ def settingsFunc():
 
             elif choice in ["2", "left"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'left' - default: a\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'left' - default: a\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == a:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'left' set to '{settingsChoice}'.")
                     confData["left"] = settingsChoice
+                    a = settingsChoice
                     sleepadv(1)
+
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
+
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
             elif choice in ["3", "down"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'down' - default: s\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'down' - default: s\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == s:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'down' set to '{settingsChoice}'.")
                     confData["down"] = settingsChoice
+                    s = settingsChoice
                     sleepadv(1)
 
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
 
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
             elif choice in ["4", "right"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'right' - default: d\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'right' - default: d\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == d:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'right' set to '{settingsChoice}'.")
                     confData["right"] = settingsChoice
+                    d = settingsChoice
                     sleepadv(1)
+
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
+
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
             elif choice in ["5", "select"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'select' - default: z\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'select' - default: z\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == z:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'select' set to '{settingsChoice}'.")
                     confData["select"] = settingsChoice
+                    z = settingsChoice
                     sleepadv(1)
 
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
 
-                elif settingsChoice == ";":
-                    return
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
             elif choice in ["6", "cancel"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'cancel' - default: x\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'cancel' - default: x\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == x:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'cancel' set to '{settingsChoice}'.")
                     confData["cancel"] = settingsChoice
+                    x = settingsChoice
                     sleepadv(1)
 
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
 
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
             elif choice in ["7", "misc"]:
                 settingsChoice = inputadv(
-                    "edit keybind 'misc' - default: c\n"
-                    f"can't use: {keybindList}\n"
-                    f"[;]"
+                    "edit keybind 'misc' - default: c\n" f"![{keybindList}] [;]"
                 )
-                if settingsChoice == ";":
+                if settingsChoice == ";" or settingsChoice == c:
                     saveNeeded = cs.RESET_ALL
                     return settingsFunc()
                 elif settingsChoice not in keybindList:
                     print(f"'misc' set to '{settingsChoice}'.")
                     confData["misc"] = settingsChoice
+                    c = settingsChoice
                     sleepadv(1)
 
                 elif settingsChoice in keybindList:
-                    print(f"keybind {settingsChoice} already used.")
+                    print(f"keybind '{settingsChoice}' already used.")
                     sleepadv(1)
-                    return settingsFunc()
+
                 else:
-                    print("did not understand.")
-                    sleepadv(1)
+                    huh('dnu')
 
     elif (
         choice in ["next", ">", d]
