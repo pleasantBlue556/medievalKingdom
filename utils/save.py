@@ -62,9 +62,9 @@ def load(saveDirectory="savefiles", slot=None, msg=c.settings["loadMsg"]):
     if slot not in ["conf", "config"]:
         filePath = os.path.join(saveDirectory, f"savefile{slot}.json")
     elif slot in ["conf", "config"]:
-        filePath = os.path.join(saveDirectory, 'conf.json')
+        filePath = os.path.join(saveDirectory, "conf.json")
     else:
-        print(f'did not have saveNum: {slot}.')
+        print(f"did not have saveNum: {slot}.")
         return None
     if os.path.exists(filePath):
         with open(filePath, "r") as f:
