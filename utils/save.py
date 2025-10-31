@@ -31,8 +31,8 @@ defaultConfig = settings = {
     "textSpeed": 1,
     "caretColorless": ">",
     "caret": ">",
-    "caretFore": '\x1b[38;5;255m',
-    "caretBack": '\x1b[38;5;232m',
+    "caretFore": "\x1b[38;5;255m",
+    "caretBack": "\x1b[38;5;232m",
     "saveListCap": 4,
     # page 2
     "saveMsg": "file {saveNum} saved.",

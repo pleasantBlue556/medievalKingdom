@@ -1,17 +1,18 @@
 import json, os, platform, sys, time, copy
 
-if platform.system() == 'Windows':
+if platform.system() == "Windows":
     try:
         import curses as crs
     except ImportError:
         # install windows port
         import subprocess
+
         subprocess.check_call(["pip", "install", "windows-curses"])
         import curses as crs
 else:
     import curses as crs
 # since all is imported as crs should work...?
-_posX = 0 # starts at 0 on start, per printadv: _posX++
+_posX = 0  # starts at 0 on start, per printadv: _posX++
 
 from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
@@ -29,6 +30,7 @@ spacingGray = cfg.GRAY12
 # option three-[3]
 
 from utils import save as sv
+
 # from utils import helpers as h
 
 # INIT VARIABLES
@@ -47,7 +49,7 @@ except FileNotFoundError:
 # adv = advanced
 def printadv(msg="", posX=int(_posX), posY=0, stdscr=crs.initscr()):
     global _posX
-    _posX += 1 # increases by one
+    _posX += 1  # increases by one
     stdscr.addstr(msg, posX, posY)
 
 
@@ -65,13 +67,13 @@ def sleepadv(length=1, speed=confData["textSpeed"]):
     time.sleep(length * speed)
 
 
-
 def clearAll():
     if platform.system() == "Windows":
         os.system("cls")  # prints a box with an x in terminal but works in cmd
     elif platform.system() == "Linux":
         os.system("clear")
     _posX = 0
+
 
 def huh(error, returnArea=None, method=None, msg=""):
     if error is None:
@@ -335,13 +337,15 @@ def fileFunc():
         choiceInt = False
         # collapsable
     if choice == "help":
-        printadv(f"[<]: previous page (also use {a})\n"
-        f"[>]: next page (also use {d})\n"
-        f"[<<]: first page\n"
-        f"[>>]: last page\n"
-        f"[{z}]: continue\n"
-        f"[{x}]: exit\n"
-        f"[{c}]: new file\n")
+        printadv(
+            f"[<]: previous page (also use {a})\n"
+            f"[>]: next page (also use {d})\n"
+            f"[<<]: first page\n"
+            f"[>>]: last page\n"
+            f"[{z}]: continue\n"
+            f"[{x}]: exit\n"
+            f"[{c}]: new file\n"
+        )
 
         inputadv("[enter] to leave")
     elif choice in [a, "prev", "previous", "<"] and prevP:
@@ -374,7 +378,7 @@ def fileFunc():
     # load
     elif choiceInt:
         currentSave = choice
-        _loadData = sv.load("savefiles", currentSave, confData['loadMsg'])
+        _loadData = sv.load("savefiles", currentSave, confData["loadMsg"])
         _loadData["data"]["timesPlayed"] += 1
         breakOut = True
 
@@ -382,7 +386,7 @@ def fileFunc():
         clearAll()
         return
     elif choice in [z, "*"] or not choice:
-        _loadData = sv.load("savefiles", currentSave, confData['loadMsg'])
+        _loadData = sv.load("savefiles", currentSave, confData["loadMsg"])
         _loadData["data"]["timesPlayed"] += 1
         breakOut = True
 
@@ -393,7 +397,7 @@ def fileFunc():
     elif choice == c:
         if "conf.json" not in _saveFileList:
             sv.save(sv.defaultConfig, "conf", msg=False)
-        sv.save(sv.defaultData, saveNum, msg=confData['saveMsg'])
+        sv.save(sv.defaultData, saveNum, msg=confData["saveMsg"])
         currentSave = saveNum
 
         sleepadv(1)
@@ -658,15 +662,18 @@ def settingsFunc():
                 elif settingsChoice.strip():
                     # before defining...
                     try:
-                        settingsChoice.format(savenum=saveNum)  # itll fail to define this if savenum is faulty
+                        settingsChoice.format(
+                            savenum=saveNum
+                        )  # itll fail to define this if savenum is faulty
                     except KeyError:
-                        printadv("check if you misspelled 'savenum'.")  # maybe make this more descriptive?
+                        printadv(
+                            "check if you misspelled 'savenum'."
+                        )  # maybe make this more descriptive?
                         sleepadv(1)
                         return
                     printadv(f"message added.\n")
                     confData["saveMsg"] = settingsChoice.lower()
                     sleepadv(1)
-
 
                 else:
                     huh("dnu", "")
@@ -687,9 +694,13 @@ def settingsFunc():
                 elif settingsChoice.strip():
                     # before defining...
                     try:
-                        settingsChoice.format(savenum=saveNum)  # itll fail to define this if day is faulty
+                        settingsChoice.format(
+                            savenum=saveNum
+                        )  # itll fail to define this if day is faulty
                     except KeyError:
-                        printadv("check if you misspelled 'day'.")  # maybe make this more descriptive?
+                        printadv(
+                            "check if you misspelled 'day'."
+                        )  # maybe make this more descriptive?
                         sleepadv(1)
                         return
                     printadv(f"message added.\n")
@@ -714,9 +725,13 @@ def settingsFunc():
                 elif settingsChoice.strip():
                     # before defining...
                     try:
-                        settingsChoice.format(day=_loadData['day'])  # itll fail to define this if savenum is faulty
+                        settingsChoice.format(
+                            day=_loadData["day"]
+                        )  # itll fail to define this if savenum is faulty
                     except KeyError:
-                        printadv("check if you misspelled 'day'.")  # maybe make this more descriptive?
+                        printadv(
+                            "check if you misspelled 'day'."
+                        )  # maybe make this more descriptive?
                         sleepadv(1)
                         return
                     printadv(f"message added.\n")
@@ -741,11 +756,13 @@ def settingsFunc():
                 elif settingsChoice.strip():
                     # before defining...
                     try:
-                        settingsChoice.format(act=actionCount)  # itll fail to define this if act is faulty
+                        settingsChoice.format(
+                            act=actionCount
+                        )  # itll fail to define this if act is faulty
                     except KeyError:
                         printadv("check if you misspelled 'act'.")
                         sleepadv(1)
-                        return # ends before message can be written
+                        return  # ends before message can be written
                     printadv(f"message added.\n")
                     confData["actionMsg"] = settingsChoice.lower()
                     sleepadv(1)
@@ -774,8 +791,8 @@ def settingsFunc():
                     sleepadv(1)
                 elif not settingsChoice:
                     printadv(f"'up' set to 'w'.")
-                    confData['up'] = 'w'
-                    w = 'w'
+                    confData["up"] = "w"
+                    w = "w"
                     sleepadv(1)
 
                 elif settingsChoice in keybindList:
@@ -918,7 +935,7 @@ def settingsFunc():
         return None
     elif choice == c:
         # universal settings config
-        sv.save(confData, "conf", confData['saveMsg'].format(savenum=saveNum))
+        sv.save(confData, "conf", confData["saveMsg"].format(savenum=saveNum))
         saveNeeded = cs.RESET_ALL  # 'none'
 
         # update savedirlistfiltered
@@ -929,7 +946,9 @@ def settingsFunc():
             ):
                 sv.saveDirListFiltered.append(sv.saveDirList[i])
 
-        currentConfData = copy.deepcopy(confData) # updates currentConfData, representative of whats in conf.json
+        currentConfData = copy.deepcopy(
+            confData
+        )  # updates currentConfData, representative of whats in conf.json
 
         sleepadv(1)
 
@@ -938,7 +957,7 @@ def settingsFunc():
     else:
         saveNeeded = cs.RESET_ALL
 
-    return settingsFunc() # goes here afterwards
+    return settingsFunc()  # goes here afterwards
 
 
 def creditsFunc():
@@ -1041,14 +1060,13 @@ def gameInit(stdscr):
 
     # colors
     crs.start_color()
-    crs.init_pair(1, crs.COLOR_WHITE, crs.COLOR_BLACK) # white/blck
+    crs.init_pair(1, crs.COLOR_WHITE, crs.COLOR_BLACK)  # white/blck
     if _loadData == sv.defaultData:  # if the loaded data is equal to the base data
         stdscr.addstr(0, 0, 'welcome to medievalKingdom! to start, type "help".')
     else:
-        stdscr.addstr(0, 0, confData['actionMsg'])
+        stdscr.addstr(0, 0, confData["actionMsg"])
     stdscr.refresh()
     stdscr.getch()
-
 
 
 def gameLoop(act=actionCount):

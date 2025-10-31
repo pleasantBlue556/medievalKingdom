@@ -9,8 +9,6 @@ if userSys == "Windows":
     coloramaInit(autoreset=True)
 
 
-
-
 # doesnt work
 # def huh(msg="dnu", sleepTime=1, returnArea=False):
 #     if msg == "min":
