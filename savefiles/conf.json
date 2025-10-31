@@ -4,11 +4,11 @@
     "caret": "@",
     "caretFore": "\u001b[38;5;226m",
     "caretBack": "\u001b[48;5;4m",
-    "saveListCap": 1,
-    "actionMsg": "",
-    "saveMsg": "",
-    "loadMsg": "",
-    "newDayMsg": "",
+    "saveListCap": 6,
+    "actionMsg": "act {act}",
+    "saveMsg": "save (slot:{savenum})",
+    "loadMsg": "load{savenum}",
+    "newDayMsg": "day{day}",
     "up": "w",
     "left": "a",
     "down": "s",
@@ -18,7 +18,8 @@
     "misc": "c",
     "kingdom": {
         "name": "",
-        "gold": 0
+        "gold": 0,
+        "day": 0
     },
     "data": {
         "version": 1.0,

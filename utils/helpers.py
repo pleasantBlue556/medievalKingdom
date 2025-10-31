@@ -9,11 +9,6 @@ if userSys == "Windows":
     coloramaInit(autoreset=True)
 
 
-def clearAll():
-    if platform.system() == "Windows":
-        os.system("cls")  # prints a box with an x in terminal but works in cmd
-    elif platform.system() == "Linux":
-        os.system("clear")
 
 
 # doesnt work
@@ -142,6 +137,7 @@ def resolveColor(name):
 #         return None
 
 
+# rebuilds text, adds color if needed (suggestion: use often, maybe adding more color-based settings?)
 def highlight(mode="digit", text="", color=cf.BLUE) -> str:
     endResult = ""
     if mode == "digit":

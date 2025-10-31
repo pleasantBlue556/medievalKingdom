@@ -1,8 +1,6 @@
 import json
 import os
 
-from utils import config as c
-
 os.makedirs("savefiles", exist_ok=True)
 saveDirList = os.listdir("savefiles")
 # init sdlf
@@ -20,6 +18,7 @@ defaultData = {
     "kingdom": {
         "name": "",
         "gold": 0,
+        "day": 0,
     },
     "data": {
         "version": 1.0,
@@ -27,11 +26,32 @@ defaultData = {
         "stop smuggling!!!": True,
     },
 }
-defaultConfig = c.settings
+defaultConfig = settings = {
+    # page 1
+    "textSpeed": 1,
+    "caretColorless": ">",
+    "caret": ">",
+    "caretFore": '\x1b[38;5;255m',
+    "caretBack": '\x1b[38;5;232m',
+    "saveListCap": 4,
+    # page 2
+    "saveMsg": "file {saveNum} saved.",
+    "loadMsg": "file {saveNum} loaded.",
+    "newDayMsg": "the day is ending...",
+    "actionMsg": "what is your action?",
+    # page 3
+    "up": "w",
+    "left": "a",
+    "down": "s",
+    "right": "d",
+    "select": "z",
+    "cancel": "x",
+    "misc": "c",
+}
 
 
-# yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b
-def save(saveData, slot, msg=c.settings["saveMsg"]):
+# yu7y8ghji9l,;09plty[0n ] byik'/6oltb7ynph, 'bvf[n-mg5b       # ???
+def save(saveData, slot, msg=defaultConfig["saveMsg"]):
     # define filepath
     if slot in ["config", "conf"]:
         _slot = "conf.json"
@@ -47,10 +67,10 @@ def save(saveData, slot, msg=c.settings["saveMsg"]):
         print(f"could not find {filePath}.")
 
     # msg logic
-    if msg and slot == "config":
-        print(c.settings["saveMsg"].format(saveNum="config"))
+    if msg and slot == "conf":
+        print(msg.format(savenum="config"))
     elif msg:
-        print(c.settings["saveMsg"].format(saveNum=slot))
+        print(msg.format(savenum=slot))
 
 
 def saveDict(newDict, newData, saveData, saveNum):
@@ -58,7 +78,7 @@ def saveDict(newDict, newData, saveData, saveNum):
     save(saveData, saveNum, msg=False)
 
 
-def load(saveDirectory="savefiles", slot=None, msg=c.settings["loadMsg"]):
+def load(saveDirectory="savefiles", slot=None, msg=defaultConfig["loadMsg"]):
     if slot not in ["conf", "config"]:
         filePath = os.path.join(saveDirectory, f"savefile{slot}.json")
     elif slot in ["conf", "config"]:
@@ -70,7 +90,7 @@ def load(saveDirectory="savefiles", slot=None, msg=c.settings["loadMsg"]):
         with open(filePath, "r") as f:
             loadData = json.load(f)
             if msg:
-                print(c.settings["loadMsg"].format(saveNum=slot))
+                print(msg.format(savenum=slot))
     else:
         print(f"save not found, check {filePath}.")
         return None
