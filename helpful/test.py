@@ -2,6 +2,7 @@ import curses as crs
 from colorama import Style as cs
 stdscr = crs.initscr()
 
+# xtra
 def inputadv(msg="", caret='>'):
     crs.curs_set(2)
     stdscr.clear()
