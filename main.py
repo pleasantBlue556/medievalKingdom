@@ -1,4 +1,4 @@
-import json, os, platform, sys, time, copy
+import json, os, platform, sys, time, copy, unicurses as ucrs
 
 if platform.system() == "Windows":
     try:
@@ -12,7 +12,8 @@ if platform.system() == "Windows":
 else:
     import curses as crs
 # since all is imported as crs should work...?
-_posX = 0  # starts at 0 on start, per printadv: _posX++
+_posX = 0  # starts at 0 on start, per printadv: _posX++    used for addstr
+stdscr = crs.initscr()
 
 from colorama import Style as cs, init as coloramaInit
 from colorama_ex.ansi_ex_back import Back as cb, Back_EX as cbx, Back_Gray as cbg
@@ -47,20 +48,28 @@ except FileNotFoundError:
 
 
 # adv = advanced
-def printadv(msg="", posX=int(_posX), posY=0, stdscr=crs.initscr()):
+def printadv(msg="", posX=int(_posX), posY=0):
     global _posX
     _posX += 1  # increases by one
     stdscr.addstr(msg, posX, posY)
 
 
-def inputadv(msg="", caret=confData["caret"]):
+def inputadv(msg="", caret=confData["caret"], posY=0):
+    crs.curs_set(2)
+    stdscr.clear()
     if caret:
-        inp = input(
-            f"{msg}\n{confData['caretFore']}{confData['caretBack']}{confData['caret']}{cs.RESET_ALL} "
-        ).lower()
+        printadv(f"{msg}\n{confData['caretFore']}{confData['caretBack']}{confData['caret']}{cs.RESET_ALL} ", posY=posY)
     else:
-        inp = input(f"{msg}\n{cs.RESET_ALL} ").lower()
-    return inp
+        printadv(f"{msg}\n{cs.RESET_ALL} ", posY=posY)
+    ch = stdscr.getch()
+    while True:
+        if ch in [10, 13]: #10 is \n or enter and 13 is \r
+            break
+        elif ch in [crs.KEY_BACKSPACE, 127, 8]:
+            if len()
+
+    crs.curs_set(0)
+    return str(inp.lower()) # just in case
 
 
 def sleepadv(length=1, speed=confData["textSpeed"]):
